@@ -1,0 +1,22 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# eslint cache
+.eslintcache
+
+# dotenv environment variables
+*.env
+
+# nextjs build stuff
+.next/
+.build/
+
+
+.DS_Store
+haters/
+layout.md
