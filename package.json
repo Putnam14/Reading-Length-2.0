@@ -1,0 +1,9 @@
+{
+  "name": "reading-length",
+  "version": "0.0.1",
+  "description": "Book reading reference and tracking",
+  "main": "index.js",
+  "repository": "https://github.com/Putnam14/Reading-Length-2.0",
+  "author": "Bridger Putnam",
+  "license": "MIT"
+}
