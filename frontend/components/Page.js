@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 import Header from './Header'
 import Meta from './Meta'
+import Footer from './Footer'
 
 const theme = {
   red: '#FF0000',
@@ -24,6 +25,9 @@ const Inner = styled.div`
   max-width: ${props => props.theme.maxWidth};
   margin: 0 auto;
   padding: 2rem;
+  min-height: calc(100vh - 50px);
+  display: grid;
+  grid-template-rows: 1fr auto;
 `
 
 const GlobalStyle = createGlobalStyle`
@@ -47,6 +51,23 @@ html {
     border-top: 1px solid #eee;
     margin: 1.5rem;
   }
+  a {
+    text-decoration: none;
+    color: #337ab7;
+    :hover {
+      text-decoration: underline;
+    }
+  }
+  .sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
 `
 
 class Page extends Component {
@@ -58,7 +79,10 @@ class Page extends Component {
           <GlobalStyle />
           <Meta />
           <Header />
-          <Inner>{children}</Inner>
+          <Inner>
+            <div>{children}</div>
+            <Footer />
+          </Inner>
         </StyledPage>
       </ThemeProvider>
     )
