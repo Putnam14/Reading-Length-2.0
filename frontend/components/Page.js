@@ -34,11 +34,18 @@ html {
   body {
     padding: 0;
     margin: 0;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 1.5rem;
     line-height: 2;
   }
   *, *:before, *:after {
     box-sizing: inherit;
+  }
+  hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 1.5rem;
   }
 `
 
