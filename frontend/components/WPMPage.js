@@ -1,8 +1,12 @@
 import Link from 'next/link'
+import Head from 'next/head'
 import Search from './Search'
 
 const WPMPage = () => (
   <div>
+    <Head>
+      <title>Words Per Minute (WPM) Calculators | Reading Length</title>
+    </Head>
     <Search />
     <h1>WPM Speed Tests</h1>
     <p>

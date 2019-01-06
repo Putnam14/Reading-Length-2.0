@@ -1,9 +1,11 @@
 import Link from 'next/link'
+import Head from 'next/head'
 import Search from './Search'
 
 const samples = {
   ttopr: {
     title: 'The Tale of Peter Rabbit',
+    browserTitle: 'WPM Test for Elementary Text',
     level: 'Easy or Elementary',
     isbn: '0723267693',
     sample: `<p>Once upon a time there were four little Rabbits, and their names were—Flopsy, Mopsy, Cotton-tail, and Peter. They lived with their Mother in a sand-bank, underneath the root of a very big fir-tree.</p>
@@ -17,6 +19,7 @@ const samples = {
   },
   tpodg: {
     title: 'The Picture of Dorian Gray',
+    browserTitle: 'WPM Test for High School Text',
     level: 'Moderate or High School',
     isbn: '0486278077',
     sample: `<p>The studio was filled with the rich odour of roses, and when the light summer wind stirred amidst the trees of the garden, there came through the open door the heavy scent of the lilac, or the more delicate perfume of the pink-flowering thorn.</p>
@@ -33,6 +36,7 @@ const samples = {
   },
   atotc: {
     title: 'A Tale of Two Cities',
+    browserTitle: 'WPM Test for Collegiate Text',
     level: 'Hard or Collegiate',
     isbn: '1503219704',
     sample: `<p>There were a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of France. In both countries it was clearer than crystal to the lords of the State preserves of loaves and fishes, that things in general were settled for ever.</p>
@@ -57,6 +61,9 @@ const WPMTest = ({ id }) => (
     {}
     {samples[id] ? (
       <>
+        <Head>
+          <title>{samples[id].browserTitle} | Reading Length</title>
+        </Head>
         <h1>{samples[id].title}</h1>
         <p>Reading level: {samples[id].level}</p>
         <div dangerouslySetInnerHTML={{ __html: samples[id].sample }} />
