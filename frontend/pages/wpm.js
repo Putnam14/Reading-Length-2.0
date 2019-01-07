@@ -8,10 +8,11 @@ class WPM extends React.Component {
   }
 
   render() {
+    const { id } = this.props
     return (
       <>
-        {!this.props.id && <WPMPage />}
-        {this.props.id && <WPMTest id={this.props.id} />}
+        {!id && <WPMPage />}
+        {id && <WPMTest id={id} />}
       </>
     )
   }
