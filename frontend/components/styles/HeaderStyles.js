@@ -21,6 +21,16 @@ const HeaderStyles = styled.div`
   .logo {
     font-size: 2rem;
   }
+  @media (max-width: 405px) {
+    .container {
+      width: 100%;
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+    a {
+      padding: 0.5em;
+    }
+  }
 `
 
 export default HeaderStyles

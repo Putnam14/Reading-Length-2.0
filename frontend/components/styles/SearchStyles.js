@@ -25,6 +25,12 @@ const SearchStyles = styled.div`
       }
     }
   }
+  @media (max-width: 480px) {
+    form {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+  }
 `
 
 export default SearchStyles

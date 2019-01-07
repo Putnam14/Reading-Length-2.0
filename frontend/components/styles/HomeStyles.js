@@ -19,6 +19,7 @@ const HomeStyles = styled.div`
   h2 {
     margin: 0;
     font-weight: 500;
+    text-align: center;
   }
 `
 
