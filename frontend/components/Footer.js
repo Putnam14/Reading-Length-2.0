@@ -11,7 +11,7 @@ const Footer = () => (
       <Link href="/wpm">
         <a>WPM Tests</a>
       </Link>
-      <Link href="about">
+      <Link href="/about">
         <a>About</a>
       </Link>
     </div>
