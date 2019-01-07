@@ -81,7 +81,7 @@ class WPMTest extends React.Component {
   render() {
     const { id } = this.props
     const { title, browserTitle, level, sample } = samples[id]
-    const { wpm, wordcount } = this.state
+    const { time, wpm, wordcount } = this.state
     return (
       <div>
         <Search />
@@ -111,16 +111,24 @@ class WPMTest extends React.Component {
                 </p>
                 <hr />
                 <div className="sample-text">
-                  <button type="button" onClick={this.setBeginTime}>
-                    Click here to start reading
-                  </button>
+                  {wpm === 0 && (
+                    <button type="button" onClick={this.setBeginTime}>
+                      {time === 0 ? 'Click here to start reading' : 'Timing...'}
+                    </button>
+                  )}
                   <div dangerouslySetInnerHTML={{ __html: sample }} />
-                  <button className="calc" type="button" onClick={this.calcWPM}>
-                    Stop and calculate
-                  </button>
+                  {wpm === 0 && (
+                    <button
+                      className="calc"
+                      type="button"
+                      onClick={this.calcWPM}
+                    >
+                      Stop and calculate
+                    </button>
+                  )}
                 </div>
                 {wpm !== 0 && (
-                  <div id="CalcWPM" className="panel-footer">
+                  <div className="panel-footer">
                     <p className="text-center">
                       You read this over an average of {wpm} words per minute.
                       Great job!
