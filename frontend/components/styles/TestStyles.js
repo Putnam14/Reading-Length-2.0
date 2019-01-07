@@ -35,6 +35,7 @@ const TestStyles = styled.div`
   }
   .panel-footer {
     border-top: 1px solid #eee;
+    text-align: center;
     button {
       margin: 0 auto;
     }
