@@ -20,7 +20,7 @@ const WPMPage = () => (
       provided by Project Gutenberg.
     </p>
     <h2>Easy or Elementary Reading Tests</h2>
-    <Link href="/wpm/ttopr/">
+    <Link href="/wpm/ttopr">
       <a>The Tale of Peter Rabbit – Beatrix Potter</a>
     </Link>
     <h2>Moderate or High School Reading Tests</h2>
