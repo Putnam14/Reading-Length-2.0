@@ -33,6 +33,12 @@ const TestStyles = styled.div`
     border-bottom: 1px solid #eee;
     background-color: #f8f8f8;
   }
+  .panel-footer {
+    border-top: 1px solid #eee;
+    button {
+      margin: 0 auto;
+    }
+  }
   .sample-text {
     margin: 0 auto;
     max-width: 70rem;
