@@ -46,7 +46,6 @@ html {
     box-sizing: inherit;
   }
   hr {
-    width: 100%;
     border: 0;
     border-top: 1px solid #eee;
     margin: 1.5rem;
