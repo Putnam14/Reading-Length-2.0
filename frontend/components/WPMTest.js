@@ -61,7 +61,9 @@ class WPMTest extends React.Component {
     this.state = {
       time: 0,
       wpm: 0,
-      wordcount: samples[props.id].sample.match(/\S+/g).length,
+      wordcount: samples[props.id]
+        ? samples[props.id].sample.match(/\S+/g).length
+        : 0,
     }
   }
 
@@ -80,6 +82,16 @@ class WPMTest extends React.Component {
 
   render() {
     const { id } = this.props
+    if (!samples[id])
+      return (
+        <div>
+          <Search />
+          <Link href="/wpm">
+            <a>Back to list of WPM calculators</a>
+          </Link>
+          <p>Sorry, we couldn't find that reading sample.</p>
+        </div>
+      )
     const { title, browserTitle, level, sample } = samples[id]
     const { time, wpm, wordcount } = this.state
     return (
@@ -88,66 +100,56 @@ class WPMTest extends React.Component {
         <Link href="/wpm">
           <a>Back to list of WPM calculators</a>
         </Link>
-        {title ? (
-          <TestStyles>
-            <Head>
-              <title>{browserTitle} | Reading Length</title>
-            </Head>
-            <h1>{title}</h1>
-            <p>Reading level: {level}</p>
-            <p>Word count: {wordcount}</p>
-            <div className="panel">
-              <div className="panel-heading">
-                <p className="panel-title">Time my reading</p>
-              </div>
-              <div className="panel-body">
-                <p>
-                  To calculate your words per minute (WPM) reading speed, click
-                  the 'Start reading' button and read the sample text below.
-                </p>
-                <p>
-                  When you are done reading, click the 'Stop and calculate'
-                  button.
-                </p>
-                <hr />
-                <div className="sample-text">
-                  {wpm === 0 && (
-                    <button type="button" onClick={this.setBeginTime}>
-                      {time === 0 ? 'Click here to start reading' : 'Timing...'}
-                    </button>
-                  )}
-                  <div dangerouslySetInnerHTML={{ __html: sample }} />
-                  {wpm === 0 && (
-                    <button
-                      className="calc"
-                      type="button"
-                      onClick={this.calcWPM}
-                    >
-                      Stop and calculate
-                    </button>
-                  )}
-                </div>
-                {wpm !== 0 && (
-                  <div className="panel-footer">
-                    <p className="text-center">
-                      You read this over an average of {wpm} words per minute.
-                      Great job!
-                    </p>
-                    <p>
-                      <button type="button" onClick={this.resetCalc}>
-                        Reset
-                      </button>
-                    </p>
-                  </div>
+        <TestStyles>
+          <Head>
+            <title>{browserTitle} | Reading Length</title>
+          </Head>
+          <h1>{title}</h1>
+          <p>Reading level: {level}</p>
+          <p>Word count: {wordcount}</p>
+          <div className="panel">
+            <div className="panel-heading">
+              <p className="panel-title">Time my reading</p>
+            </div>
+            <div className="panel-body">
+              <p>
+                To calculate your words per minute (WPM) reading speed, click
+                the 'Start reading' button and read the sample text below.
+              </p>
+              <p>
+                When you are done reading, click the 'Stop and calculate'
+                button.
+              </p>
+              <hr />
+              <div className="sample-text">
+                {wpm === 0 && (
+                  <button type="button" onClick={this.setBeginTime}>
+                    {time === 0 ? 'Click here to start reading' : 'Timing...'}
+                  </button>
+                )}
+                <div dangerouslySetInnerHTML={{ __html: sample }} />
+                {wpm === 0 && (
+                  <button className="calc" type="button" onClick={this.calcWPM}>
+                    Stop and calculate
+                  </button>
                 )}
               </div>
+              {wpm !== 0 && (
+                <div className="panel-footer">
+                  <p className="text-center">
+                    You read this over an average of {wpm} words per minute.
+                    Great job!
+                  </p>
+                  <p>
+                    <button type="button" onClick={this.resetCalc}>
+                      Reset
+                    </button>
+                  </p>
+                </div>
+              )}
             </div>
-          </TestStyles>
-        ) : (
-          <>
-            <p>Sorry, we couldn't find that reading sample.</p>
-          </>
-        )}
+          </div>
+        </TestStyles>
       </div>
     )
   }
