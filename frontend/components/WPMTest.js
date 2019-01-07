@@ -128,7 +128,7 @@ class WPMTest extends React.Component {
                   </button>
                 )}
                 <div dangerouslySetInnerHTML={{ __html: sample }} />
-                {wpm === 0 && (
+                {wpm === 0 && time !== 0 && (
                   <button className="calc" type="button" onClick={this.calcWPM}>
                     Stop and calculate
                   </button>
