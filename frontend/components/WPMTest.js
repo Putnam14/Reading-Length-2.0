@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Head from 'next/head'
+import React from 'react'
 import Search from './Search'
+import TestStyles from './styles/TestStyles'
 
 const samples = {
   ttopr: {
@@ -46,34 +48,101 @@ const samples = {
   },
   template: {
     title: 'Title',
+    browserTitle: 'WPM Test for...',
     level: 'level',
     isbn: 'ISBN-10',
     sample: `HTML for sample`,
   },
 }
 
-const WPMTest = ({ id }) => (
-  <div>
-    <Search />
-    <Link href="/wpm">
-      <a>Back to list of WPM calculators</a>
-    </Link>
-    {}
-    {samples[id] ? (
-      <>
-        <Head>
-          <title>{samples[id].browserTitle} | Reading Length</title>
-        </Head>
-        <h1>{samples[id].title}</h1>
-        <p>Reading level: {samples[id].level}</p>
-        <div dangerouslySetInnerHTML={{ __html: samples[id].sample }} />
-      </>
-    ) : (
-      <>
-        <p>Sorry, we couldn't find that reading sample.</p>
-      </>
-    )}
-  </div>
-)
+class WPMTest extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      time: 0,
+      wpm: 0,
+      wordcount: samples[props.id].sample.match(/\S+/g).length,
+    }
+  }
+
+  setBeginTime = () => this.setState({ time: new Date() })
+
+  calcWPM = () => {
+    const { time, wordcount } = this.state
+    const timeDiff = (new Date() - time) / 60000
+    const wpm = Math.floor(wordcount / timeDiff)
+    this.setState({ wpm })
+  }
+
+  resetCalc = () => {
+    this.setState({ time: 0, wpm: 0 })
+  }
+
+  render() {
+    const { id } = this.props
+    const { title, browserTitle, level, sample } = samples[id]
+    const { wpm, wordcount } = this.state
+    return (
+      <div>
+        <Search />
+        <Link href="/wpm">
+          <a>Back to list of WPM calculators</a>
+        </Link>
+        {title ? (
+          <TestStyles>
+            <Head>
+              <title>{browserTitle} | Reading Length</title>
+            </Head>
+            <h1>{title}</h1>
+            <p>Reading level: {level}</p>
+            <p>Word count: {wordcount}</p>
+            <div className="panel">
+              <div className="panel-heading">
+                <p className="panel-title">Time my reading</p>
+              </div>
+              <div className="panel-body">
+                <p>
+                  To calculate your words per minute (WPM) reading speed, click
+                  the 'Start reading' button and read the sample text below.
+                </p>
+                <p>
+                  When you are done reading, click the 'Stop and calculate'
+                  button.
+                </p>
+                <hr />
+                <div className="sample-text">
+                  <button type="button" onClick={this.setBeginTime}>
+                    Click here to start reading
+                  </button>
+                  <div dangerouslySetInnerHTML={{ __html: sample }} />
+                  <button className="calc" type="button" onClick={this.calcWPM}>
+                    Stop and calculate
+                  </button>
+                </div>
+                {wpm !== 0 && (
+                  <div id="CalcWPM" className="panel-footer">
+                    <p className="text-center">
+                      You read this over an average of {wpm} words per minute.
+                      Great job!
+                    </p>
+                    <p>
+                      <button type="button" onClick={this.resetCalc}>
+                        Reset
+                      </button>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TestStyles>
+        ) : (
+          <>
+            <p>Sorry, we couldn't find that reading sample.</p>
+          </>
+        )}
+      </div>
+    )
+  }
+}
 
 export default WPMTest
