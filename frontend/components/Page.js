@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 import Header from './Header'
 import Meta from './Meta'
-import Footer from './Footer'
 
 const theme = {
   red: '#FF0000',
@@ -19,15 +18,6 @@ theme.lightgrey = theme.lightGrey
 const StyledPage = styled.div`
   background: white;
   color: ${props => props.theme.black};
-`
-
-const Inner = styled.div`
-  max-width: ${props => props.theme.maxWidth};
-  margin: 0 auto;
-  padding: 2rem;
-  min-height: calc(100vh - 50px);
-  display: grid;
-  grid-template-rows: 1fr auto;
 `
 
 const GlobalStyle = createGlobalStyle`
@@ -78,10 +68,7 @@ class Page extends Component {
           <GlobalStyle />
           <Meta />
           <Header />
-          <Inner>
-            <div>{children}</div>
-            <Footer />
-          </Inner>
+          {children}
         </StyledPage>
       </ThemeProvider>
     )

@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import Head from 'next/head'
 import Search from './Search'
+import Inner from './Inner'
 
 const WPMPage = () => (
-  <div>
+  <Inner>
     <Head>
       <title>Words Per Minute (WPM) Calculators | Reading Length</title>
     </Head>
@@ -31,7 +32,7 @@ const WPMPage = () => (
     <Link href="/wpm/atotc">
       <a>A Tale of Two Cities – Charles Dickens</a>
     </Link>
-  </div>
+  </Inner>
 )
 
 export default WPMPage

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import React from 'react'
 import Search from './Search'
 import TestStyles from './styles/TestStyles'
+import Inner from './Inner'
 
 const samples = {
   ttopr: {
@@ -84,18 +85,18 @@ class WPMTest extends React.Component {
     const { id } = this.props
     if (!samples[id])
       return (
-        <div>
+        <Inner>
           <Search />
           <Link href="/wpm">
             <a>Back to list of WPM calculators</a>
           </Link>
           <p>Sorry, we couldn't find that reading sample.</p>
-        </div>
+        </Inner>
       )
     const { title, browserTitle, level, sample } = samples[id]
     const { time, wpm, wordcount } = this.state
     return (
-      <div>
+      <Inner>
         <Search />
         <Link href="/wpm">
           <a>Back to list of WPM calculators</a>
@@ -150,7 +151,7 @@ class WPMTest extends React.Component {
             </div>
           </div>
         </TestStyles>
-      </div>
+      </Inner>
     )
   }
 }
