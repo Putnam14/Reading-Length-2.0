@@ -6,7 +6,7 @@ import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
 
 const bookQuery = {
-  ISBN10: '0553593714',
+  isbn10: '0553593714',
   bookCover: 'https://images-na.ssl-images-amazon.com/images/I/518dkA0JEpL.jpg',
   bookTitle: 'A Game of Thrones',
   bookAuthor: 'George R.R. Martin',
@@ -21,10 +21,71 @@ const bookQuery = {
   countType: 'audiobook length',
 }
 
+const calcTime = (wpm, wordCount) => {
+  const minsToRead = wordCount / wpm
+  const hours = Math.floor(minsToRead / 60)
+  const minutes = Math.round(minsToRead % 60)
+  return { hours, minutes }
+}
 class BookPage extends React.Component {
+  constructor(props) {
+    super()
+    this.state = {
+      isbn10: bookQuery.isbn10,
+      bookCover: bookQuery.bookCover,
+      bookTitle: bookQuery.bookTitle,
+      bookAuthor: bookQuery.bookAuthor,
+      bookDescription: bookQuery.bookDescription,
+      publishDate: bookQuery.publishDate,
+      pages: bookQuery.pages,
+      wordCount: bookQuery.wordCount,
+      countAccurracy: bookQuery.countAccurracy,
+      countType: bookQuery.countType,
+      user: {
+        wpm: 250,
+        results: {
+          hours: 0,
+          minutes: 0,
+        },
+      },
+    }
+  }
+
+  handleChange = e => {
+    const newWPM = e.target.value
+    this.setState(prevState => {
+      const newState = { ...prevState }
+      newState.user.wpm = newWPM
+      return newState
+    })
+  }
+
+  calcUserTime = e => {
+    e.preventDefault()
+    const {
+      user: { wpm },
+      wordCount,
+    } = this.state
+    const { hours, minutes } = calcTime(wpm, wordCount)
+    this.setUserResults(hours, minutes)
+  }
+
+  setUserResults = (hours, minutes) => {
+    this.setState(prevState => {
+      const newState = { ...prevState }
+      newState.user.results.hours = hours
+      newState.user.results.minutes = minutes
+      return newState
+    })
+  }
+
+  resetUserResults = () => {
+    this.setUserResults(0, 0)
+  }
+
   render() {
     const {
-      ISBN10,
+      isbn10,
       bookCover,
       bookTitle,
       bookAuthor,
@@ -34,10 +95,12 @@ class BookPage extends React.Component {
       wordCount,
       countAccurracy,
       countType,
-    } = bookQuery
-    const minsToRead = wordCount / 250
-    const avgHrs = Math.floor(minsToRead / 60)
-    const avgMins = Math.round(minsToRead % 60)
+      user: {
+        wpm,
+        results: { hours, minutes },
+      },
+    } = this.state
+    const { hours: avgHrs, minutes: avgMins } = calcTime(250, wordCount)
     return (
       <BookStyles>
         <div className="above-the-fold">
@@ -46,23 +109,54 @@ class BookPage extends React.Component {
               <img src={bookCover} alt={bookTitle} />
             </div>
             <div className="reading-info">
-              <h1>{bookTitle}</h1>
-              <p>
-                The average reader will spend <b>{avgHrs} hours</b> and{' '}
-                <b>{avgMins} minutes</b> reading <em>{bookTitle}</em> at 250 WPM
-                (words per minute).
-              </p>
-              <hr />
-              <form>
-                <label>
-                  Find out how fast you can read this by entering your reading
-                  speed.
-                </label>
-                <div>
-                  <input type="number" id="calcTime" placeholder="250" />
-                  <button type="submit">Estimate</button>
-                </div>
-              </form>
+              <div className="info-container">
+                <h1>{bookTitle}</h1>
+                <p>
+                  The average reader will spend <b>{avgHrs} hours</b> and{' '}
+                  <b>{avgMins} minutes</b> reading <em>{bookTitle}</em> at 250
+                  WPM (words per minute).
+                </p>
+                <hr />
+                {hours || minutes ? (
+                  <div className="results">
+                    <p>
+                      This should take you around{' '}
+                      <strong>
+                        {hours} hour
+                        {hours > 1 ? 's' : ''}
+                      </strong>{' '}
+                      and{' '}
+                      <strong>
+                        {minutes} minute
+                        {minutes > 1 ? 's' : ''}
+                      </strong>{' '}
+                      to read.
+                    </p>
+                    <button type="button" onClick={this.resetUserResults}>
+                      Reset
+                    </button>
+                  </div>
+                ) : (
+                  <form>
+                    <label>
+                      Find out how fast you can read this by entering your
+                      reading speed.
+                    </label>
+                    <div>
+                      <input
+                        type="number"
+                        id="userWPM"
+                        placeholder="250"
+                        value={wpm}
+                        onChange={this.handleChange}
+                      />
+                      <button type="submit" onClick={this.calcUserTime}>
+                        Estimate
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -74,23 +168,31 @@ class BookPage extends React.Component {
                 <p>{bookAuthor}</p>
               </div>
               <div>
-                <strong>Publication Date</strong>
-                <p>{publishDate}</p>
-              </div>
-              <div>
-                <strong>Pages</strong>
-                <p>{pages} pages</p>
-              </div>
-              <div>
                 <strong>Word Count</strong>
                 <p>{wordCount} words</p>
                 <small>
                   {countAccurracy} from {countType}
                 </small>
               </div>
+              <div>
+                <strong>Price</strong>
+                <p>Amazon: $15.99</p>
+                <p>Powell's: $12.99</p>
+              </div>
+              <div>
+                <strong>Pages</strong>
+                <p>{pages} pages</p>
+              </div>
             </div>
             <div className="description">
-              <div dangerouslySetInnerHTML={{ __html: bookDescription }} />
+              <div className="desc-text">
+                <div dangerouslySetInnerHTML={{ __html: bookDescription }} />
+              </div>
+              <div className="amazon-link">
+                <a href={`https://www.amazon.com/dp/${isbn10}?tag=readleng-20`}>
+                  View more on Amazon
+                </a>
+              </div>
             </div>
           </div>
           <div className="related-titles">
