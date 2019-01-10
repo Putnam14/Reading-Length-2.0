@@ -24,14 +24,11 @@ const Header = () => (
           </Link>
         </div>
         <div rel="navigation">
-          <Link href="/">
+          <Link prefetch href="/">
             <a>Home</a>
           </Link>
-          <Link href="/wpm">
+          <Link prefetch href="/wpm">
             <a>Tests</a>
-          </Link>
-          <Link href="/about">
-            <a>About</a>
           </Link>
         </div>
       </div>
