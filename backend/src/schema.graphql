@@ -1,0 +1,18 @@
+# Public facing API (interfacing with via the Next client)
+# Don't need to redefine stuff that's in prisma.graphql
+
+type SuccessMessage {
+    message: String
+}
+
+
+# Insert data
+# import * from './generated/prisma.graphql'
+type Mutation {
+    createBook(isbn10: String, isbn13: String, name: String, author: String, image: String, description: String, publishDate: DateTime, pageCount: Int, related: [String]): Book!
+}
+
+# Get data
+type Query {
+    book(where: BookWhereUniqueInput!): Book
+}
