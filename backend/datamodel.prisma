@@ -1,0 +1,18 @@
+type Book {
+  id: ID! @unique
+  isbn10: String! @unique
+  isbn13: String
+  name: String!
+  author: String
+  image: String
+  description: String
+  publishDate: DateTime
+  pageCount: Int
+  wordCount: WordCount
+  related: [String!]
+}
+type WordCount {
+  id: ID! @unique
+  wordCount: Int!
+  book: Book!
+}
