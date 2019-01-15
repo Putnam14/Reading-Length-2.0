@@ -7,6 +7,8 @@ import Error from './ErrorMessage'
 import Search from './Search'
 import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
+import RelatedBook from './RelatedBook'
+import WordCount from './WordCount'
 
 const bookQuery = {
   isbn10: '0553593714',
@@ -36,14 +38,6 @@ const BOOK_FROM_ISBN_QUERY = gql`
       publishDate
       pageCount
       related
-    }
-  }
-`
-const WORDCOUNT_QUERY = gql`
-  query WORDCOUNT_QUERY($isbn: String!) {
-    wordCounts(where: { isbn10: $isbn }) {
-      isbn10
-      name
     }
   }
 `
@@ -205,7 +199,7 @@ class BookPage extends React.Component {
                     </div>
                     <div>
                       <strong>Word Count</strong>
-                      <p>{book.wordCount.wordCount} words</p>
+                      <WordCount isbn={isbn10} />
                       <small>
                         {countAccurracy} from {countType}
                       </small>
@@ -242,7 +236,7 @@ class BookPage extends React.Component {
                   {/* Related Query here */}
                   {book.related.map(val => (
                     <div>
-                      <p>{val}</p>
+                      <RelatedBook isbn={val} />
                     </div>
                   ))}
                 </div>
