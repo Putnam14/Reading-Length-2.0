@@ -1,5 +1,5 @@
 # source: https://rlength-dev-5d57e09ec4.herokuapp.com/readinglength-dev/dev
-# timestamp: Sun Jan 13 2019 23:11:18 GMT-0700 (Mountain Standard Time)
+# timestamp: Mon Jan 14 2019 22:17:07 GMT-0700 (Mountain Standard Time)
 
 type AggregateBook {
   count: Int!
@@ -28,6 +28,7 @@ type Book implements Node {
   description: String
   publishDate: DateTime
   pageCount: Int
+  wordCounts: [String!]!
   related: [String!]!
 }
 
@@ -50,10 +51,15 @@ input BookCreateInput {
   description: String
   publishDate: DateTime
   pageCount: Int
+  wordCounts: BookCreatewordCountsInput
   related: BookCreaterelatedInput
 }
 
 input BookCreaterelatedInput {
+  set: [String!]
+}
+
+input BookCreatewordCountsInput {
   set: [String!]
 }
 
@@ -382,6 +388,7 @@ type BookPreviousValues {
   description: String
   publishDate: DateTime
   pageCount: Int
+  wordCounts: [String!]!
   related: [String!]!
 }
 
@@ -433,6 +440,7 @@ input BookUpdateInput {
   description: String
   publishDate: DateTime
   pageCount: Int
+  wordCounts: BookUpdatewordCountsInput
   related: BookUpdaterelatedInput
 }
 
@@ -445,10 +453,15 @@ input BookUpdateManyMutationInput {
   description: String
   publishDate: DateTime
   pageCount: Int
+  wordCounts: BookUpdatewordCountsInput
   related: BookUpdaterelatedInput
 }
 
 input BookUpdaterelatedInput {
+  set: [String!]
+}
+
+input BookUpdatewordCountsInput {
   set: [String!]
 }
 
