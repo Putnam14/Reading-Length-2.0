@@ -8,11 +8,18 @@ type Book {
   description: String
   publishDate: DateTime
   pageCount: Int
-  wordCount: WordCount
   related: [String!]
 }
 type WordCount {
   id: ID! @unique
+  isbn10: String!
   wordCount: Int!
-  book: Book!
+  countAccuracy: String
+  countType: String
+}
+type BookPreview {
+  id: ID! @unique
+  isbn10: String! @unique
+  name: String!
+  image: String
 }

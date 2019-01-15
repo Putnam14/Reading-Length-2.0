@@ -1,7 +1,11 @@
 # source: https://rlength-dev-5d57e09ec4.herokuapp.com/readinglength-dev/dev
-# timestamp: Sun Jan 13 2019 16:19:22 GMT-0700 (Mountain Standard Time)
+# timestamp: Sun Jan 13 2019 23:11:18 GMT-0700 (Mountain Standard Time)
 
 type AggregateBook {
+  count: Int!
+}
+
+type AggregateBookPreview {
   count: Int!
 }
 
@@ -24,7 +28,6 @@ type Book implements Node {
   description: String
   publishDate: DateTime
   pageCount: Int
-  wordCount: WordCount
   related: [String!]!
 }
 
@@ -48,28 +51,10 @@ input BookCreateInput {
   publishDate: DateTime
   pageCount: Int
   related: BookCreaterelatedInput
-  wordCount: WordCountCreateOneWithoutBookInput
-}
-
-input BookCreateOneWithoutWordCountInput {
-  create: BookCreateWithoutWordCountInput
-  connect: BookWhereUniqueInput
 }
 
 input BookCreaterelatedInput {
   set: [String!]
-}
-
-input BookCreateWithoutWordCountInput {
-  isbn10: String!
-  isbn13: String
-  name: String!
-  author: String
-  image: String
-  description: String
-  publishDate: DateTime
-  pageCount: Int
-  related: BookCreaterelatedInput
 }
 
 """An edge in a connection."""
@@ -104,6 +89,287 @@ enum BookOrderByInput {
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+}
+
+type BookPreview implements Node {
+  id: ID!
+  isbn10: String!
+  name: String!
+  image: String
+}
+
+"""A connection to a list of items."""
+type BookPreviewConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [BookPreviewEdge]!
+  aggregate: AggregateBookPreview!
+}
+
+input BookPreviewCreateInput {
+  isbn10: String!
+  name: String!
+  image: String
+}
+
+"""An edge in a connection."""
+type BookPreviewEdge {
+  """The item at the end of the edge."""
+  node: BookPreview!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum BookPreviewOrderByInput {
+  id_ASC
+  id_DESC
+  isbn10_ASC
+  isbn10_DESC
+  name_ASC
+  name_DESC
+  image_ASC
+  image_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type BookPreviewPreviousValues {
+  id: ID!
+  isbn10: String!
+  name: String!
+  image: String
+}
+
+type BookPreviewSubscriptionPayload {
+  mutation: MutationType!
+  node: BookPreview
+  updatedFields: [String!]
+  previousValues: BookPreviewPreviousValues
+}
+
+input BookPreviewSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BookPreviewSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BookPreviewSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BookPreviewSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: BookPreviewWhereInput
+}
+
+input BookPreviewUpdateInput {
+  isbn10: String
+  name: String
+  image: String
+}
+
+input BookPreviewUpdateManyMutationInput {
+  isbn10: String
+  name: String
+  image: String
+}
+
+input BookPreviewWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BookPreviewWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BookPreviewWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BookPreviewWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  isbn10: String
+
+  """All values that are not equal to given value."""
+  isbn10_not: String
+
+  """All values that are contained in given list."""
+  isbn10_in: [String!]
+
+  """All values that are not contained in given list."""
+  isbn10_not_in: [String!]
+
+  """All values less than the given value."""
+  isbn10_lt: String
+
+  """All values less than or equal the given value."""
+  isbn10_lte: String
+
+  """All values greater than the given value."""
+  isbn10_gt: String
+
+  """All values greater than or equal the given value."""
+  isbn10_gte: String
+
+  """All values containing the given string."""
+  isbn10_contains: String
+
+  """All values not containing the given string."""
+  isbn10_not_contains: String
+
+  """All values starting with the given string."""
+  isbn10_starts_with: String
+
+  """All values not starting with the given string."""
+  isbn10_not_starts_with: String
+
+  """All values ending with the given string."""
+  isbn10_ends_with: String
+
+  """All values not ending with the given string."""
+  isbn10_not_ends_with: String
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  image: String
+
+  """All values that are not equal to given value."""
+  image_not: String
+
+  """All values that are contained in given list."""
+  image_in: [String!]
+
+  """All values that are not contained in given list."""
+  image_not_in: [String!]
+
+  """All values less than the given value."""
+  image_lt: String
+
+  """All values less than or equal the given value."""
+  image_lte: String
+
+  """All values greater than the given value."""
+  image_gt: String
+
+  """All values greater than or equal the given value."""
+  image_gte: String
+
+  """All values containing the given string."""
+  image_contains: String
+
+  """All values not containing the given string."""
+  image_not_contains: String
+
+  """All values starting with the given string."""
+  image_starts_with: String
+
+  """All values not starting with the given string."""
+  image_not_starts_with: String
+
+  """All values ending with the given string."""
+  image_ends_with: String
+
+  """All values not ending with the given string."""
+  image_not_ends_with: String
+}
+
+input BookPreviewWhereUniqueInput {
+  id: ID
+  isbn10: String
 }
 
 type BookPreviousValues {
@@ -168,7 +434,6 @@ input BookUpdateInput {
   publishDate: DateTime
   pageCount: Int
   related: BookUpdaterelatedInput
-  wordCount: WordCountUpdateOneWithoutBookInput
 }
 
 input BookUpdateManyMutationInput {
@@ -183,32 +448,8 @@ input BookUpdateManyMutationInput {
   related: BookUpdaterelatedInput
 }
 
-input BookUpdateOneRequiredWithoutWordCountInput {
-  create: BookCreateWithoutWordCountInput
-  connect: BookWhereUniqueInput
-  update: BookUpdateWithoutWordCountDataInput
-  upsert: BookUpsertWithoutWordCountInput
-}
-
 input BookUpdaterelatedInput {
   set: [String!]
-}
-
-input BookUpdateWithoutWordCountDataInput {
-  isbn10: String
-  isbn13: String
-  name: String
-  author: String
-  image: String
-  description: String
-  publishDate: DateTime
-  pageCount: Int
-  related: BookUpdaterelatedInput
-}
-
-input BookUpsertWithoutWordCountInput {
-  update: BookUpdateWithoutWordCountDataInput!
-  create: BookCreateWithoutWordCountInput!
 }
 
 input BookWhereInput {
@@ -544,7 +785,6 @@ input BookWhereInput {
 
   """All values greater than or equal the given value."""
   pageCount_gte: Int
-  wordCount: WordCountWhereInput
 }
 
 input BookWhereUniqueInput {
@@ -563,16 +803,22 @@ scalar Long
 type Mutation {
   createBook(data: BookCreateInput!): Book!
   createWordCount(data: WordCountCreateInput!): WordCount!
+  createBookPreview(data: BookPreviewCreateInput!): BookPreview!
   updateBook(data: BookUpdateInput!, where: BookWhereUniqueInput!): Book
   updateWordCount(data: WordCountUpdateInput!, where: WordCountWhereUniqueInput!): WordCount
+  updateBookPreview(data: BookPreviewUpdateInput!, where: BookPreviewWhereUniqueInput!): BookPreview
   deleteBook(where: BookWhereUniqueInput!): Book
   deleteWordCount(where: WordCountWhereUniqueInput!): WordCount
+  deleteBookPreview(where: BookPreviewWhereUniqueInput!): BookPreview
   upsertBook(where: BookWhereUniqueInput!, create: BookCreateInput!, update: BookUpdateInput!): Book!
   upsertWordCount(where: WordCountWhereUniqueInput!, create: WordCountCreateInput!, update: WordCountUpdateInput!): WordCount!
+  upsertBookPreview(where: BookPreviewWhereUniqueInput!, create: BookPreviewCreateInput!, update: BookPreviewUpdateInput!): BookPreview!
   updateManyBooks(data: BookUpdateManyMutationInput!, where: BookWhereInput): BatchPayload!
   updateManyWordCounts(data: WordCountUpdateManyMutationInput!, where: WordCountWhereInput): BatchPayload!
+  updateManyBookPreviews(data: BookPreviewUpdateManyMutationInput!, where: BookPreviewWhereInput): BatchPayload!
   deleteManyBooks(where: BookWhereInput): BatchPayload!
   deleteManyWordCounts(where: WordCountWhereInput): BatchPayload!
+  deleteManyBookPreviews(where: BookPreviewWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -605,10 +851,13 @@ type PageInfo {
 type Query {
   books(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Book]!
   wordCounts(where: WordCountWhereInput, orderBy: WordCountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WordCount]!
+  bookPreviews(where: BookPreviewWhereInput, orderBy: BookPreviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BookPreview]!
   book(where: BookWhereUniqueInput!): Book
   wordCount(where: WordCountWhereUniqueInput!): WordCount
+  bookPreview(where: BookPreviewWhereUniqueInput!): BookPreview
   booksConnection(where: BookWhereInput, orderBy: BookOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookConnection!
   wordCountsConnection(where: WordCountWhereInput, orderBy: WordCountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WordCountConnection!
+  bookPreviewsConnection(where: BookPreviewWhereInput, orderBy: BookPreviewOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BookPreviewConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -620,12 +869,15 @@ type Query {
 type Subscription {
   book(where: BookSubscriptionWhereInput): BookSubscriptionPayload
   wordCount(where: WordCountSubscriptionWhereInput): WordCountSubscriptionPayload
+  bookPreview(where: BookPreviewSubscriptionWhereInput): BookPreviewSubscriptionPayload
 }
 
 type WordCount implements Node {
   id: ID!
+  isbn10: String!
   wordCount: Int!
-  book: Book!
+  countAccuracy: String
+  countType: String
 }
 
 """A connection to a list of items."""
@@ -639,17 +891,10 @@ type WordCountConnection {
 }
 
 input WordCountCreateInput {
+  isbn10: String!
   wordCount: Int!
-  book: BookCreateOneWithoutWordCountInput!
-}
-
-input WordCountCreateOneWithoutBookInput {
-  create: WordCountCreateWithoutBookInput
-  connect: WordCountWhereUniqueInput
-}
-
-input WordCountCreateWithoutBookInput {
-  wordCount: Int!
+  countAccuracy: String
+  countType: String
 }
 
 """An edge in a connection."""
@@ -664,8 +909,14 @@ type WordCountEdge {
 enum WordCountOrderByInput {
   id_ASC
   id_DESC
+  isbn10_ASC
+  isbn10_DESC
   wordCount_ASC
   wordCount_DESC
+  countAccuracy_ASC
+  countAccuracy_DESC
+  countType_ASC
+  countType_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -674,7 +925,10 @@ enum WordCountOrderByInput {
 
 type WordCountPreviousValues {
   id: ID!
+  isbn10: String!
   wordCount: Int!
+  countAccuracy: String
+  countType: String
 }
 
 type WordCountSubscriptionPayload {
@@ -717,30 +971,17 @@ input WordCountSubscriptionWhereInput {
 }
 
 input WordCountUpdateInput {
+  isbn10: String
   wordCount: Int
-  book: BookUpdateOneRequiredWithoutWordCountInput
+  countAccuracy: String
+  countType: String
 }
 
 input WordCountUpdateManyMutationInput {
+  isbn10: String
   wordCount: Int
-}
-
-input WordCountUpdateOneWithoutBookInput {
-  create: WordCountCreateWithoutBookInput
-  connect: WordCountWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: WordCountUpdateWithoutBookDataInput
-  upsert: WordCountUpsertWithoutBookInput
-}
-
-input WordCountUpdateWithoutBookDataInput {
-  wordCount: Int
-}
-
-input WordCountUpsertWithoutBookInput {
-  update: WordCountUpdateWithoutBookDataInput!
-  create: WordCountCreateWithoutBookInput!
+  countAccuracy: String
+  countType: String
 }
 
 input WordCountWhereInput {
@@ -792,6 +1033,46 @@ input WordCountWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  isbn10: String
+
+  """All values that are not equal to given value."""
+  isbn10_not: String
+
+  """All values that are contained in given list."""
+  isbn10_in: [String!]
+
+  """All values that are not contained in given list."""
+  isbn10_not_in: [String!]
+
+  """All values less than the given value."""
+  isbn10_lt: String
+
+  """All values less than or equal the given value."""
+  isbn10_lte: String
+
+  """All values greater than the given value."""
+  isbn10_gt: String
+
+  """All values greater than or equal the given value."""
+  isbn10_gte: String
+
+  """All values containing the given string."""
+  isbn10_contains: String
+
+  """All values not containing the given string."""
+  isbn10_not_contains: String
+
+  """All values starting with the given string."""
+  isbn10_starts_with: String
+
+  """All values not starting with the given string."""
+  isbn10_not_starts_with: String
+
+  """All values ending with the given string."""
+  isbn10_ends_with: String
+
+  """All values not ending with the given string."""
+  isbn10_not_ends_with: String
   wordCount: Int
 
   """All values that are not equal to given value."""
@@ -814,7 +1095,86 @@ input WordCountWhereInput {
 
   """All values greater than or equal the given value."""
   wordCount_gte: Int
-  book: BookWhereInput
+  countAccuracy: String
+
+  """All values that are not equal to given value."""
+  countAccuracy_not: String
+
+  """All values that are contained in given list."""
+  countAccuracy_in: [String!]
+
+  """All values that are not contained in given list."""
+  countAccuracy_not_in: [String!]
+
+  """All values less than the given value."""
+  countAccuracy_lt: String
+
+  """All values less than or equal the given value."""
+  countAccuracy_lte: String
+
+  """All values greater than the given value."""
+  countAccuracy_gt: String
+
+  """All values greater than or equal the given value."""
+  countAccuracy_gte: String
+
+  """All values containing the given string."""
+  countAccuracy_contains: String
+
+  """All values not containing the given string."""
+  countAccuracy_not_contains: String
+
+  """All values starting with the given string."""
+  countAccuracy_starts_with: String
+
+  """All values not starting with the given string."""
+  countAccuracy_not_starts_with: String
+
+  """All values ending with the given string."""
+  countAccuracy_ends_with: String
+
+  """All values not ending with the given string."""
+  countAccuracy_not_ends_with: String
+  countType: String
+
+  """All values that are not equal to given value."""
+  countType_not: String
+
+  """All values that are contained in given list."""
+  countType_in: [String!]
+
+  """All values that are not contained in given list."""
+  countType_not_in: [String!]
+
+  """All values less than the given value."""
+  countType_lt: String
+
+  """All values less than or equal the given value."""
+  countType_lte: String
+
+  """All values greater than the given value."""
+  countType_gt: String
+
+  """All values greater than or equal the given value."""
+  countType_gte: String
+
+  """All values containing the given string."""
+  countType_contains: String
+
+  """All values not containing the given string."""
+  countType_not_contains: String
+
+  """All values starting with the given string."""
+  countType_starts_with: String
+
+  """All values not starting with the given string."""
+  countType_not_starts_with: String
+
+  """All values ending with the given string."""
+  countType_ends_with: String
+
+  """All values not ending with the given string."""
+  countType_not_ends_with: String
 }
 
 input WordCountWhereUniqueInput {
