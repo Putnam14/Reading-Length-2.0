@@ -8,8 +8,8 @@ const Mutations = {
         }
       },
       info
-    ); // Makes sure item is returned upon creation);
-    return item;
+    ); // Makes sure book is returned upon creation);
+    return book;
   }
 };
 
