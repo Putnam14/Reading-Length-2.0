@@ -8,7 +8,7 @@ type Book {
   description: String
   publishDate: DateTime
   pageCount: Int
-  related: [String!]
+  related: [String]
 }
 type WordCount {
   id: ID! @unique
