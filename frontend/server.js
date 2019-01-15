@@ -9,6 +9,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const route = pathMatch()
 const matchWPM = route('/wpm/:id')
+const matchISBN = route('/book/isbn-:isbn')
 
 app.prepare().then(() => {
   createServer((req, res) => {
@@ -18,9 +19,12 @@ app.prepare().then(() => {
       pathname = pathname.slice(0, -1)
     }
     const paramsWPM = matchWPM(pathname)
+    const paramsISBN = matchISBN(pathname)
     if (paramsWPM) {
       // assign the `query` into the params
       app.render(req, res, '/wpm', Object.assign(paramsWPM, query))
+    } else if (paramsISBN) {
+      app.render(req, res, '/book', Object.assign(paramsISBN, query))
     } else if (trailingSlash) {
       app.render(req, res, pathname, query)
     } else {
