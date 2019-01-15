@@ -1,6 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import gql from 'graphql-tag'
+import { Query } from 'react-apollo'
+import Error from './ErrorMessage'
 import Search from './Search'
 import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
@@ -20,6 +23,30 @@ const bookQuery = {
   countAccurracy: 'Estimate',
   countType: 'audiobook length',
 }
+
+const BOOK_FROM_ISBN_QUERY = gql`
+  query BOOK_FROM_ISBN_QUERY($isbn: String!) {
+    book(where: { isbn10: $isbn }) {
+      isbn10
+      isbn13
+      name
+      author
+      image
+      description
+      publishDate
+      pageCount
+      related
+    }
+  }
+`
+const WORDCOUNT_QUERY = gql`
+  query WORDCOUNT_QUERY($isbn: String!) {
+    wordCounts(where: { isbn10: $isbn }) {
+      isbn10
+      name
+    }
+  }
+`
 
 const calcTime = (wpm, wordCount) => {
   const minsToRead = wordCount / wpm
@@ -102,116 +129,128 @@ class BookPage extends React.Component {
     } = this.state
     const { hours: avgHrs, minutes: avgMins } = calcTime(250, wordCount)
     return (
-      <BookStyles>
-        <div className="above-the-fold">
-          <div className="container">
-            <div className="book-cover">
-              <img src={bookCover} alt={bookTitle} />
-            </div>
-            <div className="reading-info">
-              <div className="info-container">
-                <h1>{bookTitle}</h1>
-                <p>
-                  The average reader will spend <b>{avgHrs} hours</b> and{' '}
-                  <b>{avgMins} minutes</b> reading <em>{bookTitle}</em> at 250
-                  WPM (words per minute).
-                </p>
-                <hr />
-                {hours || minutes ? (
-                  <div className="results">
-                    <p>
-                      This should take you around{' '}
-                      <strong>
-                        {hours} hour
-                        {hours > 1 ? 's' : ''}
-                      </strong>{' '}
-                      and{' '}
-                      <strong>
-                        {minutes} minute
-                        {minutes > 1 ? 's' : ''}
-                      </strong>{' '}
-                      to read.
-                    </p>
-                    <button type="button" onClick={this.resetUserResults}>
-                      Reset
-                    </button>
+      <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn: this.props.isbn }}>
+        {({ error, loading, data }) => {
+          if (error) return <Error error={error} />
+          if (loading) return <p>Loading...</p>
+          if (!data.book) return <p>No item found for {this.props.isbn}</p>
+          const { book } = data
+          // Wordcount Query
+          return (
+            <BookStyles>
+              <Search />
+              <div className="above-the-fold">
+                <div className="container">
+                  <div className="book-cover">
+                    <img src={book.image} alt={book.name} />
                   </div>
-                ) : (
-                  <form>
-                    <label>
-                      Find out how fast you can read this by entering your
-                      reading speed.
-                    </label>
-                    <div>
-                      <input
-                        type="number"
-                        id="userWPM"
-                        placeholder="250"
-                        value={wpm}
-                        onChange={this.handleChange}
-                      />
-                      <button type="submit" onClick={this.calcUserTime}>
-                        Estimate
-                      </button>
+                  <div className="reading-info">
+                    <div className="info-container">
+                      <h1>{book.name}</h1>
+                      <p>
+                        The average reader will spend <b>{avgHrs} hours</b> and{' '}
+                        <b>{avgMins} minutes</b> reading <em>{book.name}</em> at
+                        250 WPM (words per minute).
+                      </p>
+                      <hr />
+                      {hours || minutes ? (
+                        <div className="results">
+                          <p>
+                            This should take you around{' '}
+                            <strong>
+                              {hours} hour
+                              {hours > 1 ? 's' : ''}
+                            </strong>{' '}
+                            and{' '}
+                            <strong>
+                              {minutes} minute
+                              {minutes > 1 ? 's' : ''}
+                            </strong>{' '}
+                            to read.
+                          </p>
+                          <button type="button" onClick={this.resetUserResults}>
+                            Reset
+                          </button>
+                        </div>
+                      ) : (
+                        <form>
+                          <label>
+                            Find out how fast you can read this by entering your
+                            reading speed.
+                          </label>
+                          <div>
+                            <input
+                              type="number"
+                              id="userWPM"
+                              placeholder="250"
+                              value={wpm}
+                              onChange={this.handleChange}
+                            />
+                            <button type="submit" onClick={this.calcUserTime}>
+                              Estimate
+                            </button>
+                          </div>
+                        </form>
+                      )}
                     </div>
-                  </form>
-                )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <Inner>
-          <div className="book-info">
-            <div className="attribution">
-              <div>
-                <strong>Author</strong>
-                <p>{bookAuthor}</p>
-              </div>
-              <div>
-                <strong>Word Count</strong>
-                <p>{wordCount} words</p>
-                <small>
-                  {countAccurracy} from {countType}
-                </small>
-              </div>
-              <div>
-                <strong>Price</strong>
-                <p>Amazon: $15.99</p>
-                <p>Powell's: $12.99</p>
-              </div>
-              <div>
-                <strong>Pages</strong>
-                <p>{pages} pages</p>
-              </div>
-            </div>
-            <div className="description">
-              <div className="desc-text">
-                <div dangerouslySetInnerHTML={{ __html: bookDescription }} />
-              </div>
-              <div className="amazon-link">
-                <a href={`https://www.amazon.com/dp/${isbn10}?tag=readleng-20`}>
-                  View more on Amazon
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="related-titles">
-            <h3>You might also like</h3>
-            <div>
-              <p>Book One</p>
-            </div>
-            <div>
-              <p>Book Two</p>
-            </div>
-            <div>
-              <p>Book Three</p>
-            </div>
-            <div>
-              <p>Book Four</p>
-            </div>
-          </div>
-        </Inner>
-      </BookStyles>
+              <Inner>
+                <div className="book-info">
+                  <div className="attribution">
+                    <div>
+                      <strong>Author</strong>
+                      <p>{book.author}</p>
+                    </div>
+                    <div>
+                      <strong>Word Count</strong>
+                      <p>{book.wordCount.wordCount} words</p>
+                      <small>
+                        {countAccurracy} from {countType}
+                      </small>
+                    </div>
+                    <div>
+                      <strong>Price</strong>
+                      <p>Amazon: $15.99</p>
+                      <p>Powell's: $12.99</p>
+                    </div>
+                    <div>
+                      <strong>Pages</strong>
+                      <p>{book.pageCount} pages</p>
+                    </div>
+                  </div>
+                  <div className="description">
+                    <div className="desc-text">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: book.escription }}
+                      />
+                    </div>
+                    <div className="amazon-link">
+                      <a
+                        href={`https://www.amazon.com/dp/${
+                          book.isbn10
+                        }?tag=readleng-20`}
+                      >
+                        View more on Amazon
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="related-titles">
+                  <h3>You might also like</h3>
+                  {/* Related Query here */}
+                  {book.related.map(val => (
+                    <div>
+                      <p>{val}</p>
+                    </div>
+                  ))}
+                </div>
+              </Inner>
+            </BookStyles>
+          )
+        }}
+      </Query>
     )
   }
 }
