@@ -15,6 +15,7 @@ type Mutation {
 # Get data
 type Query {
     book(where: BookWhereUniqueInput!): Book
+    bookSearch(kw: String!): [BookIndex]
     wordCounts(where: WordCountWhereInput!): [WordCount]!
     bookPreview(where: BookPreviewWhereInput!): BookPreview
 }
