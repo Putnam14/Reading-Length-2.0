@@ -10,6 +10,12 @@ type Book {
   pageCount: Int
   related: [String]
 }
+type BookIndex {
+  id: ID! @unique
+  isbn10: String! @unique
+  name: String!
+  author: String
+}
 type WordCount {
   id: ID! @unique
   isbn10: String!
