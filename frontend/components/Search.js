@@ -53,7 +53,7 @@ class Search extends React.Component {
 
   render() {
     resetIdCounter()
-    const { items, loading } = this.state
+    const { items, loading, input } = this.state
     return (
       <SearchStyles>
         <hr />
@@ -85,6 +85,7 @@ class Search extends React.Component {
                             type: 'search',
                             placeholder: 'Book title or author...',
                             id: 'search',
+                            value: input,
                             className: loading ? 'loading' : '',
                             onChange: e => {
                               e.persist()
