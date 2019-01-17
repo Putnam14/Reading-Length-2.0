@@ -77,39 +77,43 @@ class Search extends React.Component {
                 {client => (
                   <form className="searchForm" onSubmit={this.handleSubmit}>
                     <label htmlFor="search">Search for any book</label>
-                    <div>
-                      <input
-                        type="search"
-                        {...getInputProps({
-                          type: 'search',
-                          placeholder: 'Book title or author...',
-                          id: 'search',
-                          className: loading ? 'loading' : '',
-                          onChange: e => {
-                            e.persist()
-                            this.onChange(e, client)
-                          },
-                        })}
-                      />
-                      <button type="submit">Search!</button>
+                    <div className="notLabel">
+                      <div className="inputs">
+                        <input
+                          type="search"
+                          {...getInputProps({
+                            type: 'search',
+                            placeholder: 'Book title or author...',
+                            id: 'search',
+                            className: loading ? 'loading' : '',
+                            onChange: e => {
+                              e.persist()
+                              this.onChange(e, client)
+                            },
+                          })}
+                        />
+                        <button type="submit">Search!</button>
+                      </div>
+                      <div className="dropdown">
+                        {isOpen && (
+                          <DropDown>
+                            {items.map((item, index) => (
+                              <DropDownItem
+                                {...getItemProps({ item })}
+                                key={item.isbn10}
+                                highlighted={index === highlightedIndex}
+                              >
+                                {item.name} - {item.author}
+                              </DropDownItem>
+                            ))}
+                            {!inputValue && closeMenu()}
+                          </DropDown>
+                        )}
+                      </div>
                     </div>
                   </form>
                 )}
               </ApolloConsumer>
-              {isOpen && (
-                <DropDown>
-                  {items.map((item, index) => (
-                    <DropDownItem
-                      {...getItemProps({ item })}
-                      key={item.id}
-                      highlighted={index === highlightedIndex}
-                    >
-                      {item.name} - {item.author}
-                    </DropDownItem>
-                  ))}
-                  {!inputValue && closeMenu()}
-                </DropDown>
-              )}
             </div>
           )}
         </Downshift>

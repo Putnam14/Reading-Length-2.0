@@ -34,7 +34,7 @@ const glow = keyframes`
 `
 
 const SearchStyles = styled.div`
-  max-width: 600px;
+  width: 600px;
   margin: 0 auto;
   .searchForm {
     width: 100%;
@@ -44,7 +44,10 @@ const SearchStyles = styled.div`
       font-weight: 700;
       margin-right: 2rem;
     }
-    div {
+    .notLabel {
+      position: relative;
+    }
+    .inputs {
       display: flex;
       input {
         flex-grow: 2;
