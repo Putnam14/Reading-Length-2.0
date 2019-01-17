@@ -36,21 +36,29 @@ class Search extends React.Component {
     })
   }, 350)
 
-  routeToBook = item => {
-    if (item.isbn10) {
-      Router.push({ pathname: `/book/isbn-${item.isbn10}` })
-    } else {
-      console.log(this.state.input)
+  handleStateChange = changes => {
+    if (changes.selectedItem) {
+      const isbn = changes.selectedItem.isbn10
+      Router.push({ pathname: `/book/isbn-${isbn}` })
+    } else if (changes.inputValue) {
+      this.setState({ input: changes.inputValue })
     }
+  }
+
+  handleSubmit = e => {
+    e.preventDefault()
+    const { input } = this.state
+    console.log(input)
   }
 
   render() {
     resetIdCounter()
+    const { items, loading } = this.state
     return (
       <SearchStyles>
         <hr />
         <Downshift
-          onChange={this.routeToBook}
+          onStateChange={this.handleStateChange}
           itemToString={item => (item === null ? '' : item.name)}
         >
           {({
@@ -67,7 +75,7 @@ class Search extends React.Component {
             instead of it firing off at page load */}
               <ApolloConsumer>
                 {client => (
-                  <form className="searchForm" onSubmit={this.routeToBook}>
+                  <form className="searchForm" onSubmit={this.handleSubmit}>
                     <label htmlFor="search">Search for any book</label>
                     <div>
                       <input
@@ -76,7 +84,7 @@ class Search extends React.Component {
                           type: 'search',
                           placeholder: 'Book title or author...',
                           id: 'search',
-                          className: this.state.loading ? 'loading' : '',
+                          className: loading ? 'loading' : '',
                           onChange: e => {
                             e.persist()
                             this.onChange(e, client)
@@ -90,7 +98,7 @@ class Search extends React.Component {
               </ApolloConsumer>
               {isOpen && (
                 <DropDown>
-                  {this.state.items.map((item, index) => (
+                  {items.map((item, index) => (
                     <DropDownItem
                       {...getItemProps({ item })}
                       key={item.id}
