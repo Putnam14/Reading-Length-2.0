@@ -5,6 +5,7 @@ import { ApolloConsumer } from 'react-apollo'
 import debounce from 'lodash.debounce'
 import gql from 'graphql-tag'
 import SearchStyles, { DropDown, DropDownItem } from './styles/SearchStyles'
+import validISBN from '../lib/isbnValidator'
 
 const SEARCH_KEYWORDS_QUERY = gql`
   query SEARCH_KEYWORDS_QUERY($kw: String!) {
@@ -12,6 +13,14 @@ const SEARCH_KEYWORDS_QUERY = gql`
       isbn10
       name
       author
+    }
+  }
+`
+
+const FIND_NEW_BOOK = gql`
+  query FIND_NEW_BOOK($searchTerm: String!) {
+    findNewBook(searchTerm: $searchTerm) {
+      isbn10
     }
   }
 `
@@ -37,18 +46,38 @@ class Search extends React.Component {
   }, 350)
 
   handleStateChange = changes => {
+    // Handle selecting the search results
     if (changes.selectedItem) {
+      // Could do an ISBN check here
       const isbn = changes.selectedItem.isbn10
-      Router.push({ pathname: `/book/isbn-${isbn}` })
+      this.routeToBook(isbn)
     } else if (changes.inputValue) {
       this.setState({ input: changes.inputValue })
     }
   }
 
-  handleSubmit = e => {
+  // Handle an enter on the form (Also, check out this curry)
+  handleSubmit = client => async e => {
     e.preventDefault()
     const { input } = this.state
-    console.log(input)
+    if (input) {
+      // If valid ISBN route to that book page
+      if (validISBN(input)) {
+        this.routeToBook(input)
+      } else {
+        const res = await client.query({
+          query: FIND_NEW_BOOK,
+          variables: { searchTerm: input },
+        })
+        if (!res.data.findNewBook) throw new Error('Could not find that book!')
+        const { isbn10 } = res.data.findNewBook
+        this.routeToBook(isbn10)
+      }
+    }
+  }
+
+  routeToBook = isbn => {
+    Router.push({ pathname: `/book/isbn-${isbn}` })
   }
 
   render() {
@@ -75,7 +104,10 @@ class Search extends React.Component {
             instead of it firing off at page load */}
               <ApolloConsumer>
                 {client => (
-                  <form className="searchForm" onSubmit={this.handleSubmit}>
+                  <form
+                    className="searchForm"
+                    onSubmit={this.handleSubmit(client)}
+                  >
                     <label htmlFor="search">Search for any book</label>
                     <div className="notLabel">
                       <div className="inputs">
