@@ -2,13 +2,13 @@ const Mutations = {
   async createBook(parent, args, ctx, info) {
     const book = await ctx.db.mutation.createBook(
       {
-        // mutation creates a promise
         data: {
           ...args
         }
       },
       info
-    ); // Makes sure book is returned upon creation);
+    );
+    // const bookIndex = await ctx.db.mutation.createBookIndex()
     return book;
   }
 };
