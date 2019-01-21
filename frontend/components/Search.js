@@ -30,14 +30,13 @@ class Search extends React.Component {
     loading: false,
   }
 
-  onChange = debounce(async (e, client) => {
+  searchQuery = debounce(async (value, client) => {
     this.setState({ loading: true })
     const res = await client.query({
       query: SEARCH_KEYWORDS_QUERY,
-      variables: { kw: e.target.value },
+      variables: { kw: value },
     })
     this.setState({
-      input: e.target.value,
       items: res.data.bookSearch,
       loading: false,
     })
@@ -72,6 +71,15 @@ class Search extends React.Component {
         const isbn10 = res.data.findNewBook
         this.routeToBook(isbn10)
       }
+    }
+  }
+
+  handleChange = (e, client) => {
+    this.setState({
+      input: e.val || '',
+    })
+    if (e.val) {
+      this.searchQuery(e.val, client)
     }
   }
 
@@ -119,8 +127,7 @@ class Search extends React.Component {
                             value: input,
                             className: loading ? 'loading' : '',
                             onChange: e => {
-                              e.persist()
-                              this.onChange(e, client)
+                              this.handleChange({ val: e.target.value }, client)
                             },
                           })}
                         />
