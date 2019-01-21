@@ -45,7 +45,6 @@ exports.newBookSearch = async (searchTerm, ctx) => {
     related,
     relatedDetails
   } = amazonResults;
-
   // Check if book already has a BookPreview
   const bookPreview = await ctx.db.query.bookPreview({ where: { isbn10 } });
   if (bookPreview) {
@@ -72,7 +71,6 @@ exports.newBookSearch = async (searchTerm, ctx) => {
   // Take a look if book exists in BookIndex
   const existsInIndex = await ctx.db.query.bookIndexes({ where: { isbn10 } });
   if (!existsInIndex[0]) {
-    console.log("Adding to book db");
     // Add to Book
     const addedToDB = await ctx.db.mutation.createBook({
       data: {
