@@ -23,7 +23,7 @@ const Query = {
     const { searchTerm } = args;
     // Following returns an ISBN
     const res = await newBookSearch(searchTerm, ctx, info);
-    return ctx.db.query.bookIndex({ where: { isbn10: res } }, info);
+    return res;
   }
 };
 

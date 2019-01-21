@@ -19,9 +19,7 @@ const SEARCH_KEYWORDS_QUERY = gql`
 
 const FIND_NEW_BOOK = gql`
   query FIND_NEW_BOOK($searchTerm: String!) {
-    findNewBook(searchTerm: $searchTerm) {
-      isbn10
-    }
+    findNewBook(searchTerm: $searchTerm)
   }
 `
 
@@ -69,8 +67,9 @@ class Search extends React.Component {
           query: FIND_NEW_BOOK,
           variables: { searchTerm: input },
         })
+        console.log(res)
         if (!res.data.findNewBook) throw new Error('Could not find that book!')
-        const { isbn10 } = res.data.findNewBook
+        const isbn10 = res.data.findNewBook
         this.routeToBook(isbn10)
       }
     }
