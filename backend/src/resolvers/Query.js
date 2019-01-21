@@ -1,5 +1,5 @@
 const { forwardTo } = require("prisma-binding");
-const searchAPI = require("../lib/searchAPI");
+const { newBookSearch } = require("../lib/searchAPI");
 
 const Query = {
   book: forwardTo("db"),
@@ -21,8 +21,8 @@ const Query = {
   },
   async findNewBook(parent, args, ctx, info) {
     const { searchTerm } = args;
-    const res = await searchAPI(searchTerm, ctx);
-    console.log(res);
+    // Following returns an ISBN
+    const res = await newBookSearch(searchTerm, ctx, info);
     return ctx.db.query.bookIndex({ where: { isbn10: res } }, info);
   }
 };
