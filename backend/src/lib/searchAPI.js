@@ -1,8 +1,10 @@
 const { bookSearch } = require("./api/amazon");
 
-exports.newBookSearch = async (searchTerm, ctx, info) => {
+exports.newBookSearch = async (searchTerm, ctx) => {
   // Query Amazon API for search term
   const amazonSearch = await bookSearch(searchTerm);
+  if (typeof amazonSearch.ItemAttributes.Author === "object")
+    amazonSearch.ItemAttributes.Author = amazonSearch.ItemAttributes.Author[0];
   // Parse results
   const amazonResults = {
     isbn10: amazonSearch.ASIN,
@@ -48,13 +50,13 @@ exports.newBookSearch = async (searchTerm, ctx, info) => {
   const bookPreview = await ctx.db.query.bookPreview({ where: { isbn10 } });
   if (bookPreview) {
     if (!bookPreview.image) {
-      ctx.db.mutation.updateBookPreview(
-        { data: { image }, where: { id: bookPreview.id } },
-        info
-      );
+      ctx.db.mutation.updateBookPreview({
+        data: { image },
+        where: { id: bookPreview.id }
+      });
     }
   } else {
-    ctx.db.mutation.createBookPreview({ data: { isbn10, name, image } }, info);
+    ctx.db.mutation.createBookPreview({ data: { isbn10, name, image } });
   }
 
   // Add related books to bookPreview
@@ -63,37 +65,34 @@ exports.newBookSearch = async (searchTerm, ctx, info) => {
       where: { isbn10: detail.isbn10 }
     });
     if (!detailPreview) {
-      ctx.db.mutation.createBookPreview({ data: { ...detail } }, info);
+      ctx.db.mutation.createBookPreview({ data: { ...detail } });
     }
   });
 
   // Take a look if book exists in BookIndex
   const existsInIndex = await ctx.db.query.bookIndexes({ where: { isbn10 } });
   if (!existsInIndex[0]) {
+    console.log("Adding to book db");
     // Add to Book
-    const addedBook = await ctx.db.mutation.createBook(
-      {
-        data: {
-          isbn10,
-          name,
-          author,
-          image,
-          description,
-          publishDate,
-          pageCount,
-          related: { set: related }
-        }
-      },
-      info
-    );
-    console.log(addedBook);
-    // Add to BookIndex
-    if (addedBook) {
-      ctx.db.mutation.createBookIndex({ data: { isbn10, name, author } });
+    const addedToDB = await ctx.db.mutation.createBook({
+      data: {
+        isbn10,
+        name,
+        author,
+        image,
+        description,
+        publishDate,
+        pageCount,
+        related: { set: related }
+      }
+    });
+    if (addedToDB) {
+      ctx.db.mutation.createBookIndex({
+        data: { isbn10, name, author }
+      });
     }
   }
 
   // Find the audiobook length
-  console.log(isbn10);
   return isbn10;
 };
