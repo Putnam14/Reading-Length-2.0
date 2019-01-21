@@ -9,7 +9,7 @@ import validISBN from '../lib/isbnValidator'
 
 const SEARCH_KEYWORDS_QUERY = gql`
   query SEARCH_KEYWORDS_QUERY($kw: String!) {
-    bookSearch(kw: $kw) {
+    bookSearch(first: 3, kw: $kw) {
       isbn10
       name
       author
