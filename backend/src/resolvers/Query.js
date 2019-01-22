@@ -2,7 +2,22 @@ const { forwardTo } = require("prisma-binding");
 const { newBookSearch } = require("../lib/searchAPI");
 
 const Query = {
-  book: forwardTo("db"),
+  async findBook(parent, args, ctx, info) {
+    const { isbn10 } = args;
+    return ctx.db.query.book({ where: { isbn10 } }, info).then(res => {
+      if (res) {
+        console.log(res);
+        return res;
+      }
+      return newBookSearch(isbn10, ctx, info)
+        .then(async res => {
+          return ctx.db.query.book({ where: { res } }, info);
+        })
+        .catch(err => {
+          throw new Error("Oops?");
+        });
+    });
+  },
   wordCounts: forwardTo("db"),
   bookPreview: forwardTo("db"),
   bookSearch(parent, args, ctx, info) {

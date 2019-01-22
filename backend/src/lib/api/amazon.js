@@ -15,14 +15,21 @@ const client = new Piranhax(
 client.setLocale("US");
 
 exports.bookSearch = searchTerm => {
+  console.log(searchTerm);
   return client
     .ItemSearch("Books", {
       Keywords: searchTerm,
       ResponseGroup: ["Large,AlternateVersions"]
     })
     .then(results => {
-      // Return the first item
-      return results.data().Item[0];
+      if (Array.isArray(results.data().Item)) {
+        const book = results.data().Item.find(item => {
+          console.log(item);
+          return item.ItemAttributes.ISBN;
+        });
+        return book;
+      }
+      return results.data().Item;
     })
     .catch(err => {
       console.log("Why error?", err);
