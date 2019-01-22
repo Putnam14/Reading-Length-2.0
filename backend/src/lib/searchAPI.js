@@ -1,12 +1,9 @@
 const { bookSearch } = require("./api/amazon");
 
-exports.newBookSearch = async (searchTerm, ctx) => {
-  // Query Amazon API for search term
-  const amazonSearch = await bookSearch(searchTerm);
+const handleAmazonResponse = (amazonSearch, ctx) => {
   if (typeof amazonSearch.ItemAttributes.Author === "object")
     amazonSearch.ItemAttributes.Author = amazonSearch.ItemAttributes.Author[0];
-  // Parse results
-  const amazonResults = {
+  const results = {
     isbn10: amazonSearch.ASIN,
     name: amazonSearch.ItemAttributes.Title,
     author: amazonSearch.ItemAttributes.Author,
@@ -14,37 +11,32 @@ exports.newBookSearch = async (searchTerm, ctx) => {
     description: amazonSearch.EditorialReviews.EditorialReview.Content,
     publishDate: amazonSearch.ItemAttributes.PublicationDate,
     pageCount: parseInt(amazonSearch.ItemAttributes.NumberOfPages),
-    related: [
-      amazonSearch.SimilarProducts.SimilarProduct[0].ASIN,
-      amazonSearch.SimilarProducts.SimilarProduct[1].ASIN,
-      amazonSearch.SimilarProducts.SimilarProduct[2].ASIN
-    ],
-    relatedDetails: [
-      {
-        name: amazonSearch.SimilarProducts.SimilarProduct[0].Title,
-        isbn10: amazonSearch.SimilarProducts.SimilarProduct[0].ASIN
-      },
-      {
-        name: amazonSearch.SimilarProducts.SimilarProduct[1].Title,
-        isbn10: amazonSearch.SimilarProducts.SimilarProduct[1].ASIN
-      },
-      {
-        name: amazonSearch.SimilarProducts.SimilarProduct[2].Title,
-        isbn10: amazonSearch.SimilarProducts.SimilarProduct[2].ASIN
-      }
-    ]
+    related: []
   };
-  const {
-    isbn10,
-    name,
-    author,
-    image,
-    description,
-    publishDate,
-    pageCount,
-    related,
-    relatedDetails
-  } = amazonResults;
+  if (amazonSearch.SimilarProducts) {
+    amazonSearch.SimilarProducts.SimilarProduct.map((product, i) => {
+      if (i < 4) {
+        results.related.push(product.ASIN);
+        handleRelatedBooks(product.Title, product.ASIN, ctx);
+      }
+    });
+  }
+  const { isbn10, name, image } = results;
+  addBookPreview(isbn10, name, image, ctx);
+  return results;
+};
+
+const handleRelatedBooks = async (name, isbn10, ctx) => {
+  // Add related books to bookPreview
+  const detailPreview = await ctx.db.query.bookPreview({
+    where: { isbn10 }
+  });
+  if (!detailPreview) {
+    ctx.db.mutation.createBookPreview({ data: { name, isbn10 } });
+  }
+};
+
+const addBookPreview = async (isbn10, name, image, ctx) => {
   // Check if book already has a BookPreview
   const bookPreview = await ctx.db.query.bookPreview({ where: { isbn10 } });
   if (bookPreview) {
@@ -57,40 +49,44 @@ exports.newBookSearch = async (searchTerm, ctx) => {
   } else {
     ctx.db.mutation.createBookPreview({ data: { isbn10, name, image } });
   }
+};
 
-  // Add related books to bookPreview
-  relatedDetails.forEach(async detail => {
-    const detailPreview = await ctx.db.query.bookPreview({
-      where: { isbn10: detail.isbn10 }
-    });
-    if (!detailPreview) {
-      ctx.db.mutation.createBookPreview({ data: { ...detail } });
+const getBookIndex = (isbn10, ctx) => {
+  return ctx.db.query.bookIndexes({ where: { isbn10 } });
+};
+
+const addBookIndex = (isbn10, name, author, ctx) => {
+  return ctx.db.mutation.createBookIndex({
+    data: { isbn10, name, author }
+  });
+};
+
+const addBook = async (results, ctx) => {
+  const { isbn10, name, author, related } = results;
+  const addedToDB = await ctx.db.mutation.createBook({
+    data: {
+      ...results,
+      related: { set: related }
     }
   });
+  if (addedToDB) return addBookIndex(isbn10, name, author, ctx);
+};
 
-  // Take a look if book exists in BookIndex
-  const existsInIndex = await ctx.db.query.bookIndexes({ where: { isbn10 } });
-  if (!existsInIndex[0]) {
-    // Add to Book
-    const addedToDB = await ctx.db.mutation.createBook({
-      data: {
-        isbn10,
-        name,
-        author,
-        image,
-        description,
-        publishDate,
-        pageCount,
-        related: { set: related }
-      }
-    });
-    if (addedToDB) {
-      ctx.db.mutation.createBookIndex({
-        data: { isbn10, name, author }
-      });
-    }
-  }
+const handleBook = async (results, ctx) => {
+  const index = await getBookIndex(results.isbn10, ctx);
+  if (!index[0]) return addBook(results, ctx);
+  return index[0];
+};
 
-  // Find the audiobook length
-  return isbn10;
+exports.newBookSearch = async (searchTerm, ctx) => {
+  // Query Amazon API for search term
+  const amazonSearch = await bookSearch(searchTerm, ctx);
+  // Parse results
+  const amazonResults = handleAmazonResponse(amazonSearch, ctx);
+
+  return handleBook(amazonResults, ctx).then(result => {
+    console.log(result);
+    const { isbn10 } = result;
+    return isbn10;
+  });
 };
