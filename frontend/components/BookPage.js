@@ -10,25 +10,9 @@ import Inner from './Inner'
 import RelatedBook from './RelatedBook'
 import WordCount from './WordCount'
 
-const bookQuery = {
-  isbn10: '0553593714',
-  bookCover: 'https://images-na.ssl-images-amazon.com/images/I/518dkA0JEpL.jpg',
-  bookTitle: 'A Game of Thrones',
-  bookAuthor: 'George R.R. Martin',
-  bookDescription: `<b>NOW THE ACCLAIMED HBO SERIES GAME OF THRONES—THE MASTERPIECE THAT BECAME A CULTURAL PHENOMENON</b>
- <p>Winter is coming. Such is the stern motto of House Stark, the northernmost of the fiefdoms that owe allegiance to King Robert Baratheon in far-off King’s Landing. There Eddard Stark of Winterfell rules in Robert’s name. There his family dwells in peace and comfort: his proud wife, Catelyn; his sons Robb, Brandon, and Rickon; his daughters Sansa and Arya; and his bastard son, Jon Snow. Far to the north, behind the towering Wall, lie savage Wildings and worse—unnatural things relegated to myth during the centuries-long summer, but proving all too real and all too deadly in the turning of the season.</p>
-   <p>Yet a more immediate threat lurks to the south, where Jon Arryn, the Hand of the King, has died under mysterious circumstances. Now Robert is riding north to Winterfell, bringing his queen, the lovely but cold Cersei, his son, the cruel, vainglorious Prince Joffrey, and the queen’s brothers Jaime and Tyrion of the powerful and wealthy House Lannister—the first a swordsman without equal, the second a dwarf whose stunted stature belies a brilliant mind. All are heading for Winterfell and a fateful encounter that will change the course of kingdoms.</p>
-   <p>Meanwhile, across the Narrow Sea, Prince Viserys, heir of the fallen House Targaryen, which once ruled all of Westeros, schemes to reclaim the throne with an army of barbarian Dothraki—whose loyalty he will purchase in the only coin left to him: his beautiful yet innocent sister, Daenerys.</p>`,
-  publishDate: '2011-03-22',
-  pages: '864',
-  wordCount: '293625',
-  countAccurracy: 'Estimate',
-  countType: 'audiobook length',
-}
-
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
-    book(where: { isbn10: $isbn }) {
+    findBook(isbn10: $isbn) {
       isbn10
       isbn13
       name
@@ -52,16 +36,6 @@ class BookPage extends React.Component {
   constructor(props) {
     super()
     this.state = {
-      isbn10: bookQuery.isbn10,
-      bookCover: bookQuery.bookCover,
-      bookTitle: bookQuery.bookTitle,
-      bookAuthor: bookQuery.bookAuthor,
-      bookDescription: bookQuery.bookDescription,
-      publishDate: bookQuery.publishDate,
-      pages: bookQuery.pages,
-      wordCount: bookQuery.wordCount,
-      countAccurracy: bookQuery.countAccurracy,
-      countType: bookQuery.countType,
       user: {
         wpm: 250,
         results: {
@@ -106,29 +80,20 @@ class BookPage extends React.Component {
 
   render() {
     const {
-      isbn10,
-      bookCover,
-      bookTitle,
-      bookAuthor,
-      bookDescription,
-      publishDate,
-      pages,
-      wordCount,
-      countAccurracy,
-      countType,
       user: {
         wpm,
         results: { hours, minutes },
       },
     } = this.state
-    const { hours: avgHrs, minutes: avgMins } = calcTime(250, wordCount)
+    const { hours: avgHrs, minutes: avgMins } = calcTime(250, 1000)
     return (
       <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn: this.props.isbn }}>
         {({ error, loading, data }) => {
           if (error) return <Error error={error} />
           if (loading) return <p>Loading...</p>
-          if (!data.book) return <p>No item found for {this.props.isbn}</p>
-          const { book } = data
+          console.log(data)
+          if (!data.findBook) return <p>No item found for {this.props.isbn}</p>
+          const book = data.findBook
           // Wordcount Query
           return (
             <BookStyles>
@@ -199,10 +164,10 @@ class BookPage extends React.Component {
                     </div>
                     <div>
                       <strong>Word Count</strong>
-                      <WordCount isbn={isbn10} />
+                      {/* <WordCount isbn={isbn10} />
                       <small>
                         {countAccurracy} from {countType}
-                      </small>
+                      </small> */}
                     </div>
                     <div>
                       <strong>Price</strong>
@@ -235,9 +200,7 @@ class BookPage extends React.Component {
                   <h3>You might also like</h3>
                   {/* Related Query here */}
                   {book.related.map(val => (
-                    <div>
-                      <RelatedBook isbn={val} />
-                    </div>
+                    <RelatedBook isbn={val} />
                   ))}
                 </div>
               </Inner>
