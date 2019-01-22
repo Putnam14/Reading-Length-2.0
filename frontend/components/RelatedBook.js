@@ -24,7 +24,7 @@ class RelatedBook extends React.Component {
           const { bookPreview } = data
           // Wordcount Query
           return (
-            <div>
+            <div key={isbn}>
               <img src={bookPreview.image} alt={bookPreview.name} />
               <p>{bookPreview.name}</p>
             </div>
