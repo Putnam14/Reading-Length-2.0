@@ -1,0 +1,15 @@
+{
+    "name": "reading-length",
+    "alias": "staging.readinglength.com",
+    "env": {
+        "NODE_ENV": "staging"
+    },
+    "version": 2,
+    "builds": [
+        { "src": "package.json", "use": "@now/next" }
+    ],
+    "routes": [
+        { "src": "/book/isbn-(?<isbn>[^/]*)", "dest": "/book?isbn=$isbn" },
+        { "src": "/wpm/(?<id>[^/]*)", "dest": "/wpm?id=$id" }
+    ]
+  }
