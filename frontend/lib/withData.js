@@ -2,12 +2,17 @@
 import withApollo from 'next-with-apollo'
 // You can import Apollo along with any 'link's you want, or do this
 import ApolloClient from 'apollo-boost'
-import { prismaEndpoint } from '../config'
+import { devEndpoint, betaEndpoint, prodEndpoint } from '../config'
 
 function createClient({ headers }) {
   return new ApolloClient({
     // Can change this if you have different Yoga APIs for dev, prod
-    uri: prismaEndpoint,
+    uri:
+      process.env.NODE_ENV === 'prod'
+        ? prodEndpoint
+        : process.env.NODE_ENV === 'staging'
+        ? betaEndpoint
+        : devEndpoint,
     request: operation => {
       operation.setContext({
         fetchOptions: {
