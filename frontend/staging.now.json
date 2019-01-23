@@ -1,5 +1,5 @@
 {
-    "name": "reading-length",
+    "name": "reading-length-staging",
     "alias": "staging.readinglength.com",
     "env": {
         "NODE_ENV": "staging"

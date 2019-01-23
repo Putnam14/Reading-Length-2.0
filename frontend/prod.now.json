@@ -1,5 +1,5 @@
 {
-    "name": "reading-length",
+    "name": "reading-length-prod",
     "alias": "prod.readinglength.com",
     "env": {
         "NODE_ENV": "prod"
