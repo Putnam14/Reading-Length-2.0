@@ -33,14 +33,17 @@ server.express.use(async (req, res, next) => {
   next();
 }); */
 
-server.start(
-  {
-    cors: {
-      // Requirements for accessing endpoint
-      credentials: true,
-      origin: true
-    }
+const options = {
+  cors: {
+    // Requirements for accessing endpoint
+    credentials: true,
+    origin: true
   },
+  playground: process.env.NODE_ENV === "production" ? false : "/playground"
+};
+
+server.start(
+  options,
   //Callback function
   deets => {
     console.log(`Server is now running on port http:/localhost:${deets.port}`);
