@@ -2,16 +2,16 @@
 import withApollo from 'next-with-apollo'
 // You can import Apollo along with any 'link's you want, or do this
 import ApolloClient from 'apollo-boost'
-import { devEndpoint, betaEndpoint, prodEndpoint } from '../config'
+import { devEndpoint, stagingEndpoint, prodEndpoint } from '../config'
 
 function createClient({ headers }) {
   return new ApolloClient({
     // Can change this if you have different Yoga APIs for dev, prod
     uri:
-      process.env.NODE_ENV === 'prod'
+      process.env.NODE_ENV === 'production'
         ? prodEndpoint
         : process.env.NODE_ENV === 'staging'
-        ? betaEndpoint
+        ? stagingEndpoint
         : devEndpoint,
     request: operation => {
       operation.setContext({
