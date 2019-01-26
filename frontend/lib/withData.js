@@ -8,9 +8,9 @@ function createClient({ headers }) {
   return new ApolloClient({
     // Can change this if you have different Yoga APIs for dev, prod
     uri:
-      process.env.NODE_ENV === 'production'
+      process.env.SERVER === 'production'
         ? prodEndpoint
-        : process.env.NODE_ENV === 'staging'
+        : process.env.SERVER === 'staging'
         ? stagingEndpoint
         : devEndpoint,
     request: operation => {

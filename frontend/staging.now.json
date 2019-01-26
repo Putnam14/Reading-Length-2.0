@@ -2,7 +2,7 @@
     "name": "reading-length-staging",
     "alias": "staging.readinglength.com",
     "env": {
-        "NODE_ENV": "staging"
+        "SERVER": "staging"
     },
     "version": 2,
     "builds": [

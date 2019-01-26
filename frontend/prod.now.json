@@ -2,7 +2,7 @@
     "name": "reading-length-prod",
     "alias": "prod.readinglength.com",
     "env": {
-        "NODE_ENV": "production"
+        "SERVER": "production"
     },
     "version": 2,
     "builds": [
