@@ -66,10 +66,9 @@ class Search extends React.Component {
           query: FIND_NEW_BOOK,
           variables: { searchTerm: input },
         })
-        console.log(res)
         if (!res.data.findNewBook) throw new Error('Could not find that book!')
         const isbn10 = res.data.findNewBook
-        this.routeToBook(isbn10)
+        if (validISBN(isbn10)) this.routeToBook(isbn10)
       }
     }
   }

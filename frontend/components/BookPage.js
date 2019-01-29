@@ -1,6 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import Error from './ErrorMessage'
@@ -33,7 +31,7 @@ const calcTime = (wpm, wordCount) => {
   return { hours, minutes }
 }
 class BookPage extends React.Component {
-  constructor(props) {
+  constructor() {
     super()
     this.state = {
       user: {
@@ -86,15 +84,14 @@ class BookPage extends React.Component {
       },
     } = this.state
     const { hours: avgHrs, minutes: avgMins } = calcTime(250, 1000)
+    const { isbn } = this.props
     return (
-      <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn: this.props.isbn }}>
+      <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn }}>
         {({ error, loading, data }) => {
           if (error) return <Error error={error} />
           if (loading) return <p>Loading...</p>
-          console.log(data)
-          if (!data.findBook) return <p>No item found for {this.props.isbn}</p>
+          if (!data.findBook) return <p>No item found for {isbn}</p>
           const book = data.findBook
-          // Wordcount Query
           return (
             <BookStyles>
               <Search />
@@ -133,7 +130,7 @@ class BookPage extends React.Component {
                         </div>
                       ) : (
                         <form>
-                          <label>
+                          <label htmlFor="userWPM">
                             Find out how fast you can read this by entering your
                             reading speed.
                           </label>
@@ -182,7 +179,7 @@ class BookPage extends React.Component {
                   <div className="description">
                     <div className="desc-text">
                       <div
-                        dangerouslySetInnerHTML={{ __html: book.escription }}
+                        dangerouslySetInnerHTML={{ __html: book.description }}
                       />
                     </div>
                     <div className="amazon-link">
@@ -196,13 +193,14 @@ class BookPage extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="related-titles">
-                  <h3>You might also like</h3>
-                  {/* Related Query here */}
-                  {book.related.map(val => (
-                    <RelatedBook isbn={val} />
-                  ))}
-                </div>
+                {book.related && (
+                  <div className="related-titles">
+                    <h3>You might also like</h3>
+                    {book.related.map(val => (
+                      <RelatedBook isbn={val} />
+                    ))}
+                  </div>
+                )}
               </Inner>
             </BookStyles>
           )

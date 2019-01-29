@@ -5,10 +5,7 @@ const Query = {
   async findBook(parent, args, ctx, info) {
     const { isbn10 } = args;
     return ctx.db.query.book({ where: { isbn10 } }, info).then(res => {
-      if (res) {
-        console.log(res);
-        return res;
-      }
+      if (res) return res;
       return newBookSearch(isbn10, ctx, info)
         .then(async res => {
           return ctx.db.query.book({ where: { res } }, info);
