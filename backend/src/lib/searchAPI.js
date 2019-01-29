@@ -1,6 +1,6 @@
-const { bookSearch } = require("./api/amazon");
+const { bookSearch, audibleSearch } = require("./api/amazon");
 
-const handleAmazonResponse = (amazonSearch, ctx) => {
+const handleAmazonResponse = async (amazonSearch, ctx) => {
   if (typeof amazonSearch.ItemAttributes.Author === "object")
     amazonSearch.ItemAttributes.Author = amazonSearch.ItemAttributes.Author[0];
   const results = {
@@ -20,6 +20,31 @@ const handleAmazonResponse = (amazonSearch, ctx) => {
         handleRelatedBooks(product.Title, product.ASIN, ctx);
       }
     });
+  }
+  if (amazonSearch.AlternateVersions) {
+    const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
+      alternate => {
+        return (
+          alternate.Binding === "Audible Audio Edition" ||
+          alternate.Binding === "Audible Audiobook"
+        );
+      }
+    );
+    if (audibleVersion) {
+      const runtime = await audibleSearch(audibleVersion.ASIN);
+      // Check if runtime is realistic (some books are split up into multiple audiobooks)
+      if (runtime > results.pageCount) {
+        const wordCount = runtime * 145;
+        ctx.db.mutation.createWordCount({
+          data: {
+            isbn10: results.isbn10,
+            wordCount,
+            countAccuracy: "Estimate",
+            countType: "Audiobook"
+          }
+        });
+      }
+    }
   }
   const { isbn10, name, image } = results;
   addBookPreview(isbn10, name, image, ctx);
@@ -69,7 +94,8 @@ const addBook = async (results, ctx) => {
       related: { set: related }
     }
   });
-  if (addedToDB) return addBookIndex(isbn10, name, author, ctx);
+  if (addedToDB)
+    return addBookIndex(isbn10, name.toLowerCase(), author.toLowerCase(), ctx);
 };
 
 const handleBook = async (results, ctx) => {
@@ -82,10 +108,9 @@ exports.newBookSearch = async (searchTerm, ctx) => {
   // Query Amazon API for search term
   const amazonSearch = await bookSearch(searchTerm, ctx);
   // Parse results
-  const amazonResults = handleAmazonResponse(amazonSearch, ctx);
+  const amazonResults = await handleAmazonResponse(amazonSearch, ctx);
 
   return handleBook(amazonResults, ctx).then(result => {
-    console.log(result);
     const { isbn10 } = result;
     return isbn10;
   });
