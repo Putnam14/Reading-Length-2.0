@@ -7,10 +7,10 @@
   "author": "Bridger Putnam",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=dev node server.js",
+    "dev": "NODE_ENV=development yarn next build && yarn run start",
     "build": "next build",
     "now-build": "next build",
-    "start": "NODE_ENV=dev node server.js",
+    "start": "NODE_ENV=development node server.js",
     "test": "NODE_ENV=test jest --watch"
   },
   "dependencies": {
