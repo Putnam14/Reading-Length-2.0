@@ -11,7 +11,7 @@ const Query = {
           return ctx.db.query.book({ where: { res } }, info);
         })
         .catch(err => {
-          throw new Error("Oops?");
+          throw new Error("Could not find that book. Sorry!", err);
         });
     });
   },
