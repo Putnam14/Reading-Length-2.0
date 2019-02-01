@@ -30,14 +30,18 @@ exports.bookSearch = async searchTerm => {
       return results.data().Item;
     })
     .catch(err => {
-      console.log("Why error?", err);
+      throw new Error(err);
     });
   return result;
 };
 
 exports.audibleSearch = async audibleASIN => {
-  const result = await client
-    .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
-    .then(result => result.data().Item.ItemAttributes.RunningTime._);
-  return result;
+  try {
+    const result = await client
+      .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
+      .then(result => result.data().Item.ItemAttributes.RunningTime._);
+    return result;
+  } catch (err) {
+    throw new Error(err);
+  }
 };
