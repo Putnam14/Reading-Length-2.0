@@ -1,26 +1,6 @@
 const { bookSearch, audibleSearch } = require("./api/amazon");
 
-const handleAmazonResponse = async (amazonSearch, ctx) => {
-  if (typeof amazonSearch.ItemAttributes.Author === "object")
-    amazonSearch.ItemAttributes.Author = amazonSearch.ItemAttributes.Author[0];
-  const results = {
-    isbn10: amazonSearch.ASIN,
-    name: amazonSearch.ItemAttributes.Title,
-    author: amazonSearch.ItemAttributes.Author,
-    image: amazonSearch.LargeImage.URL,
-    description: amazonSearch.EditorialReviews.EditorialReview.Content,
-    publishDate: amazonSearch.ItemAttributes.PublicationDate,
-    pageCount: parseInt(amazonSearch.ItemAttributes.NumberOfPages),
-    related: []
-  };
-  if (amazonSearch.SimilarProducts) {
-    amazonSearch.SimilarProducts.SimilarProduct.map((product, i) => {
-      if (i < 4) {
-        results.related.push(product.ASIN);
-        handleRelatedBooks(product.Title, product.ASIN, ctx);
-      }
-    });
-  }
+const handleAudibleResponse = async (amazonSearch, ctx) => {
   if (amazonSearch.AlternateVersions) {
     const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
       alternate => {
@@ -46,6 +26,30 @@ const handleAmazonResponse = async (amazonSearch, ctx) => {
       }
     }
   }
+};
+
+const handleAmazonResponse = async (amazonSearch, ctx) => {
+  if (typeof amazonSearch.ItemAttributes.Author === "object")
+    amazonSearch.ItemAttributes.Author = amazonSearch.ItemAttributes.Author[0];
+  const results = {
+    isbn10: amazonSearch.ASIN,
+    name: amazonSearch.ItemAttributes.Title,
+    author: amazonSearch.ItemAttributes.Author,
+    image: amazonSearch.LargeImage.URL,
+    description: amazonSearch.EditorialReviews.EditorialReview.Content,
+    publishDate: amazonSearch.ItemAttributes.PublicationDate,
+    pageCount: parseInt(amazonSearch.ItemAttributes.NumberOfPages),
+    related: []
+  };
+  if (amazonSearch.SimilarProducts) {
+    amazonSearch.SimilarProducts.SimilarProduct.map((product, i) => {
+      if (i < 4) {
+        results.related.push(product.ASIN);
+        handleRelatedBooks(product.Title, product.ASIN, ctx);
+      }
+    });
+  }
+  handleAudibleResponse(amazonSearch, ctx);
   const { isbn10, name, image } = results;
   addBookPreview(isbn10, name, image, ctx);
   return results;
