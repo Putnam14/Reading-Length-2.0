@@ -27,6 +27,7 @@ class Search extends React.Component {
   state = {
     items: [],
     input: '',
+    error: '',
     loading: false,
   }
 
@@ -62,13 +63,23 @@ class Search extends React.Component {
       if (validISBN(input)) {
         this.routeToBook(input)
       } else {
-        const res = await client.query({
-          query: FIND_NEW_BOOK,
-          variables: { searchTerm: input },
-        })
-        if (!res.data.findNewBook) throw new Error('Could not find that book!')
-        const isbn10 = res.data.findNewBook
-        if (validISBN(isbn10)) this.routeToBook(isbn10)
+        try {
+          const res = await client.query({
+            query: FIND_NEW_BOOK,
+            variables: { searchTerm: input },
+          })
+          if (!res.data.findNewBook)
+            throw new Error('Could not find that book!')
+          const isbn10 = res.data.findNewBook
+          if (validISBN(isbn10)) this.routeToBook(isbn10)
+        } catch (err) {
+          this.setState(prevState => {
+            const newState = { ...prevState }
+            newState.error = err.message
+            return newState
+          })
+          throw new Error(`Error caught at search: ${err.message}`)
+        }
       }
     }
   }
@@ -148,6 +159,9 @@ class Search extends React.Component {
                           </DropDown>
                         )}
                       </div>
+                      {this.state.error && (
+                        <p>Could not find that book. Try again!</p>
+                      )}
                     </div>
                   </form>
                 )}
