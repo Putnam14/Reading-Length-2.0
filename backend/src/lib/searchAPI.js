@@ -1,29 +1,63 @@
-const { bookSearch } = require("./api/amazon");
+const { bookSearch, audibleSearch } = require("./api/amazon");
 
-const handleAmazonResponse = (amazonSearch, ctx) => {
-  if (typeof amazonSearch.ItemAttributes.Author === "object")
-    amazonSearch.ItemAttributes.Author = amazonSearch.ItemAttributes.Author[0];
-  const results = {
-    isbn10: amazonSearch.ASIN,
-    name: amazonSearch.ItemAttributes.Title,
-    author: amazonSearch.ItemAttributes.Author,
-    image: amazonSearch.LargeImage.URL,
-    description: amazonSearch.EditorialReviews.EditorialReview.Content,
-    publishDate: amazonSearch.ItemAttributes.PublicationDate,
-    pageCount: parseInt(amazonSearch.ItemAttributes.NumberOfPages),
-    related: []
-  };
-  if (amazonSearch.SimilarProducts) {
-    amazonSearch.SimilarProducts.SimilarProduct.map((product, i) => {
-      if (i < 4) {
-        results.related.push(product.ASIN);
-        handleRelatedBooks(product.Title, product.ASIN, ctx);
+const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
+  if (amazonSearch.AlternateVersions) {
+    const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
+      alternate => {
+        return (
+          alternate.Binding === "Audible Audio Edition" ||
+          alternate.Binding === "Audible Audiobook"
+        );
       }
-    });
+    );
+    if (audibleVersion) {
+      const runtime = await audibleSearch(audibleVersion.ASIN);
+      // Check if runtime is realistic (some books are split up into multiple audiobooks)
+      if (runtime > pages) {
+        const wordCount = runtime * 145;
+        ctx.db.mutation.createWordCount({
+          data: {
+            isbn10: isbn,
+            wordCount,
+            countAccuracy: "Estimate",
+            countType: "Audiobook"
+          }
+        });
+      }
+    }
   }
-  const { isbn10, name, image } = results;
-  addBookPreview(isbn10, name, image, ctx);
-  return results;
+};
+
+const handleAmazonResponse = async (amazonSearch, ctx) => {
+  try {
+    if (typeof amazonSearch.ItemAttributes.Author === "object")
+      amazonSearch.ItemAttributes.Author =
+        amazonSearch.ItemAttributes.Author[0];
+    const results = {
+      isbn10: amazonSearch.ASIN,
+      name: amazonSearch.ItemAttributes.Title,
+      author: amazonSearch.ItemAttributes.Author,
+      image: amazonSearch.LargeImage.URL,
+      description: amazonSearch.EditorialReviews.EditorialReview.Content,
+      publishDate: amazonSearch.ItemAttributes.PublicationDate,
+      pageCount: parseInt(amazonSearch.ItemAttributes.NumberOfPages),
+      related: []
+    };
+    if (amazonSearch.SimilarProducts) {
+      amazonSearch.SimilarProducts.SimilarProduct.map((product, i) => {
+        if (i < 4) {
+          results.related.push(product.ASIN);
+          handleRelatedBooks(product.Title, product.ASIN, ctx);
+        }
+      });
+    }
+    handleAudibleResponse(amazonSearch, results.isbn10, results.pageCount, ctx);
+    const { isbn10, name, image } = results;
+    addBookPreview(isbn10, name, image, ctx);
+    return results;
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 const handleRelatedBooks = async (name, isbn10, ctx) => {
@@ -69,7 +103,8 @@ const addBook = async (results, ctx) => {
       related: { set: related }
     }
   });
-  if (addedToDB) return addBookIndex(isbn10, name, author, ctx);
+  if (addedToDB)
+    return addBookIndex(isbn10, name.toLowerCase(), author.toLowerCase(), ctx);
 };
 
 const handleBook = async (results, ctx) => {
@@ -79,14 +114,21 @@ const handleBook = async (results, ctx) => {
 };
 
 exports.newBookSearch = async (searchTerm, ctx) => {
-  // Query Amazon API for search term
-  const amazonSearch = await bookSearch(searchTerm, ctx);
-  // Parse results
-  const amazonResults = handleAmazonResponse(amazonSearch, ctx);
+  try {
+    // Query Amazon API for search term
+    const amazonSearch = await bookSearch(searchTerm, ctx);
+    // Parse results
+    const amazonResults = await handleAmazonResponse(amazonSearch, ctx);
 
-  return handleBook(amazonResults, ctx).then(result => {
-    console.log(result);
-    const { isbn10 } = result;
-    return isbn10;
-  });
+    return handleBook(amazonResults, ctx)
+      .then(result => {
+        const { isbn10 } = result;
+        return isbn10;
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  } catch (err) {
+    throw new Error(err);
+  }
 };

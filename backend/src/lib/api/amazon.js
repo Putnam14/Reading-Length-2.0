@@ -14,9 +14,8 @@ const client = new Piranhax(
 
 client.setLocale("US");
 
-exports.bookSearch = searchTerm => {
-  console.log(searchTerm);
-  return client
+exports.bookSearch = async searchTerm => {
+  const result = await client
     .ItemSearch("Books", {
       Keywords: searchTerm,
       ResponseGroup: ["Large,AlternateVersions"]
@@ -24,7 +23,6 @@ exports.bookSearch = searchTerm => {
     .then(results => {
       if (Array.isArray(results.data().Item)) {
         const book = results.data().Item.find(item => {
-          console.log(item);
           return item.ItemAttributes.ISBN;
         });
         return book;
@@ -32,6 +30,18 @@ exports.bookSearch = searchTerm => {
       return results.data().Item;
     })
     .catch(err => {
-      console.log("Why error?", err);
+      throw new Error(err);
     });
+  return result;
+};
+
+exports.audibleSearch = async audibleASIN => {
+  try {
+    const result = await client
+      .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
+      .then(result => result.data().Item.ItemAttributes.RunningTime._);
+    return result;
+  } catch (err) {
+    throw new Error(err);
+  }
 };

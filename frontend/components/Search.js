@@ -27,6 +27,7 @@ class Search extends React.Component {
   state = {
     items: [],
     input: '',
+    error: '',
     loading: false,
   }
 
@@ -62,14 +63,23 @@ class Search extends React.Component {
       if (validISBN(input)) {
         this.routeToBook(input)
       } else {
-        const res = await client.query({
-          query: FIND_NEW_BOOK,
-          variables: { searchTerm: input },
-        })
-        console.log(res)
-        if (!res.data.findNewBook) throw new Error('Could not find that book!')
-        const isbn10 = res.data.findNewBook
-        this.routeToBook(isbn10)
+        try {
+          const res = await client.query({
+            query: FIND_NEW_BOOK,
+            variables: { searchTerm: input },
+          })
+          if (!res.data.findNewBook)
+            throw new Error('Could not find that book!')
+          const isbn10 = res.data.findNewBook
+          if (validISBN(isbn10)) this.routeToBook(isbn10)
+        } catch (err) {
+          this.setState(prevState => {
+            const newState = { ...prevState }
+            newState.error = err.message
+            return newState
+          })
+          throw new Error(`Error caught at search: ${err.message}`)
+        }
       }
     }
   }
@@ -89,7 +99,7 @@ class Search extends React.Component {
 
   render() {
     resetIdCounter()
-    const { items, loading, input } = this.state
+    const { items, loading, input, error } = this.state
     return (
       <SearchStyles>
         <hr />
@@ -115,41 +125,48 @@ class Search extends React.Component {
                     className="searchForm"
                     onSubmit={this.handleSubmit(client)}
                   >
-                    <label htmlFor="search">Search for any book</label>
-                    <div className="notLabel">
-                      <div className="inputs">
-                        <input
-                          type="search"
-                          {...getInputProps({
-                            type: 'search',
-                            placeholder: 'Book title or author...',
-                            id: 'search',
-                            value: input,
-                            className: loading ? 'loading' : '',
-                            onChange: e => {
-                              this.handleChange({ val: e.target.value }, client)
-                            },
-                          })}
-                        />
-                        <button type="submit">Search!</button>
+                    <label htmlFor="search">
+                      Search for any book
+                      <div className="input-container">
+                        <div className="inputs">
+                          <input
+                            type="search"
+                            id="search"
+                            {...getInputProps({
+                              type: 'search',
+                              placeholder: 'Book title or author...',
+                              value: input,
+                              className: loading ? 'loading' : '',
+                              onChange: e => {
+                                this.handleChange(
+                                  { val: e.target.value },
+                                  client
+                                )
+                              },
+                            })}
+                          />
+                          <button type="submit">Search!</button>
+                        </div>
+                        <div className="dropdown">
+                          {isOpen && (
+                            <DropDown>
+                              {items.map((item, index) => (
+                                <DropDownItem
+                                  {...getItemProps({ item })}
+                                  key={item.isbn10}
+                                  highlighted={index === highlightedIndex}
+                                >
+                                  {item.name} - {item.author}
+                                </DropDownItem>
+                              ))}
+                              {(!inputValue || items.length === 0) &&
+                                closeMenu()}
+                            </DropDown>
+                          )}
+                        </div>
                       </div>
-                      <div className="dropdown">
-                        {isOpen && (
-                          <DropDown>
-                            {items.map((item, index) => (
-                              <DropDownItem
-                                {...getItemProps({ item })}
-                                key={item.isbn10}
-                                highlighted={index === highlightedIndex}
-                              >
-                                {item.name} - {item.author}
-                              </DropDownItem>
-                            ))}
-                            {!inputValue && closeMenu()}
-                          </DropDown>
-                        )}
-                      </div>
-                    </div>
+                      {error && <p>Could not find that book. Try again!</p>}
+                    </label>
                   </form>
                 )}
               </ApolloConsumer>

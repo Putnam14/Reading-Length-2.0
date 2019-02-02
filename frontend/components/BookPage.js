@@ -1,6 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import Error from './ErrorMessage'
@@ -8,7 +6,7 @@ import Search from './Search'
 import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
 import RelatedBook from './RelatedBook'
-import WordCount from './WordCount'
+import WordCountInfo from './WordCountInfo'
 
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
@@ -19,21 +17,24 @@ const BOOK_FROM_ISBN_QUERY = gql`
       author
       image
       description
-      publishDate
       pageCount
       related
     }
   }
 `
 
-const calcTime = (wpm, wordCount) => {
-  const minsToRead = wordCount / wpm
-  const hours = Math.floor(minsToRead / 60)
-  const minutes = Math.round(minsToRead % 60)
-  return { hours, minutes }
-}
+const WORDCOUNT_QUERY = gql`
+  query WORDCOUNT_QUERY($isbn: String!) {
+    wordCounts(where: { isbn10: $isbn }) {
+      wordCount
+      countAccuracy
+      countType
+    }
+  }
+`
+
 class BookPage extends React.Component {
-  constructor(props) {
+  constructor() {
     super()
     this.state = {
       user: {
@@ -46,167 +47,102 @@ class BookPage extends React.Component {
     }
   }
 
-  handleChange = e => {
-    const newWPM = e.target.value
+  safelySetState = (toUpdate, val) => {
     this.setState(prevState => {
       const newState = { ...prevState }
-      newState.user.wpm = newWPM
+      newState[toUpdate] = val
       return newState
     })
-  }
-
-  calcUserTime = e => {
-    e.preventDefault()
-    const {
-      user: { wpm },
-      wordCount,
-    } = this.state
-    const { hours, minutes } = calcTime(wpm, wordCount)
-    this.setUserResults(hours, minutes)
-  }
-
-  setUserResults = (hours, minutes) => {
-    this.setState(prevState => {
-      const newState = { ...prevState }
-      newState.user.results.hours = hours
-      newState.user.results.minutes = minutes
-      return newState
-    })
-  }
-
-  resetUserResults = () => {
-    this.setUserResults(0, 0)
   }
 
   render() {
-    const {
-      user: {
-        wpm,
-        results: { hours, minutes },
-      },
-    } = this.state
-    const { hours: avgHrs, minutes: avgMins } = calcTime(250, 1000)
+    const { isbn } = this.props
     return (
-      <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn: this.props.isbn }}>
-        {({ error, loading, data }) => {
-          if (error) return <Error error={error} />
-          if (loading) return <p>Loading...</p>
-          console.log(data)
-          if (!data.findBook) return <p>No item found for {this.props.isbn}</p>
-          const book = data.findBook
-          // Wordcount Query
-          return (
-            <BookStyles>
-              <Search />
-              <div className="above-the-fold">
-                <div className="container">
-                  <div className="book-cover">
-                    <img src={book.image} alt={book.name} />
+      <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn }}>
+        {({ error: errorOne, loading: loadingOne, data: dataOne }) => (
+          <Query query={WORDCOUNT_QUERY} variables={{ isbn }}>
+            {({ error: errorTwo, loading: loadingTwo, data: dataTwo }) => {
+              if (errorOne || errorTwo) return <Error error={errorTwo} />
+              if (loadingOne || loadingTwo) return <p>Loading...</p>
+              const book = dataOne.findBook
+              book.isbn = book.isbn10
+              const wordcountData = dataTwo.wordCounts[0]
+              const wordcount = wordcountData
+                ? wordcountData.wordCount
+                : book.pageCount * 250
+              const { user } = this.state
+              return (
+                <BookStyles>
+                  <Search />
+                  <div className="above-the-fold">
+                    <div className="container">
+                      <div className="book-cover">
+                        <img src={book.image} alt={book.name} />
+                      </div>
+                      <div className="reading-info">
+                        <WordCountInfo
+                          user={user}
+                          book={book}
+                          wordCount={wordcount}
+                          safelySetState={this.safelySetState}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="reading-info">
-                    <div className="info-container">
-                      <h1>{book.name}</h1>
-                      <p>
-                        The average reader will spend <b>{avgHrs} hours</b> and{' '}
-                        <b>{avgMins} minutes</b> reading <em>{book.name}</em> at
-                        250 WPM (words per minute).
-                      </p>
-                      <hr />
-                      {hours || minutes ? (
-                        <div className="results">
-                          <p>
-                            This should take you around{' '}
-                            <strong>
-                              {hours} hour
-                              {hours > 1 ? 's' : ''}
-                            </strong>{' '}
-                            and{' '}
-                            <strong>
-                              {minutes} minute
-                              {minutes > 1 ? 's' : ''}
-                            </strong>{' '}
-                            to read.
-                          </p>
-                          <button type="button" onClick={this.resetUserResults}>
-                            Reset
-                          </button>
+                  <Inner>
+                    <div className="book-info">
+                      <div className="attribution">
+                        <div>
+                          <strong>Author</strong>
+                          <p>{book.author}</p>
                         </div>
-                      ) : (
-                        <form>
-                          <label>
-                            Find out how fast you can read this by entering your
-                            reading speed.
-                          </label>
-                          <div>
-                            <input
-                              type="number"
-                              id="userWPM"
-                              placeholder="250"
-                              value={wpm}
-                              onChange={this.handleChange}
-                            />
-                            <button type="submit" onClick={this.calcUserTime}>
-                              Estimate
-                            </button>
-                          </div>
-                        </form>
-                      )}
+                        <div>
+                          <strong>Price</strong>
+                          <p>Amazon: $15.99</p>
+                          <p>Powell's: $12.99</p>
+                        </div>
+                        <div>
+                          <strong>Word Count</strong>
+                          <p>{wordcount} words</p>
+                        </div>
+                        <div>
+                          <strong>Pages</strong>
+                          <p>{book.pageCount} pages</p>
+                        </div>
+                      </div>
+                      <div className="description">
+                        <div className="desc-text">
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: book.description,
+                            }}
+                          />
+                        </div>
+                        <div className="amazon-link">
+                          <a
+                            href={`https://www.amazon.com/dp/${
+                              book.isbn
+                            }?tag=readleng-20`}
+                          >
+                            View more on Amazon
+                          </a>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <Inner>
-                <div className="book-info">
-                  <div className="attribution">
-                    <div>
-                      <strong>Author</strong>
-                      <p>{book.author}</p>
-                    </div>
-                    <div>
-                      <strong>Word Count</strong>
-                      {/* <WordCount isbn={isbn10} />
-                      <small>
-                        {countAccurracy} from {countType}
-                      </small> */}
-                    </div>
-                    <div>
-                      <strong>Price</strong>
-                      <p>Amazon: $15.99</p>
-                      <p>Powell's: $12.99</p>
-                    </div>
-                    <div>
-                      <strong>Pages</strong>
-                      <p>{book.pageCount} pages</p>
-                    </div>
-                  </div>
-                  <div className="description">
-                    <div className="desc-text">
-                      <div
-                        dangerouslySetInnerHTML={{ __html: book.escription }}
-                      />
-                    </div>
-                    <div className="amazon-link">
-                      <a
-                        href={`https://www.amazon.com/dp/${
-                          book.isbn10
-                        }?tag=readleng-20`}
-                      >
-                        View more on Amazon
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="related-titles">
-                  <h3>You might also like</h3>
-                  {/* Related Query here */}
-                  {book.related.map(val => (
-                    <RelatedBook isbn={val} />
-                  ))}
-                </div>
-              </Inner>
-            </BookStyles>
-          )
-        }}
+                    {book.related && (
+                      <div className="related-titles">
+                        <h3>You might also like</h3>
+                        {book.related.map(val => (
+                          <RelatedBook isbn={val} />
+                        ))}
+                      </div>
+                    )}
+                  </Inner>
+                </BookStyles>
+              )
+            }}
+          </Query>
+        )}
       </Query>
     )
   }
