@@ -13,7 +13,7 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
     if (audibleVersion) {
       const runtime = await audibleSearch(audibleVersion.ASIN);
       // Check if runtime is realistic (some books are split up into multiple audiobooks)
-      if (runtime > pages) {
+      if (runtime > pages || pages < 350) {
         const wordCount = runtime * 145;
         ctx.db.mutation.createWordCount({
           data: {
