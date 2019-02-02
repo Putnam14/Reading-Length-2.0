@@ -84,6 +84,7 @@ class WordCountInfo extends React.Component {
                   type="number"
                   id="userWPM"
                   placeholder="250"
+                  aria-label="Enter your reading speed to calculate how long this will take to read"
                   value={wpm}
                   onChange={e => {
                     e.preventDefault()
