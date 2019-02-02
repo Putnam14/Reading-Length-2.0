@@ -1,7 +1,4 @@
 import React from 'react'
-import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
-import Error from './ErrorMessage'
 
 class WordCountInfo extends React.Component {
   calcUserTime = e => {
@@ -79,25 +76,27 @@ class WordCountInfo extends React.Component {
           </div>
         ) : (
           <form>
-            <label>
+            <label htmlFor="userWPM">
               Find out how fast you can read this by entering your reading
               speed.
+              <div>
+                <input
+                  type="number"
+                  id="userWPM"
+                  placeholder="250"
+                  label="Find out how fast you can read this by entering your reading
+                speed."
+                  value={wpm}
+                  onChange={e => {
+                    e.preventDefault()
+                    this.newWPM(e.target.value)
+                  }}
+                />
+                <button type="submit" onClick={this.calcUserTime}>
+                  Estimate
+                </button>
+              </div>
             </label>
-            <div>
-              <input
-                type="number"
-                id="userWPM"
-                placeholder="250"
-                value={wpm}
-                onChange={e => {
-                  e.preventDefault()
-                  this.newWPM(e.target.value)
-                }}
-              />
-              <button type="submit" onClick={this.calcUserTime}>
-                Estimate
-              </button>
-            </div>
           </form>
         )}
       </div>

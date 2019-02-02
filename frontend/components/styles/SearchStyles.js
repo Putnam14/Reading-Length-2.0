@@ -4,7 +4,6 @@ const DropDown = styled.div`
   position: absolute;
   width: 100%;
   z-index: 2;
-  border: 1px solid ${props => props.theme.lightgrey};
 `
 
 const DropDownItem = styled.div`
@@ -37,15 +36,16 @@ const SearchStyles = styled.div`
   width: 600px;
   margin: 0 auto;
   .searchForm {
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto 1fr;
     label {
       font-weight: 700;
-      margin-right: 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-column-gap: 2rem;
     }
-    .notLabel {
+    .input-container {
+      display: grid;
       position: relative;
+      grid-template-columns: 1fr;
     }
     .inputs {
       display: flex;
