@@ -7,6 +7,7 @@ import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
 import RelatedBook from './RelatedBook'
 import WordCountInfo from './WordCountInfo'
+import priceFormatter from '../lib/priceFormatter'
 
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
@@ -30,6 +31,11 @@ const WORDCOUNT_QUERY = gql`
       countAccuracy
       countType
     }
+  }
+`
+const PRICE_QUERY = gql`
+  query PRICE_QUERY($isbn: String!) {
+    findPrice(isbn10: $isbn)
   }
 `
 
@@ -61,86 +67,99 @@ class BookPage extends React.Component {
       <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn }}>
         {({ error: errorOne, loading: loadingOne, data: dataOne }) => (
           <Query query={WORDCOUNT_QUERY} variables={{ isbn }}>
-            {({ error: errorTwo, loading: loadingTwo, data: dataTwo }) => {
-              if (errorOne || errorTwo) return <Error error={errorTwo} />
-              if (loadingOne || loadingTwo) return <p>Loading...</p>
-              const book = dataOne.findBook
-              book.isbn = book.isbn10
-              const wordcountData = dataTwo.wordCounts[0]
-              const wordcount = wordcountData
-                ? wordcountData.wordCount
-                : book.pageCount * 250
-              const { user } = this.state
-              return (
-                <BookStyles>
-                  <Search />
-                  <div className="above-the-fold">
-                    <div className="container">
-                      <div className="book-cover">
-                        <img src={book.image} alt={book.name} />
-                      </div>
-                      <div className="reading-info">
-                        <WordCountInfo
-                          user={user}
-                          book={book}
-                          wordCount={wordcount}
-                          safelySetState={this.safelySetState}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <Inner>
-                    <div className="book-info">
-                      <div className="attribution">
-                        <div>
-                          <strong>Author</strong>
-                          <p>{book.author}</p>
-                        </div>
-                        <div>
-                          <strong>Price</strong>
-                          <p>Amazon: $15.99</p>
-                          <p>Powell's: $12.99</p>
-                        </div>
-                        <div>
-                          <strong>Word Count</strong>
-                          <p>{wordcount} words</p>
-                        </div>
-                        <div>
-                          <strong>Pages</strong>
-                          <p>{book.pageCount} pages</p>
+            {({ error: errorTwo, loading: loadingTwo, data: dataTwo }) => (
+              <Query query={PRICE_QUERY} variables={{ isbn }}>
+                {({
+                  error: errorThree,
+                  loading: loadingThree,
+                  data: dataThree,
+                }) => {
+                  if (errorOne) return <Error error={errorOne} />
+                  if (loadingOne) return <p>Loading...</p>
+                  const book = dataOne.findBook
+                  book.isbn = book.isbn10
+                  const wordcountData = dataTwo.wordCounts[0]
+                  const wordcount = wordcountData
+                    ? wordcountData.wordCount
+                    : book.pageCount * 250
+                  const prices = priceFormatter(dataThree.findPrice, isbn)
+                  console.log(prices)
+                  const { user } = this.state
+                  return (
+                    <BookStyles>
+                      <Search />
+                      <div className="above-the-fold">
+                        <div className="container">
+                          <div className="book-cover">
+                            <img src={book.image} alt={book.name} />
+                          </div>
+                          <div className="reading-info">
+                            <WordCountInfo
+                              user={user}
+                              book={book}
+                              wordCount={wordcount}
+                              safelySetState={this.safelySetState}
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div className="description">
-                        <div className="desc-text">
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: book.description,
-                            }}
-                          />
+                      <Inner>
+                        <div className="book-info">
+                          <div className="attribution">
+                            <div>
+                              <strong>Author</strong>
+                              <p>{book.author}</p>
+                            </div>
+                            <div>
+                              <strong>Price</strong>
+                              {prices.map(price => (
+                                <a href={price.affiliateLink}>
+                                  {price.marketplace}: {price.formattedPrice}
+                                </a>
+                              ))}
+                            </div>
+                            <div>
+                              <strong>Word Count</strong>
+                              <p>{wordcount} words</p>
+                            </div>
+                            <div>
+                              <strong>Pages</strong>
+                              <p>{book.pageCount} pages</p>
+                            </div>
+                          </div>
+                          <div className="description">
+                            <div className="desc-text">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: book.description,
+                                }}
+                              />
+                            </div>
+                            <div className="amazon-link">
+                              <a
+                                href={`https://www.amazon.com/dp/${
+                                  book.isbn
+                                }?tag=readleng-20`}
+                              >
+                                View more on Amazon
+                              </a>
+                            </div>
+                          </div>
                         </div>
-                        <div className="amazon-link">
-                          <a
-                            href={`https://www.amazon.com/dp/${
-                              book.isbn
-                            }?tag=readleng-20`}
-                          >
-                            View more on Amazon
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    {book.related && (
-                      <div className="related-titles">
-                        <h3>You might also like</h3>
-                        {book.related.map(val => (
-                          <RelatedBook isbn={val} />
-                        ))}
-                      </div>
-                    )}
-                  </Inner>
-                </BookStyles>
-              )
-            }}
+                        {book.related && (
+                          <div className="related-titles">
+                            <h3>You might also like</h3>
+                            {book.related.map(val => (
+                              <RelatedBook isbn={val} />
+                            ))}
+                          </div>
+                        )}
+                      </Inner>
+                    </BookStyles>
+                  )
+                }}
+              </Query>
+            )}
           </Query>
         )}
       </Query>
