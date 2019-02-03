@@ -132,3 +132,7 @@ exports.newBookSearch = async (searchTerm, ctx) => {
     throw new Error(err);
   }
 };
+
+exports.priceSearch = isbn => {
+  return ["Amazon: 2799", "Powells: 2499"];
+};
