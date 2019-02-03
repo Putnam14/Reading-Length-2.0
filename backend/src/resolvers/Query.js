@@ -1,19 +1,23 @@
 const { forwardTo } = require("prisma-binding");
-const { newBookSearch } = require("../lib/searchAPI");
+const { newBookSearch, priceSearch } = require("../lib/searchAPI");
 
 const Query = {
-  async findBook(parent, args, ctx, info) {
+  findBook(parent, args, ctx, info) {
     const { isbn10 } = args;
     return ctx.db.query.book({ where: { isbn10 } }, info).then(res => {
       if (res) return res;
       return newBookSearch(isbn10, ctx, info)
-        .then(async res => {
+        .then(res => {
           return ctx.db.query.book({ where: { res } }, info);
         })
         .catch(err => {
-          throw new Error("Could not find that book. Sorry!", err);
+          throw new Error(`Could not find book for ISBN ${isbn10}`, err);
         });
     });
+  },
+  findPrice(parent, args, ctx, info) {
+    const { isbn10 } = args;
+    return priceSearch(isbn10);
   },
   wordCounts: forwardTo("db"),
   bookPreview: forwardTo("db"),
