@@ -16,6 +16,7 @@ type Mutation {
 type Query {
     book(where: BookWhereUniqueInput!): Book
     findBook(isbn10: String!): Book
+    findPrice(isbn10: String!): [String]!
     bookSearch(kw: String!, first: Int): [BookIndex]
     findNewBook(searchTerm: String!): String
     wordCounts(where: WordCountWhereInput!): [WordCount]!
