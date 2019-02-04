@@ -145,8 +145,9 @@ exports.priceSearch = async isbn => {
     };
     amazonObject.MSRP = amazonResult.ItemAttributes.ListPrice.Amount;
     amazonObject.currency = amazonResult.ItemAttributes.ListPrice.CurrencyCode;
-    amazonObject.offerPrice =
-      amazonResult.Offers.Offer.OfferListing.Price.Amount;
+    amazonObject.offerPrice = amazonResult.Offers
+      ? amazonResult.Offers.Offer.OfferListing.Price.Amount
+      : amazonObject.MSRP;
     prices.push(amazonObject);
   }
   return prices;
