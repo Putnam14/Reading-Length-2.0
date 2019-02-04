@@ -24,11 +24,11 @@ const DropDownItem = styled.div`
 
 const glow = keyframes`
   from {
-    box-shadow: 0 0 0px yellow;
+    box-shadow: 0 0 0px #337ab7;
   }
 
   to {
-    box-shadow: 0 0 10px 1px yellow;
+    box-shadow: 0 0 10px 1px #337ab7;
   }
 `
 
@@ -49,12 +49,15 @@ const SearchStyles = styled.div`
     }
     .inputs {
       display: flex;
-      input {
-        flex-grow: 2;
+      input,
+      button {
         border: 1px solid #eee;
-        border-radius: 6px 0 0 6px;
         padding: 0.5rem 1rem;
         font-size: 1.5rem;
+      }
+      input {
+        border-radius: 6px 0 0 6px;
+        flex-grow: 2;
         &.loading {
           animation: ${glow} 0.5s ease-in-out infinite alternate;
         }
@@ -65,10 +68,13 @@ const SearchStyles = styled.div`
       }
     }
   }
-  @media (max-width: 480px) {
-    form {
-      grid-template-columns: 1fr;
-      justify-items: center;
+  @media (max-width: 620px) {
+    width: auto;
+    .searchForm {
+      label {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
     }
   }
 `

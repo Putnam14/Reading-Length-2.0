@@ -19,21 +19,19 @@ const WordCountInfoStyles = styled.div`
       background-color: #f8f8f8;
     }
   }
-  form {
-    label {
-      font-weight: 700;
+  label {
+    font-weight: 700;
+  }
+  .input-group {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    input {
+      border-radius: 6px 0 0 6px;
     }
-    .input-group {
-      display: grid;
-      grid-template-columns: auto auto;
-      justify-content: center;
-      input {
-        border-radius: 6px 0 0 6px;
-      }
-      button {
-        border-left: 0;
-        border-radius: 0 6px 6px 0;
-      }
+    button {
+      border-left: 0;
+      border-radius: 0 6px 6px 0;
     }
   }
   .results {
@@ -43,6 +41,20 @@ const WordCountInfoStyles = styled.div`
     button {
       display: block;
       margin: 0 auto;
+    }
+  }
+  @media (max-width: 700px) {
+    h1,
+    label {
+      text-align: center;
+    }
+    label {
+      display: block;
+    }
+    .results {
+      p {
+        text-align: center;
+      }
     }
   }
 `
