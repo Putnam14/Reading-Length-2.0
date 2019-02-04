@@ -64,6 +64,10 @@ const BookStyles = styled.div`
     }
     .book-info {
       grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .description {
+      text-align: left;
     }
   }
 `
