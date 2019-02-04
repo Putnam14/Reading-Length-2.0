@@ -1,4 +1,4 @@
-const { bookSearch, audibleSearch } = require("./api/amazon");
+const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
 
 const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
   if (amazonSearch.AlternateVersions) {
@@ -133,6 +133,21 @@ exports.newBookSearch = async (searchTerm, ctx) => {
   }
 };
 
-exports.priceSearch = isbn => {
-  return ["Amazon: 2799", "Powells: 2499"];
+exports.priceSearch = async isbn => {
+  const prices = [];
+  const amazonResult = await amazonPrices(isbn);
+  if (amazonResult) {
+    const amazonObject = {
+      marketplace: "Amazon",
+      affiliateLink: `https://www.amazon.com/dp/${isbn}?tag=${
+        process.env.AMAZON_AFFILIATE_TAG
+      }`
+    };
+    amazonObject.MSRP = amazonResult.ItemAttributes.ListPrice.Amount;
+    amazonObject.currency = amazonResult.ItemAttributes.ListPrice.CurrencyCode;
+    amazonObject.lowestNewPrice =
+      amazonResult.OfferSummary.LowestNewPrice.Amount;
+    prices.push(amazonObject);
+  }
+  return prices;
 };
