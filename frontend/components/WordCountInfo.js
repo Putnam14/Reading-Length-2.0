@@ -78,7 +78,7 @@ class WordCountInfo extends React.Component {
         ) : (
           <form>
             <label htmlFor="userWPM">
-              How fast can you read this? Enter your reading speed:
+              How fast can you read this? Enter your reading speed here:
               <span className="input-group">
                 <input
                   type="number"
