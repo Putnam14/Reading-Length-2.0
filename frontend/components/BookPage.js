@@ -94,14 +94,12 @@ class BookPage extends React.Component {
                           <div className="book-cover">
                             <img src={book.image} alt={book.name} />
                           </div>
-                          <div className="reading-info">
-                            <WordCountInfo
-                              user={user}
-                              book={book}
-                              wordCount={wordcount}
-                              safelySetState={this.safelySetState}
-                            />
-                          </div>
+                          <WordCountInfo
+                            user={user}
+                            book={book}
+                            wordCount={wordcount}
+                            safelySetState={this.safelySetState}
+                          />
                         </div>
                       </div>
                       <Inner>
