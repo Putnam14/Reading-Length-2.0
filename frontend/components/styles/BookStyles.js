@@ -45,7 +45,7 @@ const BookStyles = styled.div`
         height: 100%;
         width: 100%;
         content: '';
-        background-image: linear-gradient(transparent 70%, white);
+        background-image: linear-gradient(rgba(255, 255, 255, 0) 70%, white);
       }
       .amazon-link {
         text-align: center;
