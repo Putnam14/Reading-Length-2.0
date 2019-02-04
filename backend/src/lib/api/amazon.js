@@ -45,3 +45,19 @@ exports.audibleSearch = async audibleASIN => {
     throw new Error(err);
   }
 };
+
+exports.amazonPrices = async isbn => {
+  try {
+    const result = await client
+      .ItemLookup(isbn, { ResponseGroup: ["Medium,Offers"] })
+      .then(result => {
+        if (result.data()) return result.data().Item;
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+    return result;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
