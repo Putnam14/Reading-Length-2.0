@@ -1,4 +1,5 @@
 import React from 'react'
+import WordCountInfoStyles from './styles/WordCountInfoStyles'
 
 class WordCountInfo extends React.Component {
   calcUserTime = e => {
@@ -47,7 +48,7 @@ class WordCountInfo extends React.Component {
       minutes: averageMinutes,
     } = this.calcReadingTime(250)
     return (
-      <div className="info-container">
+      <WordCountInfoStyles>
         <h1>{book.name}</h1>
         <p>
           The average reader will spend <b>{averageHours} hours</b> and{' '}
@@ -77,9 +78,8 @@ class WordCountInfo extends React.Component {
         ) : (
           <form>
             <label htmlFor="userWPM">
-              Find out how fast you can read this by entering your reading
-              speed.
-              <div>
+              How fast can you read this? Enter your reading speed here:
+              <span className="input-group">
                 <input
                   type="number"
                   id="userWPM"
@@ -91,14 +91,14 @@ class WordCountInfo extends React.Component {
                     this.newWPM(e.target.value)
                   }}
                 />
-                <button type="submit" onClick={this.calcUserTime}>
+                <button type="button" onClick={this.calcUserTime}>
                   Estimate
                 </button>
-              </div>
+              </span>
             </label>
           </form>
         )}
-      </div>
+      </WordCountInfoStyles>
     )
   }
 }
