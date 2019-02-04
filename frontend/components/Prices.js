@@ -9,9 +9,9 @@ class Prices extends React.Component {
       <div>
         <strong>Price</strong>
         {prices.map((price, i) => (
-          <a href={price.affiliateLink}>
-            <p>
-              {price.marketplace}:{' '}
+          <p>
+            {price.marketplace}:{' '}
+            <a href={price.affiliateLink}>
               {priceData[i].MSRP > priceData[i].lowestNewPrice ? (
                 <>
                   <strike>{price.formattedMSRP}</strike> {price.formattedOffer}
@@ -19,8 +19,8 @@ class Prices extends React.Component {
               ) : (
                 price.formattedMSRP
               )}
-            </p>
-          </a>
+            </a>
+          </p>
         ))}
       </div>
     )
