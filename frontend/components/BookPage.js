@@ -38,7 +38,7 @@ const PRICE_QUERY = gql`
     findPrice(isbn10: $isbn) {
       marketplace
       MSRP
-      lowestNewPrice
+      offerPrice
       currency
       affiliateLink
     }

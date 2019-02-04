@@ -14,11 +14,10 @@ const formatMoney = (amount, currency) => {
 
 const priceFormatter = prices => {
   const formatted = []
-  console.log(prices)
   prices.forEach(price => {
     const { marketplace, affiliateLink } = price
     const formattedMSRP = formatMoney(price.MSRP, price.currency)
-    const formattedOffer = formatMoney(price.lowestNewPrice, price.currency)
+    const formattedOffer = formatMoney(price.offerPrice, price.currency)
     formatted.push({
       affiliateLink,
       marketplace,

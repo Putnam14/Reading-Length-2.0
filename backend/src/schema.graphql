@@ -8,7 +8,7 @@ type SuccessMessage {
 type Price {
     marketplace: String
     MSRP: Int
-    lowestNewPrice: Int
+    offerPrice: Int
     currency: String
     affiliateLink: String
 }

@@ -12,7 +12,7 @@ class Prices extends React.Component {
           <p>
             {price.marketplace}:{' '}
             <a href={price.affiliateLink}>
-              {priceData[i].MSRP > priceData[i].lowestNewPrice ? (
+              {priceData[i].MSRP > priceData[i].offerPrice ? (
                 <>
                   <strike>{price.formattedMSRP}</strike> {price.formattedOffer}
                 </>

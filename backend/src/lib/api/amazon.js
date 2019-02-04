@@ -48,7 +48,7 @@ exports.audibleSearch = async audibleASIN => {
 
 exports.amazonPrices = async isbn => {
   const result = await client
-    .ItemLookup(isbn, { ResponseGroup: ["Medium"] })
+    .ItemLookup(isbn, { ResponseGroup: ["Medium,Offers"] })
     .then(result => {
       if (result.data()) return result.data().Item;
     })
