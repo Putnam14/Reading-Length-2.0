@@ -35,7 +35,13 @@ const WORDCOUNT_QUERY = gql`
 `
 const PRICE_QUERY = gql`
   query PRICE_QUERY($isbn: String!) {
-    findPrice(isbn10: $isbn)
+    findPrice(isbn10: $isbn) {
+      marketplace
+      MSRP
+      lowestNewPrice
+      currency
+      affiliateLink
+    }
   }
 `
 
@@ -82,8 +88,7 @@ class BookPage extends React.Component {
                   const wordcount = wordcountData
                     ? wordcountData.wordCount
                     : book.pageCount * 250
-                  const prices = priceFormatter(dataThree.findPrice, isbn)
-                  console.log(prices)
+                  const prices = priceFormatter(dataThree.findPrice)
                   const { user } = this.state
                   return (
                     <BookStyles>
@@ -112,9 +117,20 @@ class BookPage extends React.Component {
                             </div>
                             <div>
                               <strong>Price</strong>
-                              {prices.map(price => (
+                              {prices.map((price, i) => (
                                 <a href={price.affiliateLink}>
-                                  {price.marketplace}: {price.formattedPrice}
+                                  <p>
+                                    {price.marketplace}:{' '}
+                                    {dataThree.findPrice[i].MSRP >
+                                    dataThree.findPrice[i].lowestNewPrice ? (
+                                      <>
+                                        <strike>{price.formattedMSRP}</strike>{' '}
+                                        {price.formattedOffer}
+                                      </>
+                                    ) : (
+                                      price.formattedMSRP
+                                    )}
+                                  </p>
                                 </a>
                               ))}
                             </div>
