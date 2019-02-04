@@ -7,7 +7,7 @@ import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
 import RelatedBook from './RelatedBook'
 import WordCountInfo from './WordCountInfo'
-import priceFormatter from '../lib/priceFormatter'
+import Prices from './Prices'
 
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
@@ -88,8 +88,8 @@ class BookPage extends React.Component {
                   const wordcount = wordcountData
                     ? wordcountData.wordCount
                     : book.pageCount * 250
-                  const prices = priceFormatter(dataThree.findPrice)
                   const { user } = this.state
+                  const priceData = dataThree.findPrice
                   return (
                     <BookStyles>
                       <Search />
@@ -115,25 +115,9 @@ class BookPage extends React.Component {
                               <strong>Author</strong>
                               <p>{book.author}</p>
                             </div>
-                            <div>
-                              <strong>Price</strong>
-                              {prices.map((price, i) => (
-                                <a href={price.affiliateLink}>
-                                  <p>
-                                    {price.marketplace}:{' '}
-                                    {dataThree.findPrice[i].MSRP >
-                                    dataThree.findPrice[i].lowestNewPrice ? (
-                                      <>
-                                        <strike>{price.formattedMSRP}</strike>{' '}
-                                        {price.formattedOffer}
-                                      </>
-                                    ) : (
-                                      price.formattedMSRP
-                                    )}
-                                  </p>
-                                </a>
-                              ))}
-                            </div>
+                            {priceData.length > 0 && (
+                              <Prices priceData={priceData} />
+                            )}
                             <div>
                               <strong>Word Count</strong>
                               <p>{wordcount} words</p>
