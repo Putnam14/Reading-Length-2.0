@@ -1,10 +1,6 @@
 const prod = process.env.SERVER === 'production'
 const staging = process.env.SERVER === 'staging'
 
-const affiliates = {
-  amazon: 'readleng-20',
-}
-
 const endpoints = {
   dev: 'http://localhost:4444',
   staging: 'https://rlength-yoga-staging.herokuapp.com/',
@@ -18,5 +14,4 @@ if (prod) endpoint = endpoints.prod
 module.exports = {
   'process.env.ENDPOINT': endpoint,
   'process.env.SERVER': process.env.SERVER,
-  'process.env.AMAZON_AFF': affiliates.amazon,
 }

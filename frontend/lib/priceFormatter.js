@@ -1,9 +1,9 @@
-const formatMoney = amount => {
+const formatMoney = (amount, currency) => {
   // Amount is stored and handled as cents
   const parsedAmount = parseInt(amount)
   const options = {
     style: 'currency',
-    currency: 'USD',
+    currency,
     minimumFractionDigits: 2,
   }
   // Leave off the .00 for round numbers
@@ -12,23 +12,18 @@ const formatMoney = amount => {
   return formatter.format(parsedAmount / 100)
 }
 
-// This could be moved to the backend as a 'Price' object type with money formatting on the front end.
-const priceFormatter = (prices, isbn) => {
+const priceFormatter = prices => {
   const formatted = []
+  console.log(prices)
   prices.forEach(price => {
-    const marketPattern = new RegExp(/([^:]+)/)
-    const pricePattern = new RegExp(/([0-9]+)/)
-    const marketplace = marketPattern.exec(price)[0]
-    let affiliateLink = ''
-    if (marketplace === 'Amazon')
-      affiliateLink = `https://www.amazon.com/dp/${isbn}?tag=${
-        process.env.AMAZON_AFF
-      }`
-    const formattedPrice = formatMoney(pricePattern.exec(price)[0])
+    const { marketplace, affiliateLink } = price
+    const formattedMSRP = formatMoney(price.MSRP, price.currency)
+    const formattedOffer = formatMoney(price.lowestNewPrice, price.currency)
     formatted.push({
       affiliateLink,
       marketplace,
-      formattedPrice,
+      formattedMSRP,
+      formattedOffer,
     })
   })
   return formatted

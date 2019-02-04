@@ -5,6 +5,13 @@ type SuccessMessage {
     message: String
 }
 
+type Price {
+    marketplace: String
+    MSRP: Int
+    lowestNewPrice: Int
+    currency: String
+    affiliateLink: String
+}
 
 # Insert data
 # import * from './generated/prisma.graphql'
@@ -16,7 +23,7 @@ type Mutation {
 type Query {
     book(where: BookWhereUniqueInput!): Book
     findBook(isbn10: String!): Book
-    findPrice(isbn10: String!): [String]!
+    findPrice(isbn10: String!): [Price]!
     bookSearch(kw: String!, first: Int): [BookIndex]
     findNewBook(searchTerm: String!): String
     wordCounts(where: WordCountWhereInput!): [WordCount]!
