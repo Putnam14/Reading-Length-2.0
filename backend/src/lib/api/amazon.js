@@ -47,13 +47,17 @@ exports.audibleSearch = async audibleASIN => {
 };
 
 exports.amazonPrices = async isbn => {
-  const result = await client
-    .ItemLookup(isbn, { ResponseGroup: ["Medium,Offers"] })
-    .then(result => {
-      if (result.data()) return result.data().Item;
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
-  return result;
+  try {
+    const result = await client
+      .ItemLookup(isbn, { ResponseGroup: ["Medium,Offers"] })
+      .then(result => {
+        if (result.data()) return result.data().Item;
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+    return result;
+  } catch (err) {
+    throw new Error(err);
+  }
 };
