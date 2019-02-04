@@ -91,9 +91,7 @@ class BookPage extends React.Component {
                       <Search />
                       <div className="above-the-fold">
                         <div className="container">
-                          <div className="book-cover">
-                            <img src={book.image} alt={book.name} />
-                          </div>
+                          <img src={book.image} alt={book.name} />
                           <WordCountInfo
                             user={user}
                             book={book}
@@ -104,21 +102,24 @@ class BookPage extends React.Component {
                       </div>
                       <Inner>
                         <div className="book-info">
-                          <div className="attribution">
-                            <div>
-                              <strong>Author</strong>
-                              <p>{book.author}</p>
-                            </div>
-                            {priceData.length > 0 && (
-                              <Prices priceData={priceData} />
-                            )}
-                            <div>
-                              <strong>Word Count</strong>
-                              <p>{wordcount} words</p>
-                            </div>
-                            <div>
-                              <strong>Pages</strong>
-                              <p>{book.pageCount} pages</p>
+                          {/* Need this div so the height of the book data is not the same as the description */}
+                          <div>
+                            <div className="book-data">
+                              <div>
+                                <strong>Author</strong>
+                                <p>{book.author}</p>
+                              </div>
+                              {priceData.length > 0 && (
+                                <Prices priceData={priceData} />
+                              )}
+                              <div>
+                                <strong>Word Count</strong>
+                                <p>{wordcount} words</p>
+                              </div>
+                              <div>
+                                <strong>Pages</strong>
+                                <p>{book.pageCount} pages</p>
+                              </div>
                             </div>
                           </div>
                           <div className="description">
