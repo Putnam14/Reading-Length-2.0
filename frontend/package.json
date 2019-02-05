@@ -11,7 +11,8 @@
     "build": "next build",
     "now-build": "next build",
     "start": "NODE_ENV=development node server.js",
-    "test": "NODE_ENV=test jest --watch"
+    "test": "NODE_ENV=test jest --watch",
+    "deploy-staging": "now -A staging.now.json && now alias -A staging.now.json"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
