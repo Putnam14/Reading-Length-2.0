@@ -1,7 +1,9 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import Link from 'next/link'
 import Error from './ErrorMessage'
+import RelatedBookStyles from './styles/RelatedBookStyles'
 
 const RELATED_BOOK_QUERY = gql`
   query RELATED_BOOK_QUERY($isbn: String!) {
@@ -24,10 +26,30 @@ class RelatedBook extends React.Component {
           const { bookPreview } = data
           // Wordcount Query
           return (
-            <div key={isbn}>
-              <img src={bookPreview.image} alt={bookPreview.name} />
-              <p>{bookPreview.name}</p>
-            </div>
+            <RelatedBookStyles key={isbn}>
+              {bookPreview.image && (
+                <img src={bookPreview.image} alt={bookPreview.name} />
+              )}
+              <p className="related-link">
+                View{' '}
+                <span className="related-name">
+                  <Link href={`/book/isbn-${isbn}`}>
+                    <a>{bookPreview.name}</a>
+                  </Link>
+                </span>{' '}
+                on Reading Length
+              </p>
+              <p className="amazon-link">
+                Look on{' '}
+                <a
+                  href={`https://www.amazon.com/dp/${isbn}?tag=${
+                    process.env.AMAZON_AFF
+                  }`}
+                >
+                  Amazon
+                </a>
+              </p>
+            </RelatedBookStyles>
           )
         }}
       </Query>
