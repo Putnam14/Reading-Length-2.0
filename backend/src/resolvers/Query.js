@@ -4,9 +4,9 @@ const { newBookSearch, priceSearch } = require("../lib/searchAPI");
 const Query = {
   findBook(parent, args, ctx, info) {
     const { isbn10 } = args;
-    return ctx.db.query.book({ where: { isbn10 } }, info).then(res => {
+    return ctx.db.query.book({ where: { isbn10 } }, info).then(async res => {
       if (res) return res;
-      return newBookSearch(isbn10, ctx, info)
+      return await newBookSearch(isbn10, ctx, info)
         .then(res => {
           return ctx.db.query.book({ where: { res } }, info);
         })
