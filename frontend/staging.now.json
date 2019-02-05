@@ -1,6 +1,6 @@
 {
     "name": "reading-length-staging",
-    "alias": ["staging.readinglength.com"],
+    "alias": ["staging.readinglength.com","beta.readinglength.com"],
     "version": 2,
     "build": {
         "env": {
