@@ -7,6 +7,10 @@ const endpoints = {
   prod: 'https://localhost:2222',
 }
 
+const affiliates = {
+  amazon: 'readleng-20',
+}
+
 let endpoint = endpoints.dev
 if (staging) endpoint = endpoints.staging
 if (prod) endpoint = endpoints.prod
@@ -14,4 +18,5 @@ if (prod) endpoint = endpoints.prod
 module.exports = {
   'process.env.ENDPOINT': endpoint,
   'process.env.SERVER': process.env.SERVER,
+  'process.env.AMAZON_AFF': affiliates.amazon,
 }
