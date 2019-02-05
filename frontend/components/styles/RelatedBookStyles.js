@@ -2,7 +2,8 @@ import styled from 'styled-components'
 
 const RelatedBookStyles = styled.div`
   position: relative;
-  flex-basis: 20%;
+  min-width: 180px;
+  max-width: 200px;
   border-radius: 6px;
   border: 1px solid #e7e7e7;
   box-shadow: ${props => props.theme.bs};
