@@ -5,7 +5,7 @@ import Error from './ErrorMessage'
 import Search from './Search'
 import BookStyles from './styles/BookStyles'
 import Inner from './Inner'
-import RelatedBook from './RelatedBook'
+import RelatedBooks from './RelatedBooks'
 import WordCountInfo from './WordCountInfo'
 import Prices from './Prices'
 
@@ -73,7 +73,7 @@ class BookPage extends React.Component {
       <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn }}>
         {({ error: errorOne, loading: loadingOne, data: dataOne }) => (
           <Query query={WORDCOUNT_QUERY} variables={{ isbn }}>
-            {({ error: errorTwo, loading: loadingTwo, data: dataTwo }) => (
+            {({ data: dataTwo }) => (
               <Query query={PRICE_QUERY} variables={{ isbn }}>
                 {({ data: dataThree }) => {
                   if (errorOne) return <Error error={errorOne} />
@@ -142,12 +142,7 @@ class BookPage extends React.Component {
                           </div>
                         </div>
                         {book.related && (
-                          <div className="related-titles">
-                            <h3>You might also like</h3>
-                            {book.related.map(val => (
-                              <RelatedBook isbn={val} />
-                            ))}
-                          </div>
+                          <RelatedBooks relatedBooks={book.related} />
                         )}
                       </Inner>
                     </BookStyles>
