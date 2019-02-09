@@ -1,7 +1,10 @@
 const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
 
 const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
-  if (amazonSearch.AlternateVersions) {
+  if (
+    amazonSearch.AlternateVersions &&
+    amazonSearch.AlternateVersions.AlternateVersion
+  ) {
     const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
       alternate => {
         return (

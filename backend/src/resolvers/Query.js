@@ -15,7 +15,7 @@ const Query = {
             })
             .catch(err => {
               throw new Error(
-                `Could not find book for ISBN ${isbn10}. ${err}`,
+                `Could not find book for ISBN ${isbn10}. Error: ${err}`,
                 err
               );
             });
