@@ -1,5 +1,6 @@
 import React from 'react'
 import Downshift, { resetIdCounter } from 'downshift'
+import NProgress from 'nprogress'
 import Router from 'next/router'
 import { ApolloConsumer } from 'react-apollo'
 import debounce from 'lodash.debounce'
@@ -64,14 +65,18 @@ class Search extends React.Component {
         this.routeToBook(input)
       } else {
         try {
+          this.setState({ loading: false })
+          NProgress.start()
           const res = await client.query({
             query: FIND_NEW_BOOK,
             variables: { searchTerm: input },
           })
-          if (!res.data.findNewBook)
-            throw new Error('Could not find that book!')
-          const isbn10 = res.data.findNewBook
-          if (validISBN(isbn10)) this.routeToBook(isbn10)
+          if (res.data) {
+            if (!res.data.findNewBook)
+              throw new Error('Could not find that book!')
+            const isbn10 = res.data.findNewBook
+            if (validISBN(isbn10)) this.routeToBook(isbn10)
+          }
         } catch (err) {
           this.setState(prevState => {
             const newState = { ...prevState }
