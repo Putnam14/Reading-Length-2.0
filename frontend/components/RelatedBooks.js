@@ -1,5 +1,6 @@
 import React from 'react'
 import RelatedBook from './RelatedBook'
+import ValidISBN from '../lib/isbnValidator'
 import RelatedBooksStyles from './styles/RelatedBooksStyles'
 
 class RelatedBooks extends React.Component {
@@ -9,9 +10,9 @@ class RelatedBooks extends React.Component {
       <RelatedBooksStyles>
         <h3>You might also like</h3>
         <div className="related-container">
-          {relatedBooks.map(isbn => (
-            <RelatedBook isbn={isbn} />
-          ))}
+          {relatedBooks.map(isbn => {
+            if (ValidISBN(isbn)) return <RelatedBook isbn={isbn} key={isbn} />
+          })}
         </div>
       </RelatedBooksStyles>
     )
