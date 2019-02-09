@@ -8,10 +8,23 @@ const Query = {
       if (res) return res;
       return await newBookSearch(isbn10, ctx, info)
         .then(res => {
-          return ctx.db.query.book({ where: { res } }, info);
+          return ctx.db.query
+            .book({ where: { isbn10: res } }, info)
+            .then(async res => {
+              if (res) return res;
+            })
+            .catch(err => {
+              throw new Error(
+                `Could not find book for ISBN ${isbn10}. ${err}`,
+                err
+              );
+            });
         })
         .catch(err => {
-          throw new Error(`Could not find book for ISBN ${isbn10}`, err);
+          throw new Error(
+            `Could not find a book with those search terms.`,
+            err
+          );
         });
     });
   },
