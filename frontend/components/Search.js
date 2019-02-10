@@ -72,8 +72,10 @@ class Search extends React.Component {
             variables: { searchTerm: input },
           })
           if (res.data) {
-            if (!res.data.findNewBook)
+            if (!res.data.findNewBook) {
+              NProgress.done()
               throw new Error('Could not find that book!')
+            }
             const isbn10 = res.data.findNewBook
             if (validISBN(isbn10)) this.routeToBook(isbn10)
           }
