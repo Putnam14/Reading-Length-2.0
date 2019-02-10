@@ -141,7 +141,11 @@ class Search extends React.Component {
                     <label htmlFor="search">
                       Search for any book
                       <div className="input-container">
-                        <div className="inputs">
+                        <div
+                          className={`inputs${
+                            suggestionLoading ? ' loading' : ''
+                          }`}
+                        >
                           <input
                             type="search"
                             id="search"
@@ -149,7 +153,6 @@ class Search extends React.Component {
                               type: 'search',
                               placeholder: 'Book title or author...',
                               value: input,
-                              className: suggestionLoading ? 'loading' : '',
                               onChange: e => {
                                 this.handleChange(
                                   { val: e.target.value },
