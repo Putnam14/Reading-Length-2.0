@@ -8,6 +8,7 @@ import Inner from './Inner'
 import RelatedBooks from './RelatedBooks'
 import WordCountInfo from './WordCountInfo'
 import Prices from './Prices'
+import Loading from './Loading'
 
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
@@ -75,16 +76,10 @@ class BookPage extends React.Component {
           <Query query={WORDCOUNT_QUERY} variables={{ isbn }}>
             {({ data: dataTwo, loading: loadingTwo, error: errorTwo }) => (
               <Query query={PRICE_QUERY} variables={{ isbn }}>
-                {({
-                  data: dataThree,
-                  loading: loadingThree,
-                  error: errorThree,
-                }) => {
+                {({ data: dataThree, error: errorThree }) => {
                   if (errorOne) return <Error error={errorOne} />
                   if (errorTwo) return <Error error={errorTwo} />
-                  if (errorThree) return <Error error={errorThree} />
-                  if (loadingOne || loadingTwo || loadingThree)
-                    return <p>Loading...</p>
+                  if (loadingOne || loadingTwo) return <Loading />
                   const book = dataOne.findBook
                   book.isbn = book.isbn10
                   if (errorThree) console.log(errorThree)
