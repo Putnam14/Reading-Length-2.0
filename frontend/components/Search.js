@@ -29,18 +29,19 @@ class Search extends React.Component {
     items: [],
     input: '',
     error: '',
-    loading: false,
+    suggestionLoading: false,
+    searchLoading: false,
   }
 
   searchQuery = debounce(async (value, client) => {
-    this.setState({ loading: true })
+    this.setState({ suggestionLoading: true })
     const res = await client.query({
       query: SEARCH_KEYWORDS_QUERY,
       variables: { kw: value },
     })
     this.setState({
       items: res.data.bookSearch,
-      loading: false,
+      suggestionLoading: false,
     })
   }, 350)
 
@@ -65,19 +66,24 @@ class Search extends React.Component {
         this.routeToBook(input)
       } else {
         try {
-          this.setState({ loading: false })
+          this.setState({ suggestionLoading: false, searchLoading: true })
           NProgress.start()
           const res = await client.query({
             query: FIND_NEW_BOOK,
             variables: { searchTerm: input },
           })
           if (res.data) {
+            this.setState({ searchLoading: false })
+            NProgress.done()
             if (!res.data.findNewBook) {
-              NProgress.done()
-              throw new Error('Could not find that book!')
+              throw new Error('Could not find that book.')
             }
             const isbn10 = res.data.findNewBook
-            if (validISBN(isbn10)) this.routeToBook(isbn10)
+            if (validISBN(isbn10)) {
+              this.routeToBook(isbn10)
+            } else {
+              throw new Error('ISBN returned from search was invalid.')
+            }
           }
         } catch (err) {
           this.setState(prevState => {
@@ -106,7 +112,7 @@ class Search extends React.Component {
 
   render() {
     resetIdCounter()
-    const { items, loading, input, error } = this.state
+    const { items, suggestionLoading, searchLoading, input, error } = this.state
     return (
       <SearchStyles>
         <hr />
@@ -143,7 +149,7 @@ class Search extends React.Component {
                               type: 'search',
                               placeholder: 'Book title or author...',
                               value: input,
-                              className: loading ? 'loading' : '',
+                              className: suggestionLoading ? 'loading' : '',
                               onChange: e => {
                                 this.handleChange(
                                   { val: e.target.value },
@@ -152,7 +158,9 @@ class Search extends React.Component {
                               },
                             })}
                           />
-                          <button type="submit">Search!</button>
+                          <button type="submit" disabled={searchLoading}>
+                            Search!
+                          </button>
                         </div>
                         <div className="dropdown">
                           {isOpen && (
