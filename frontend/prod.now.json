@@ -10,6 +10,8 @@
     ],
     "routes": [
         { "src": "/book/isbn-(?<isbn>[^/]*)", "dest": "/book?isbn=$isbn" },
-        { "src": "/wpm/(?<id>[^/]*)", "dest": "/wpm?id=$id" }
+        { "src": "/book/isbn-(?<isbn>[^/]*)/", "status": 301, "dest": "/book?isbn=$isbn" },
+        { "src": "/wpm/(?<id>[^/]*)", "dest": "/wpm?id=$id" },
+        { "src": "/wpm/(?<id>[^/]*)/", "status": 301, "dest": "/wpm?id=$id" }
     ]
   }
