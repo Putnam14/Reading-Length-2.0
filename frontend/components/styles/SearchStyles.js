@@ -7,19 +7,28 @@ const DropDown = styled.div`
 `
 
 const DropDownItem = styled.div`
+  p {
+    display: block;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+    line-height: 1.4;
+  }
+  .title {
+    font-style: italic;
+    font-weight: 500;
+  }
+  .author {
+    font-weight: 300;
+  }
   text-transform: capitalize;
   border-bottom: 1px solid ${props => props.theme.lightgrey};
   background: ${props => (props.highlighted ? '#f7f7f7' : 'white')};
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   transition: all 0.2s;
   ${props => (props.highlighted ? 'padding-left: 2rem;' : null)};
-  display: flex;
-  align-items: center;
   border-left: 10px solid
-    ${props => (props.highlighted ? props.theme.lightgrey : 'white')};
-  img {
-    margin-right: 10px;
-  }
+    ${props => (props.highlighted ? 'rgb(51, 122, 183)' : 'white')};
 `
 
 const glow = keyframes`

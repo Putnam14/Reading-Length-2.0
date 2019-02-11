@@ -174,7 +174,8 @@ class Search extends React.Component {
                                   key={item.isbn10}
                                   highlighted={index === highlightedIndex}
                                 >
-                                  {item.name} - {item.author}
+                                  <p className="title">{item.name}</p>
+                                  <p className="author">{item.author}</p>
                                 </DropDownItem>
                               ))}
                               {(!inputValue || items.length === 0) &&
