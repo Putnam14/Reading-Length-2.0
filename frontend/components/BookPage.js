@@ -72,7 +72,6 @@ class BookPage extends React.Component {
   render() {
     const { isbn } = this.props
     if (!validISBN(isbn)) {
-      console.log('Oops')
       return (
         <BookStyles>
           <Search />
