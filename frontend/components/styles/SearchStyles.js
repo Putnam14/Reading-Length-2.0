@@ -7,19 +7,31 @@ const DropDown = styled.div`
 `
 
 const DropDownItem = styled.div`
+  width: 100%;
+  p {
+    justify-self: start;
+    text-align: left;
+    display: block;
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    line-height: 1.4;
+  }
+  .title {
+    font-style: italic;
+    font-weight: 500;
+  }
+  .author {
+    font-weight: 300;
+  }
   text-transform: capitalize;
   border-bottom: 1px solid ${props => props.theme.lightgrey};
   background: ${props => (props.highlighted ? '#f7f7f7' : 'white')};
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   transition: all 0.2s;
   ${props => (props.highlighted ? 'padding-left: 2rem;' : null)};
-  display: flex;
-  align-items: center;
   border-left: 10px solid
-    ${props => (props.highlighted ? props.theme.lightgrey : 'white')};
-  img {
-    margin-right: 10px;
-  }
+    ${props => (props.highlighted ? 'rgb(51, 122, 183)' : 'white')};
 `
 
 const glow = keyframes`
@@ -55,12 +67,13 @@ const SearchStyles = styled.div`
         padding: 0.5rem 1rem;
         font-size: 1.5rem;
       }
+      &.loading {
+        border-radius: 6px;
+        animation: ${glow} 0.5s ease-in-out infinite alternate;
+      }
       input {
         border-radius: 6px 0 0 6px;
         flex-grow: 2;
-        &.loading {
-          animation: ${glow} 0.5s ease-in-out infinite alternate;
-        }
       }
       button {
         border: 0;

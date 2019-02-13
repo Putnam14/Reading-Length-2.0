@@ -54,7 +54,8 @@
     "jest-transform-graphql": "^2.1.0"
   },
   "resolutions": {
-    "terser": "3.14.1"
+    "terser": "3.14.1",
+    "ajv": "6.8.1"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
