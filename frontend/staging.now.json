@@ -8,9 +8,7 @@
         }
     },
     "builds": [{ 
-        "src": "package.json", "use": "@now/next", "config": {
-            "newPipeline": true
-        }
+        "src": "next.config.js", "use": "@now/next"
     }],
     "routes": [
         { "src": "/book/isbn-(?<isbn>[^/]*)", "dest": "/book?isbn=$isbn" },

@@ -76,10 +76,16 @@ class BookPage extends React.Component {
           <Query query={WORDCOUNT_QUERY} variables={{ isbn }}>
             {({ data: dataTwo, loading: loadingTwo, error: errorTwo }) => (
               <Query query={PRICE_QUERY} variables={{ isbn }}>
-                {({ data: dataThree, error: errorThree }) => {
+                {({
+                  data: dataThree,
+                  loading: loadingThree,
+                  error: errorThree,
+                }) => {
                   if (errorOne) return <Error error={errorOne} />
                   if (errorTwo) return <Error error={errorTwo} />
-                  if (loadingOne || loadingTwo) return <Loading />
+                  if (errorThree) return <Error error={errorThree} />
+                  if (loadingOne || loadingTwo || loadingThree)
+                    return <Loading />
                   const book = dataOne.findBook
                   book.isbn = book.isbn10
                   if (errorThree) console.log(errorThree)
