@@ -14,8 +14,8 @@ class Error extends React.Component {
       <Inner>
         <p>
           {statusCode
-            ? `An error occurred on server: ${statusCode}`
-            : 'An error occurred on client'}
+            ? `A ${statusCode} error occurred on the server.`
+            : 'An unknown error occurred.'}
         </p>
         <p>Sorry about that. If you like, you could try another search.</p>
         <Search />
