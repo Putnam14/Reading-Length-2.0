@@ -139,7 +139,7 @@ exports.newBookSearch = async (searchTerm, ctx) => {
 exports.priceSearch = async isbn => {
   const prices = [];
   const amazonResult = await amazonPrices(isbn);
-  if (amazonResult.ItemAttributes.ListPrice) {
+  if (amazonResult) {
     const amazonObject = {
       marketplace: "Amazon",
       affiliateLink: `https://www.amazon.com/dp/${isbn}?tag=${
