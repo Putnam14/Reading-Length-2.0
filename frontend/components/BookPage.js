@@ -9,6 +9,7 @@ import RelatedBooks from './RelatedBooks'
 import WordCountInfo from './WordCountInfo'
 import Prices from './Prices'
 import Loading from './Loading'
+import validISBN from '../lib/isbnValidator'
 
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
@@ -70,6 +71,19 @@ class BookPage extends React.Component {
 
   render() {
     const { isbn } = this.props
+    if (!validISBN(isbn)) {
+      console.log('Oops')
+      return (
+        <BookStyles>
+          <Search />
+          <Inner>
+            <p>
+              The ISBN given does not appear to be valid. Try another search.
+            </p>
+          </Inner>
+        </BookStyles>
+      )
+    }
     return (
       <Query query={BOOK_FROM_ISBN_QUERY} variables={{ isbn }}>
         {({ error: errorOne, loading: loadingOne, data: dataOne }) => (
