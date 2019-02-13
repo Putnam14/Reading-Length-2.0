@@ -1,4 +1,6 @@
 import React from 'react'
+import Inner from '../components/Inner'
+import Search from '../components/Search'
 
 class Error extends React.Component {
   static getInitialProps({ res, err }) {
@@ -9,11 +11,15 @@ class Error extends React.Component {
   render() {
     const { statusCode } = this.props
     return (
-      <p>
-        {statusCode
-          ? `An error ${statusCode} occurred on server`
-          : 'An error occurred on client'}
-      </p>
+      <Inner>
+        <p>
+          {statusCode
+            ? `An error occurred on server: ${statusCode}`
+            : 'An error occurred on client'}
+        </p>
+        <p>Sorry about that. If you like, you could try another search.</p>
+        <Search />
+      </Inner>
     )
   }
 }
