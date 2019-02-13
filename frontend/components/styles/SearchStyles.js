@@ -11,7 +11,7 @@ const DropDownItem = styled.div`
     display: block;
     margin: 0;
     padding: 0;
-    font-size: 0.8em;
+    font-size: 1em;
     line-height: 1.4;
   }
   .title {
