@@ -14,8 +14,9 @@
     }],
     "routes": [
         { "src": "/book/isbn-(?<isbn>[^/]*)", "dest": "/book?isbn=$isbn" },
-        { "src": "/book/isbn-(?<isbn>[^/]*)/", "dest": "/book?isbn=$isbn" },
+        { "src": "/book/isbn-(?<isbn>[^/]*)/", "status": 301, "headers": { "Location": "/book/isbn-$isbn" }},
         { "src": "/wpm/(?<id>[^/]*)", "dest": "/wpm?id=$id" },
-        { "src": "/wpm/(?<id>[^/]*)/", "dest": "/wpm?id=$id" }
+        { "src": "/wpm/(?<id>[^/]*)/", "status": 301, "headers": { "Location": "/wpm/$id" }},
+        { "src": "/wpm/", "status": 301, "headers": { "Location": "/wpm" }}
     ]
   }
