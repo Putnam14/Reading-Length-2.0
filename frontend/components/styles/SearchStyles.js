@@ -7,7 +7,10 @@ const DropDown = styled.div`
 `
 
 const DropDownItem = styled.div`
+  width: 100%;
   p {
+    justify-self: start;
+    text-align: left;
     display: block;
     margin: 0;
     padding: 0;
