@@ -126,7 +126,11 @@ class BookPage extends React.Component {
                           <Prices isbn={isbn} />
                           <div>
                             <strong>Word Count</strong>
-                            <p>{wordcount} words</p>
+                            <p>{wordcount.toLocaleString()} words</p>
+                            <p>
+                              {wordcountData.countAccuracy} based on{' '}
+                              {wordcountData.countType}
+                            </p>
                           </div>
                           <div>
                             <strong>Pages</strong>
