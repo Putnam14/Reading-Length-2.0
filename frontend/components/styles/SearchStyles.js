@@ -47,6 +47,9 @@ const glow = keyframes`
 const SearchStyles = styled.div`
   width: 600px;
   margin: 0 auto;
+  *:focus {
+    outline: none;
+  }
   .searchForm {
     label {
       font-weight: 700;
@@ -65,6 +68,7 @@ const SearchStyles = styled.div`
       button {
         border: 1px solid #eee;
         padding: 0.5rem 1rem;
+        margin: 0;
         font-size: 1.5rem;
       }
       &.loading {
@@ -72,12 +76,14 @@ const SearchStyles = styled.div`
         animation: ${glow} 0.5s ease-in-out infinite alternate;
       }
       input {
+        -webkit-appearance: none;
         border-radius: 6px 0 0 6px;
         flex-grow: 2;
       }
       button {
         border: 0;
         border-radius: 0 6px 6px 0;
+        background-color: rgb(240, 240, 240);
       }
     }
   }
