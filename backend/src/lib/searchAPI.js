@@ -23,7 +23,7 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
             isbn10: isbn,
             wordCount,
             countAccuracy: "Estimate",
-            countType: "Audiobook"
+            countType: "audiobook length"
           }
         });
       }

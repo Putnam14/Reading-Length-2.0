@@ -2,6 +2,7 @@ import React from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import priceFormatter from '../lib/priceFormatter'
+import PriceStyles from './styles/PriceStyles'
 
 const PRICE_QUERY = gql`
   query PRICE_QUERY($isbn: String!) {
@@ -24,7 +25,7 @@ class Prices extends React.Component {
           const priceData = data.findPrice
           const prices = priceFormatter(priceData)
           return (
-            <div>
+            <PriceStyles>
               <strong>Price</strong>
               {prices.map((price, i) => (
                 <p key={price.marketplace}>
@@ -41,7 +42,7 @@ class Prices extends React.Component {
                   </a>
                 </p>
               ))}
-            </div>
+            </PriceStyles>
           )
         }}
       </Query>

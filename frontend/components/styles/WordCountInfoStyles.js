@@ -4,6 +4,8 @@ const WordCountInfoStyles = styled.div`
   font-size: 2rem;
   h1 {
     font-size: 2rem;
+    padding: 0;
+    margin: 0;
   }
   input,
   button {
@@ -23,15 +25,25 @@ const WordCountInfoStyles = styled.div`
     font-weight: 700;
   }
   .input-group {
+    padding: 0.5em 0;
     display: grid;
     grid-template-columns: auto auto;
-    justify-content: center;
+    justify-content: start;
     input {
       border-radius: 6px 0 0 6px;
     }
     button {
       border-left: 0;
       border-radius: 0 6px 6px 0;
+    }
+  }
+  form {
+    p {
+      font-weight: 300;
+      padding: 0;
+      margin: 0;
+      font-size: 1.5rem;
+      font-style: italic;
     }
   }
   .results {
@@ -42,6 +54,9 @@ const WordCountInfoStyles = styled.div`
       display: block;
       margin: 0 auto;
     }
+  }
+  a {
+    font-weight: 400;
   }
   @media (max-width: 700px) {
     h1,
