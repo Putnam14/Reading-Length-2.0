@@ -1,6 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
+import Head from 'next/head'
 import Error from './ErrorMessage'
 import Search from './Search'
 import BookStyles from './styles/BookStyles'
@@ -108,6 +109,55 @@ class BookPage extends React.Component {
               const { user } = this.state
               return (
                 <BookStyles>
+                  <Head>
+                    <title>{book.name} | Reading Length</title>
+                    <meta
+                      name="description"
+                      key="description"
+                      content={`${book.name} has ${
+                        book.pageCount
+                      } pages. Reading Length provides a calculation for the word count of this book, find out how long it will take you to read!`}
+                    />
+                    <meta name="twitter:card" content="summary" />
+                    <meta
+                      property="og:description"
+                      key="og-description"
+                      content={`${book.name} has ${
+                        book.pageCount
+                      } pages. Reading Length provides a calculation for the word count of this book, find out how long it will take you to read!`}
+                    />
+                    <meta
+                      name="twitter:description"
+                      key="twitter-description"
+                      content={`${book.name} has ${
+                        book.pageCount
+                      } pages. Reading Length provides a calculation for the word count of this book, find out how long it will take you to read!`}
+                    />
+                    <meta
+                      property="og:title"
+                      key="og-title"
+                      content={`${
+                        book.name
+                      } word count and more | Reading Length`}
+                    />
+                    <meta
+                      name="twitter:title"
+                      key="twitter-title"
+                      content={`${
+                        book.name
+                      } word count and more | Reading Length`}
+                    />
+                    <meta
+                      property="og:image"
+                      key="og-image"
+                      content={book.image}
+                    />
+                    <meta
+                      name="twitter:image"
+                      key="twitter-image"
+                      content={book.image}
+                    />
+                  </Head>
                   <Search />
                   <div className="above-the-fold">
                     <div className="container">
