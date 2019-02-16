@@ -22,7 +22,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.0",
     "downshift": "^3.2.2",
-    "eslint-config-prettier": "^3.6.0",
+    "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^3.0.1",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",

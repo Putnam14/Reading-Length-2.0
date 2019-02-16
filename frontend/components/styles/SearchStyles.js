@@ -79,6 +79,10 @@ const SearchStyles = styled.div`
         -webkit-appearance: none;
         border-radius: 6px 0 0 6px;
         flex-grow: 2;
+        ::placeholder {
+          color: rgb(40, 40, 40);
+          opacity: 1;
+        }
       }
       button {
         border: 0;
