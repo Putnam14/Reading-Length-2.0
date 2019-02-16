@@ -5,7 +5,7 @@ const FooterStyles = styled.footer`
     margin: 1rem 0
     padding: 0;
     font-size: 1.25rem;
-    color: #777;
+    color: rgb(57, 57, 57);
     line-height: 1.5rem;
   }
   .navLinks {

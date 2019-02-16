@@ -12,10 +12,10 @@ const HeaderStyles = styled.div`
     align-items: center;
   }
   a {
-    color: #777;
+    color: rgb(57, 57, 57);
     padding-right: 1em;
     :hover {
-      color: #5e5e5e;
+      color: rgb(0, 0, 0);
     }
   }
   .logo {
