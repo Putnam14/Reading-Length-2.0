@@ -99,6 +99,12 @@ class BookPage extends React.Component {
               const wordcount = wordcountData
                 ? wordcountData.wordCount
                 : book.pageCount * 250
+              const countAccuracy = wordcountData
+                ? wordcountData.countAccuracy
+                : 'Guess'
+              const countType = wordcountData
+                ? wordcountData.countType
+                : 'page count'
               const { user } = this.state
               return (
                 <BookStyles>
@@ -127,9 +133,8 @@ class BookPage extends React.Component {
                           <div>
                             <strong>Word Count</strong>
                             <p>{wordcount.toLocaleString()} words</p>
-                            <p>
-                              {wordcountData.countAccuracy} based on{' '}
-                              {wordcountData.countType}
+                            <p className="count-accuracy">
+                              {countAccuracy} based on {countType}
                             </p>
                           </div>
                           <div>
