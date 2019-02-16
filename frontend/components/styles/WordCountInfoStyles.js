@@ -31,8 +31,10 @@ const WordCountInfoStyles = styled.div`
     justify-content: start;
     input {
       border-radius: 6px 0 0 6px;
+      margin: 0;
     }
     button {
+      margin: 0;
       border-left: 0;
       border-radius: 0 6px 6px 0;
     }
@@ -65,6 +67,12 @@ const WordCountInfoStyles = styled.div`
     }
     label {
       display: block;
+    }
+    .input-group {
+      justify-content: center;
+    }
+    form {
+      text-align: center;
     }
     .results {
       p {
