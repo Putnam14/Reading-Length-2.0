@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import WordCountInfoStyles from './styles/WordCountInfoStyles'
 
 class WordCountInfo extends React.Component {
@@ -55,7 +56,6 @@ class WordCountInfo extends React.Component {
           <b>{averageMinutes} minutes</b> reading <em>{book.name}</em> at 250
           WPM (words per minute).
         </p>
-        <hr />
         {hours ? (
           <div className="results">
             <p>
@@ -78,7 +78,8 @@ class WordCountInfo extends React.Component {
         ) : (
           <form>
             <label htmlFor="userWPM">
-              How fast can you read this? Enter your reading speed here:
+              How quickly can you read this book? <br /> Enter your reading
+              speed here:
               <span className="input-group">
                 <input
                   type="number"
@@ -96,6 +97,13 @@ class WordCountInfo extends React.Component {
                 </button>
               </span>
             </label>
+            <p>
+              If you do not know your reading speed,{' '}
+              <Link href="/wpm">
+                <a>click here</a>
+              </Link>{' '}
+              to take a test.
+            </p>
           </form>
         )}
       </WordCountInfoStyles>
