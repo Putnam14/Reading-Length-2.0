@@ -52,6 +52,9 @@ const BookStyles = styled.div`
       }
     }
   }
+  .count-accuracy {
+    font-size: 1.2rem;
+  }
   @media (max-width: 700px) {
     .above-the-fold {
       .container {
