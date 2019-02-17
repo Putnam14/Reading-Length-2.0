@@ -98,9 +98,9 @@ class WordCountInfo extends React.Component {
               </span>
             </label>
             <p>
-              If you do not know your reading speed,{' '}
+              To find your reading speed you can take one of our{' '}
               <Link href="/wpm">
-                <a>click here to take a WPM test</a>
+                <a>WPM tests</a>
               </Link>
               .
             </p>
