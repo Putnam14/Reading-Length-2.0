@@ -1,5 +1,6 @@
 import React from 'react'
 import Downshift, { resetIdCounter } from 'downshift'
+import NProgress from 'nprogress'
 import Router from 'next/router'
 import { ApolloConsumer } from 'react-apollo'
 import debounce from 'lodash.debounce'
@@ -28,18 +29,19 @@ class Search extends React.Component {
     items: [],
     input: '',
     error: '',
-    loading: false,
+    suggestionLoading: false,
+    searchLoading: false,
   }
 
   searchQuery = debounce(async (value, client) => {
-    this.setState({ loading: true })
+    this.setState({ suggestionLoading: true })
     const res = await client.query({
       query: SEARCH_KEYWORDS_QUERY,
       variables: { kw: value },
     })
     this.setState({
       items: res.data.bookSearch,
-      loading: false,
+      suggestionLoading: false,
     })
   }, 350)
 
@@ -64,14 +66,25 @@ class Search extends React.Component {
         this.routeToBook(input)
       } else {
         try {
+          this.setState({ suggestionLoading: false, searchLoading: true })
+          NProgress.start()
           const res = await client.query({
             query: FIND_NEW_BOOK,
             variables: { searchTerm: input },
           })
-          if (!res.data.findNewBook)
-            throw new Error('Could not find that book!')
-          const isbn10 = res.data.findNewBook
-          if (validISBN(isbn10)) this.routeToBook(isbn10)
+          if (res.data) {
+            this.setState({ searchLoading: false })
+            NProgress.done()
+            if (!res.data.findNewBook) {
+              throw new Error('Could not find that book.')
+            }
+            const isbn10 = res.data.findNewBook
+            if (validISBN(isbn10)) {
+              this.routeToBook(isbn10)
+            } else {
+              throw new Error('ISBN returned from search was invalid.')
+            }
+          }
         } catch (err) {
           this.setState(prevState => {
             const newState = { ...prevState }
@@ -99,7 +112,7 @@ class Search extends React.Component {
 
   render() {
     resetIdCounter()
-    const { items, loading, input, error } = this.state
+    const { items, suggestionLoading, searchLoading, input, error } = this.state
     return (
       <SearchStyles>
         <hr />
@@ -128,7 +141,11 @@ class Search extends React.Component {
                     <label htmlFor="search">
                       Search for any book
                       <div className="input-container">
-                        <div className="inputs">
+                        <div
+                          className={`inputs${
+                            suggestionLoading ? ' loading' : ''
+                          }`}
+                        >
                           <input
                             type="search"
                             id="search"
@@ -136,7 +153,6 @@ class Search extends React.Component {
                               type: 'search',
                               placeholder: 'Book title or author...',
                               value: input,
-                              className: loading ? 'loading' : '',
                               onChange: e => {
                                 this.handleChange(
                                   { val: e.target.value },
@@ -145,7 +161,9 @@ class Search extends React.Component {
                               },
                             })}
                           />
-                          <button type="submit">Search!</button>
+                          <button type="submit" disabled={searchLoading}>
+                            Search!
+                          </button>
                         </div>
                         <div className="dropdown">
                           {isOpen && (
@@ -156,7 +174,8 @@ class Search extends React.Component {
                                   key={item.isbn10}
                                   highlighted={index === highlightedIndex}
                                 >
-                                  {item.name} - {item.author}
+                                  <p className="title">{item.name}</p>
+                                  <p className="author">{item.author}</p>
                                 </DropDownItem>
                               ))}
                               {(!inputValue || items.length === 0) &&

@@ -1,7 +1,10 @@
 const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
 
 const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
-  if (amazonSearch.AlternateVersions) {
+  if (
+    amazonSearch.AlternateVersions &&
+    amazonSearch.AlternateVersions.AlternateVersion
+  ) {
     const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
       alternate => {
         return (
@@ -20,7 +23,7 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
             isbn10: isbn,
             wordCount,
             countAccuracy: "Estimate",
-            countType: "Audiobook"
+            countType: "audiobook length"
           }
         });
       }
@@ -52,8 +55,9 @@ const handleAmazonResponse = async (amazonSearch, ctx) => {
       });
     }
     handleAudibleResponse(amazonSearch, results.isbn10, results.pageCount, ctx);
-    const { isbn10, name, image } = results;
-    addBookPreview(isbn10, name, image, ctx);
+    const { isbn10, name } = results;
+    const medImage = amazonSearch.MediumImage.URL;
+    addBookPreview(isbn10, name, medImage, ctx);
     return results;
   } catch (err) {
     throw new Error(err);

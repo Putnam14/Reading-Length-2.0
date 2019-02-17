@@ -4,14 +4,27 @@ const { newBookSearch, priceSearch } = require("../lib/searchAPI");
 const Query = {
   findBook(parent, args, ctx, info) {
     const { isbn10 } = args;
-    return ctx.db.query.book({ where: { isbn10 } }, info).then(res => {
+    return ctx.db.query.book({ where: { isbn10 } }, info).then(async res => {
       if (res) return res;
-      return newBookSearch(isbn10, ctx, info)
+      return await newBookSearch(isbn10, ctx, info)
         .then(res => {
-          return ctx.db.query.book({ where: { res } }, info);
+          return ctx.db.query
+            .book({ where: { isbn10: res } }, info)
+            .then(async res => {
+              if (res) return res;
+            })
+            .catch(err => {
+              throw new Error(
+                `Could not find book for ISBN ${isbn10}. Error: ${err}`,
+                err
+              );
+            });
         })
         .catch(err => {
-          throw new Error(`Could not find book for ISBN ${isbn10}`, err);
+          throw new Error(
+            `Could not find a book with those search terms.`,
+            err
+          );
         });
     });
   },

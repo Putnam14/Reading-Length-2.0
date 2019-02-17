@@ -7,8 +7,8 @@ class Book extends React.Component {
   }
 
   render() {
-    const { isbn } = this.props
-    return <BookPage isbn={isbn} />
+    const { isbn, bot } = this.props
+    return <BookPage isbn={isbn} bot={bot} />
   }
 }
 

@@ -1,7 +1,7 @@
 import App, { Container } from 'next/app'
 import { ApolloProvider } from 'react-apollo'
 import Page from '../components/Page'
-import withApollo from '../lib/withData'
+import withApollo from '../lib/withApollo'
 
 class MyApp extends App {
   // Crawls page for any queries or mutations that need to be fetched
@@ -16,12 +16,14 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, apollo, pageProps } = this.props
+    const { Component, apolloClient, pageProps, bot, ua } = this.props
+    pageProps.bot = bot
+    pageProps.ua = ua
 
     return (
       <Container>
-        <ApolloProvider client={apollo}>
-          <Page>
+        <ApolloProvider client={apolloClient}>
+          <Page bot={bot} ua={ua}>
             <Component {...pageProps} />
           </Page>
         </ApolloProvider>

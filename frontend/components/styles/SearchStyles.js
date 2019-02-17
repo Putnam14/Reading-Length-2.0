@@ -7,34 +7,49 @@ const DropDown = styled.div`
 `
 
 const DropDownItem = styled.div`
+  width: 100%;
+  p {
+    justify-self: start;
+    text-align: left;
+    display: block;
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    line-height: 1.4;
+  }
+  .title {
+    font-style: italic;
+    font-weight: 500;
+  }
+  .author {
+    font-weight: 300;
+  }
   text-transform: capitalize;
   border-bottom: 1px solid ${props => props.theme.lightgrey};
   background: ${props => (props.highlighted ? '#f7f7f7' : 'white')};
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   transition: all 0.2s;
   ${props => (props.highlighted ? 'padding-left: 2rem;' : null)};
-  display: flex;
-  align-items: center;
   border-left: 10px solid
-    ${props => (props.highlighted ? props.theme.lightgrey : 'white')};
-  img {
-    margin-right: 10px;
-  }
+    ${props => (props.highlighted ? 'rgb(51, 122, 183)' : 'white')};
 `
 
 const glow = keyframes`
   from {
-    box-shadow: 0 0 0px yellow;
+    box-shadow: 0 0 0px #337ab7;
   }
 
   to {
-    box-shadow: 0 0 10px 1px yellow;
+    box-shadow: 0 0 10px 1px #337ab7;
   }
 `
 
 const SearchStyles = styled.div`
   width: 600px;
   margin: 0 auto;
+  *:focus {
+    outline: none;
+  }
   .searchForm {
     label {
       font-weight: 700;
@@ -49,26 +64,40 @@ const SearchStyles = styled.div`
     }
     .inputs {
       display: flex;
-      input {
-        flex-grow: 2;
+      input,
+      button {
         border: 1px solid #eee;
-        border-radius: 6px 0 0 6px;
         padding: 0.5rem 1rem;
+        margin: 0;
         font-size: 1.5rem;
-        &.loading {
-          animation: ${glow} 0.5s ease-in-out infinite alternate;
+      }
+      &.loading {
+        border-radius: 6px;
+        animation: ${glow} 0.5s ease-in-out infinite alternate;
+      }
+      input {
+        -webkit-appearance: none;
+        border-radius: 6px 0 0 6px;
+        flex-grow: 2;
+        ::placeholder {
+          color: rgb(40, 40, 40);
+          opacity: 1;
         }
       }
       button {
         border: 0;
         border-radius: 0 6px 6px 0;
+        background-color: rgb(240, 240, 240);
       }
     }
   }
-  @media (max-width: 480px) {
-    form {
-      grid-template-columns: 1fr;
-      justify-items: center;
+  @media (max-width: 620px) {
+    width: auto;
+    .searchForm {
+      label {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
     }
   }
 `
