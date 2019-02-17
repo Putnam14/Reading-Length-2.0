@@ -36,5 +36,6 @@ module.exports = {
     SERVER: process.env.SERVER,
     AMAZON_AFF: affiliates.amazon,
     URL: url,
+    GATAG: 'UA-63567761-5',
   },
 }

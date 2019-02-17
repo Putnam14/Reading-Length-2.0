@@ -36,17 +36,6 @@ const WORDCOUNT_QUERY = gql`
     }
   }
 `
-const PRICE_QUERY = gql`
-  query PRICE_QUERY($isbn: String!) {
-    findPrice(isbn10: $isbn) {
-      marketplace
-      MSRP
-      offerPrice
-      currency
-      affiliateLink
-    }
-  }
-`
 
 class BookPage extends React.Component {
   constructor() {
@@ -71,7 +60,7 @@ class BookPage extends React.Component {
   }
 
   render() {
-    const { isbn } = this.props
+    const { isbn, bot } = this.props
     if (!validISBN(isbn)) {
       return (
         <BookStyles>
@@ -91,7 +80,7 @@ class BookPage extends React.Component {
             {({ data: dataTwo, loading: loadingTwo, error: errorTwo }) => {
               if (errorOne) return <Error error={errorOne} />
               if (errorTwo) return <Error error={errorTwo} />
-              if (loadingOne || loadingTwo) return <Loading />
+              if (!bot && (loadingOne || loadingTwo)) return <Loading />
               const book = dataOne.findBook
               book.isbn = book.isbn10
               const wordcountData = dataTwo.wordCounts
@@ -179,7 +168,7 @@ class BookPage extends React.Component {
                             <strong>Author</strong>
                             <p>{book.author}</p>
                           </div>
-                          <Prices isbn={isbn} />
+                          {!bot && <Prices isbn={isbn} />}
                           <div>
                             <strong>Word Count</strong>
                             <p>{wordcount.toLocaleString()} words</p>
