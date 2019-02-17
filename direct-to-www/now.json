@@ -1,0 +1,7 @@
+{
+    "name": "reading-length-prod-redirector",
+    "alias": ["readinglength.com"],
+    "version": 2,
+    "builds": [{ "src": "index.html", "use": "@now/static" }],
+    "routes": [{ "src": "/(.*)", "status": 301, "headers": { "Location": "https://www.readinglength.com/$1" }}]
+  }
