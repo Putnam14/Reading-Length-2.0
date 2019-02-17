@@ -21,15 +21,15 @@ const WPMPage = () => (
       provided by Project Gutenberg.
     </p>
     <h2>Easy or Elementary Reading Tests</h2>
-    <Link prefetch href="/wpm/ttopr">
+    <Link href="/wpm/ttopr">
       <a>The Tale of Peter Rabbit – Beatrix Potter</a>
     </Link>
     <h2>Moderate or High School Reading Tests</h2>
-    <Link prefetch href="/wpm/tpodg">
+    <Link href="/wpm/tpodg">
       <a>The Picture of Dorian Gray – Oscar Wilde</a>
     </Link>
     <h2>Hard or Collegiate Reading Tests</h2>
-    <Link prefetch href="/wpm/atotc">
+    <Link href="/wpm/atotc">
       <a>A Tale of Two Cities – Charles Dickens</a>
     </Link>
   </Inner>
