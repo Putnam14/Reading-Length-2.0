@@ -10,8 +10,10 @@ export default App =>
 
     static async getInitialProps(ctx) {
       const { Component, router } = ctx
-      const userAgent = ctx.ctx.req.headers['user-agent']
-      const bot = isBot(userAgent)
+      const userAgent = ctx.ctx.req
+        ? ctx.ctx.req.headers['user-agent']
+        : 'Unknown'
+      const bot = userAgent ? isBot(userAgent) : true
 
       let appProps = {}
       if (App.getInitialProps) {
