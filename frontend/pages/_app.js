@@ -16,7 +16,8 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, apolloClient, pageProps } = this.props
+    const { Component, apolloClient, pageProps, bot } = this.props
+    pageProps.bot = bot
 
     return (
       <Container>
