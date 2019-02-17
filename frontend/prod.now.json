@@ -1,6 +1,6 @@
 {
     "name": "reading-length-prod",
-    "alias": ["prod.readinglength.com","readinglength.com"],
+    "alias": ["prod.readinglength.com","www.readinglength.com"],
     "version": 2,
     "build": {
         "env": {
