@@ -4,7 +4,7 @@ const staging = process.env.SERVER === 'staging'
 const endpoints = {
   dev: 'http://localhost:4444',
   staging: 'https://rlength-yoga-staging.herokuapp.com/',
-  prod: 'https://localhost:2222',
+  prod: 'https://rlength-yoga-prod.herokuapp.com/',
 }
 
 const urls = {
