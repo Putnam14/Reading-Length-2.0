@@ -17,12 +17,13 @@ export default App =>
       if (App.getInitialProps) {
         appProps = await App.getInitialProps(ctx)
         appProps.bot = bot
+        appProps.ua = userAgent
       }
 
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
       const apollo = initApollo()
-      if (!bot) {
+      if (bot) {
         try {
           // Run all GraphQL queries
           await getDataFromTree(
