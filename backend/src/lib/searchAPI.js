@@ -5,6 +5,7 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
     amazonSearch.AlternateVersions &&
     amazonSearch.AlternateVersions.AlternateVersion
   ) {
+    console.log(amazonSearch.AlternateVersions.AlternateVersion)
     const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
       alternate => {
         return (
