@@ -47,8 +47,7 @@ exports.audibleSearch = async audibleASIN => {
       })
       .catch(err => {
         throw new Error(
-          `Something went wrong looking up audible version for ${audibleASIN}`,
-          err
+          `Something went wrong looking up audible version for ${audibleASIN}: ${err}`
         );
       });
     return result;
