@@ -46,10 +46,10 @@ exports.audibleSearch = async audibleASIN => {
           return result.data().Item.ItemAttributes.RunningTime._;
       })
       .catch(err => {
-        console.log(
-          `Something went wrong looking up audible version for ${audibleASIN}`
+        throw new Error(
+          `Something went wrong looking up audible version for ${audibleASIN}`,
+          err
         );
-        throw new Error(err);
       });
     return result;
   } catch (err) {
