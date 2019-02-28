@@ -89,6 +89,7 @@ class Search extends React.Component {
           this.setState(prevState => {
             const newState = { ...prevState }
             newState.error = err.message
+            newState.searchLoading = false
             return newState
           })
           throw new Error(`Error caught at search: ${err.message}`)
