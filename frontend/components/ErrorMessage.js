@@ -6,9 +6,11 @@ import PropTypes from 'prop-types'
 const ErrorStyles = styled.div`
   padding: 2rem;
   background: white;
-  margin: 2rem 0;
+  margin: 2rem auto;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-left: 5px solid red;
+  border-right: 5px solid red;
+  max-width: 450px;
   p {
     margin: 0;
     font-weight: 100;
