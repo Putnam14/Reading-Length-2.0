@@ -22,7 +22,7 @@ const Query = {
         })
         .catch(err => {
           throw new Error(
-            `Could not find a book with those search terms. If you followed a link here, try refreshing. Our servers may be busy.`,
+            `Looks like that book isn't on our shelves. If you followed a link here, try refreshing. Our servers may be busy.`,
             err
           );
         });
