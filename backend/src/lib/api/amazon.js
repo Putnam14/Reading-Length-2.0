@@ -37,7 +37,7 @@ exports.bookSearch = async searchTerm => {
 };
 
 exports.audibleSearch = async audibleASIN => {
-  await wait(75);
+  await wait(500);
   try {
     const result = await client
       .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
