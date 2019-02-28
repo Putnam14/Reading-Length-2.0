@@ -185,7 +185,12 @@ class Search extends React.Component {
                           )}
                         </div>
                       </div>
-                      {error && <p>Could not find that book. Try again!</p>}
+                      {error && (
+                        <p>
+                          Could not find that book, our servers might be busy...
+                          Try again in a few seconds.
+                        </p>
+                      )}
                     </label>
                   </form>
                 )}
