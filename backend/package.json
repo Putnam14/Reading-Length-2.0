@@ -19,7 +19,8 @@
     "nodemon": "^1.18.9",
     "piranhax": "^1.0.9",
     "prisma": "^1.24.0",
-    "prisma-binding": "^2.2.14"
+    "prisma-binding": "^2.2.14",
+    "waait": "^1.0.4"
   },
   "repository": "https://github.com/Putnam14/Reading-Length-2.0",
   "author": "Bridger Putnam",

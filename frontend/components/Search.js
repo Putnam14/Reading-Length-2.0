@@ -89,6 +89,7 @@ class Search extends React.Component {
           this.setState(prevState => {
             const newState = { ...prevState }
             newState.error = err.message
+            newState.searchLoading = false
             return newState
           })
           throw new Error(`Error caught at search: ${err.message}`)
@@ -184,7 +185,12 @@ class Search extends React.Component {
                           )}
                         </div>
                       </div>
-                      {error && <p>Could not find that book. Try again!</p>}
+                      {error && (
+                        <p>
+                          Could not find that book, our servers might be busy...
+                          Try again in a few seconds.
+                        </p>
+                      )}
                     </label>
                   </form>
                 )}

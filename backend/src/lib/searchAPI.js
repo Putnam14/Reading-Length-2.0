@@ -3,7 +3,7 @@ const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
 const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
   if (
     amazonSearch.AlternateVersions &&
-    amazonSearch.AlternateVersions.AlternateVersion
+    Array.isArray(amazonSearch.AlternateVersions.AlternateVersion)
   ) {
     const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
       alternate => {
@@ -14,18 +14,22 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
       }
     );
     if (audibleVersion) {
-      const runtime = await audibleSearch(audibleVersion.ASIN);
-      // Check if runtime is realistic (at least half a minute per page for books over 50 pages)
-      if (pages < 50 || runtime / pages > 0.5) {
-        const wordCount = runtime * 145;
-        ctx.db.mutation.createWordCount({
-          data: {
-            isbn10: isbn,
-            wordCount,
-            countAccuracy: "Estimate",
-            countType: "audiobook length"
-          }
-        });
+      try {
+        const runtime = await audibleSearch(audibleVersion.ASIN);
+        // Check if runtime is realistic (at least half a minute per page for books over 50 pages)
+        if (pages < 50 || runtime / pages > 0.5) {
+          const wordCount = runtime * 145;
+          ctx.db.mutation.createWordCount({
+            data: {
+              isbn10: isbn,
+              wordCount,
+              countAccuracy: "Estimate",
+              countType: "audiobook length"
+            }
+          });
+        }
+      } catch (err) {
+        throw new Error(err);
       }
     }
   }
