@@ -40,7 +40,7 @@ exports.audibleSearch = async audibleASIN => {
     const result = await client
       .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
       .then(result => {
-        console.log(result.data());
+        console.log(result);
         return result.data().Item.ItemAttributes.RunningTime._;
       })
       .catch(err => {
