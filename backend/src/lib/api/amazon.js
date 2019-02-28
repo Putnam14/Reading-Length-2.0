@@ -1,4 +1,5 @@
 const Piranhax = require("piranhax");
+const wait = require("waait");
 
 const credentials = {
   pubKey: process.env.AMAZON_API_PUBLIC,
@@ -36,6 +37,7 @@ exports.bookSearch = async searchTerm => {
 };
 
 exports.audibleSearch = async audibleASIN => {
+  await wait(75);
   try {
     const result = await client
       .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
@@ -43,7 +45,9 @@ exports.audibleSearch = async audibleASIN => {
         return result.data().Item.ItemAttributes.RunningTime._;
       })
       .catch(err => {
-        console.log("Something didnt work at audibleSearch.");
+        console.log(
+          `Something went wrong looking up audible version for ${audibleASIN}`
+        );
         throw new Error(err);
       });
     return result;
