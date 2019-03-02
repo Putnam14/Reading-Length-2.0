@@ -90,6 +90,7 @@ class Search extends React.Component {
             const newState = { ...prevState }
             newState.error = err.message
             newState.searchLoading = false
+            newState.suggestionLoading = false
             return newState
           })
           NProgress.done()
