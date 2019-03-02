@@ -186,12 +186,6 @@ class Search extends React.Component {
                           )}
                         </div>
                       </div>
-                      {error && (
-                        <p>
-                          Could not find that book, our servers might be busy...
-                          Try again in a few seconds.
-                        </p>
-                      )}
                     </label>
                   </form>
                 )}
@@ -199,6 +193,12 @@ class Search extends React.Component {
             </div>
           )}
         </Downshift>
+        {error && (
+          <p>
+            Could not find that book, our servers might be busy... Try again in
+            a few seconds.
+          </p>
+        )}
         <hr />
       </SearchStyles>
     )
