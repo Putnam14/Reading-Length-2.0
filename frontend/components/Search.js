@@ -92,6 +92,7 @@ class Search extends React.Component {
             newState.searchLoading = false
             return newState
           })
+          NProgress.done()
           throw new Error(`Error caught at search: ${err.message}`)
         }
       }
