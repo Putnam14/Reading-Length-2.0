@@ -90,8 +90,10 @@ class Search extends React.Component {
             const newState = { ...prevState }
             newState.error = err.message
             newState.searchLoading = false
+            newState.suggestionLoading = false
             return newState
           })
+          NProgress.done()
           throw new Error(`Error caught at search: ${err.message}`)
         }
       }
@@ -198,6 +200,12 @@ class Search extends React.Component {
             </div>
           )}
         </Downshift>
+        {error && (
+          <p>
+            Could not find that book, our servers might be busy... Try again in
+            a few seconds.
+          </p>
+        )}
         <hr />
       </SearchStyles>
     )

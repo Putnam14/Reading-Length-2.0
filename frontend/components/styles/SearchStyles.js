@@ -50,6 +50,10 @@ const SearchStyles = styled.div`
   *:focus {
     outline: none;
   }
+  .dropdown {
+    position: relative;
+    width: 100%;
+  }
   .searchForm {
     label {
       font-weight: 700;
