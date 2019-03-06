@@ -97,7 +97,7 @@ class BookPage extends React.Component {
                 : 'page count'
               const { user } = this.state
               return (
-                <BookStyles>
+                <BookStyles data-test="book">
                   <Head>
                     <title>{book.name} | Reading Length</title>
                     <meta
@@ -216,3 +216,4 @@ class BookPage extends React.Component {
 }
 
 export default BookPage
+export { BOOK_FROM_ISBN_QUERY, WORDCOUNT_QUERY }

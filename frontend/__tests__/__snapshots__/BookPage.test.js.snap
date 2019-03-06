@@ -1,0 +1,1168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<BookPage/> Renders a page with book information that matches snapshot 1`] = `
+<div
+  className="BookStyles-sc-7qtqdh-0 hxjbZS"
+  data-test="book"
+>
+  <Head>
+    <SideEffect
+      handleStateChange={null}
+      reduceComponentsToState={[Function]}
+    />
+  </Head>
+  <Search>
+    <SearchStyles>
+      <StyledComponent
+        forwardedComponent={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "attrs": Array [],
+            "componentStyle": ComponentStyle {
+              "componentId": "SearchStyles-sc-1i8eull-2",
+              "isStatic": true,
+              "lastClassName": "geEuIR",
+              "rules": Array [
+                "width:600px;margin:0 auto;*:focus{outline:none;}.dropdown{position:relative;width:100%;}.searchForm{label{font-weight:700;display:grid;grid-template-columns:auto 1fr;grid-column-gap:2rem;}.input-container{display:grid;position:relative;grid-template-columns:1fr;}.inputs{display:flex;input,button{border:1px solid #eee;padding:0.5rem 1rem;margin:0;font-size:1.5rem;}&.loading{border-radius:6px;animation:",
+                Keyframes {
+                  "id": "sc-keyframes-gkgsoI",
+                  "inject": [Function],
+                  "name": "gkgsoI",
+                  "rules": Array [
+                    "@-webkit-keyframes gkgsoI{from{box-shadow:0 0 0px #337ab7;}to{box-shadow:0 0 10px 1px #337ab7;}}",
+                    "@keyframes gkgsoI{from{box-shadow:0 0 0px #337ab7;}to{box-shadow:0 0 10px 1px #337ab7;}}",
+                  ],
+                  "toString": [Function],
+                },
+                " 0.5s ease-in-out infinite alternate;}input{-webkit-appearance:none;border-radius:6px 0 0 6px;flex-grow:2;::placeholder{color:rgb(40,40,40);opacity:1;}}button{border:0;border-radius:0 6px 6px 0;background-color:rgb(240,240,240);}}}@media (max-width:620px){width:auto;.searchForm{label{grid-template-columns:1fr;justify-items:center;}}}",
+              ],
+            },
+            "displayName": "SearchStyles",
+            "foldedComponentIds": Array [],
+            "render": [Function],
+            "styledComponentId": "SearchStyles-sc-1i8eull-2",
+            "target": "div",
+            "toString": [Function],
+            "warnTooManyClasses": [Function],
+            "withComponent": [Function],
+          }
+        }
+        forwardedRef={null}
+      >
+        <div
+          className="SearchStyles-sc-1i8eull-2 geEuIR"
+        >
+          <hr />
+          <Downshift
+            defaultHighlightedIndex={null}
+            defaultIsOpen={false}
+            environment={[Window]}
+            getA11yStatusMessage={[Function]}
+            itemToString={[Function]}
+            onChange={[Function]}
+            onInputValueChange={[Function]}
+            onOuterClick={[Function]}
+            onSelect={[Function]}
+            onStateChange={[Function]}
+            onUserAction={[Function]}
+            scrollIntoView={[Function]}
+            selectedItemChanged={[Function]}
+            stateReducer={[Function]}
+            suppressRefError={false}
+          >
+            <div
+              aria-expanded={false}
+              aria-haspopup="listbox"
+              aria-labelledby="downshift-0-label"
+              aria-owns={null}
+              role="combobox"
+            >
+              <ApolloConsumer>
+                <form
+                  className="searchForm"
+                  onSubmit={[Function]}
+                >
+                  <label
+                    htmlFor="search"
+                  >
+                    Search for any book
+                    <div
+                      className="input-container"
+                    >
+                      <div
+                        className="inputs"
+                      >
+                        <input
+                          aria-activedescendant={null}
+                          aria-autocomplete="list"
+                          aria-controls={null}
+                          aria-labelledby="downshift-0-label"
+                          autoComplete="off"
+                          id="downshift-0-input"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onKeyDown={[Function]}
+                          placeholder="Book title or author..."
+                          type="search"
+                          value=""
+                        />
+                        <button
+                          disabled={false}
+                          type="submit"
+                        >
+                          Search!
+                        </button>
+                      </div>
+                      <div
+                        className="dropdown"
+                      />
+                    </div>
+                  </label>
+                </form>
+              </ApolloConsumer>
+            </div>
+          </Downshift>
+          <hr />
+        </div>
+      </StyledComponent>
+    </SearchStyles>
+  </Search>
+  <div
+    className="above-the-fold"
+  >
+    <div
+      className="container"
+    >
+      <img
+        alt="Walden and Civil Disobedience"
+        src="https://images-na.ssl-images-amazon.com/images/I/41UtCWaX0BL.jpg"
+      />
+      <WordCountInfo
+        book={
+          Object {
+            "__typename": "Book",
+            "author": "Henry David Thoreau",
+            "description": "<b>Henry David Thoreau reflects on life, politics, and society in these two inspiring masterworks: <i>Walden</i> and <i>Civil Disobedience</i>.</b><br><br> In 1845, Thoreau moved to a cabin that he built with his own hands along the shores of Walden Pond in Massachusetts. Shedding the trivial ties that he felt bound much of humanity, Thoreau reaped from the land both physically and mentally, and pursued truth in the quiet of nature. In <i>Walden</i>, he explains how separating oneself from the world of men can truly awaken the sleeping self. Thoreau holds fast to the notion that you have not truly existed until you adopt such a lifestyle—and only then can you reenter society, as an enlightened being.<br>  <br> These simple but profound musings—as well as “Civil Disobedience,” his protest against the government’s interference with civil liberty—have inspired many to embrace his philosophy of individualism and love of nature. More than a century and a half later, his message is more timely than ever.<br>  <br><b>With an Introduction by W.S. Merwin </b><br><b>and an Afterword by Will Howarth</b>",
+            "image": "https://images-na.ssl-images-amazon.com/images/I/41UtCWaX0BL.jpg",
+            "isbn": "0451532163",
+            "isbn10": "0451532163",
+            "isbn13": null,
+            "name": "Walden and Civil Disobedience",
+            "pageCount": 336,
+            "related": Array [
+              "1451529791",
+              "1548000019",
+              "0679740244",
+              "0486277909",
+            ],
+          }
+        }
+        safelySetState={[Function]}
+        user={
+          Object {
+            "results": Object {
+              "hours": 0,
+              "minutes": 0,
+            },
+            "wpm": 250,
+          }
+        }
+        wordCount={84000}
+      >
+        <WordCountInfoStyles>
+          <StyledComponent
+            forwardedComponent={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "attrs": Array [],
+                "componentStyle": ComponentStyle {
+                  "componentId": "WordCountInfoStyles-sc-1gfvu8y-0",
+                  "isStatic": true,
+                  "lastClassName": "juDlzS",
+                  "rules": Array [
+                    "font-size:2rem;h1{font-size:2rem;padding:0;margin:0;}input,button{border:1px solid #e7e7e7;font-size:1.5rem;padding:0.5rem 1rem;background-color:white;}button{border-radius:6px;cursor:pointer;:hover{background-color:#f8f8f8;}}label{font-weight:700;}.input-group{padding:0.5em 0;display:grid;grid-template-columns:auto auto;justify-content:start;input{border-radius:6px 0 0 6px;margin:0;}button{margin:0;border-left:0;border-radius:0 6px 6px 0;}}form{p{font-weight:300;padding:0;margin:0;font-size:1.5rem;font-style:italic;}}.results{p{margin:0;}button{display:block;margin:0 auto;}}a{font-weight:400;}@media (max-width:700px){h1,label{text-align:center;}label{display:block;}.input-group{justify-content:center;}form{text-align:center;}.results{p{text-align:center;}}}",
+                  ],
+                },
+                "displayName": "WordCountInfoStyles",
+                "foldedComponentIds": Array [],
+                "render": [Function],
+                "styledComponentId": "WordCountInfoStyles-sc-1gfvu8y-0",
+                "target": "div",
+                "toString": [Function],
+                "warnTooManyClasses": [Function],
+                "withComponent": [Function],
+              }
+            }
+            forwardedRef={null}
+          >
+            <div
+              className="WordCountInfoStyles-sc-1gfvu8y-0 juDlzS"
+            >
+              <h1>
+                Walden and Civil Disobedience
+              </h1>
+              <p>
+                The average reader will spend 
+                <b>
+                  5
+                   hours
+                </b>
+                 and
+                 
+                <b>
+                  36
+                   minutes
+                </b>
+                 reading 
+                <em>
+                  Walden and Civil Disobedience
+                </em>
+                 at 250 WPM (words per minute).
+              </p>
+              <form>
+                <label
+                  htmlFor="userWPM"
+                >
+                  How quickly can you read this book? 
+                  <br />
+                   Enter your reading speed here:
+                  <span
+                    className="input-group"
+                  >
+                    <input
+                      aria-label="Enter your reading speed to calculate how long this will take to read"
+                      id="userWPM"
+                      onChange={[Function]}
+                      placeholder="250"
+                      type="number"
+                      value={250}
+                    />
+                    <button
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      Estimate
+                    </button>
+                  </span>
+                </label>
+                <p>
+                  To find your reading speed you can take one of our
+                   
+                  <Link
+                    href="/wpm"
+                  >
+                    <a
+                      href="/wpm"
+                      onClick={[Function]}
+                    >
+                      WPM tests
+                    </a>
+                  </Link>
+                  .
+                </p>
+              </form>
+            </div>
+          </StyledComponent>
+        </WordCountInfoStyles>
+      </WordCountInfo>
+    </div>
+  </div>
+  <Inner>
+    <Inner__InnerStyles>
+      <StyledComponent
+        forwardedComponent={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "attrs": Array [],
+            "componentStyle": ComponentStyle {
+              "componentId": "Inner__InnerStyles-vj740s-0",
+              "isStatic": false,
+              "lastClassName": "iTOdau",
+              "rules": Array [
+                "max-width:",
+                [Function],
+                ";margin:0 auto;padding:2rem;min-height:calc(100vh - 50px);display:grid;grid-template-rows:1fr auto;",
+              ],
+            },
+            "displayName": "Inner__InnerStyles",
+            "foldedComponentIds": Array [],
+            "render": [Function],
+            "styledComponentId": "Inner__InnerStyles-vj740s-0",
+            "target": "div",
+            "toString": [Function],
+            "warnTooManyClasses": [Function],
+            "withComponent": [Function],
+          }
+        }
+        forwardedRef={null}
+      >
+        <div
+          className="Inner__InnerStyles-vj740s-0 iTOdau"
+        >
+          <div>
+            <div
+              className="book-info"
+            >
+              <div>
+                <div
+                  className="book-data"
+                >
+                  <div>
+                    <strong>
+                      Author
+                    </strong>
+                    <p>
+                      Henry David Thoreau
+                    </p>
+                  </div>
+                  <Prices
+                    isbn="0451532163"
+                  >
+                    <Query
+                      query={
+                        Object {
+                          "definitions": Array [
+                            Object {
+                              "directives": Array [],
+                              "kind": "OperationDefinition",
+                              "name": Object {
+                                "kind": "Name",
+                                "value": "PRICE_QUERY",
+                              },
+                              "operation": "query",
+                              "selectionSet": Object {
+                                "kind": "SelectionSet",
+                                "selections": Array [
+                                  Object {
+                                    "alias": undefined,
+                                    "arguments": Array [
+                                      Object {
+                                        "kind": "Argument",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "isbn10",
+                                        },
+                                        "value": Object {
+                                          "kind": "Variable",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "isbn",
+                                          },
+                                        },
+                                      },
+                                    ],
+                                    "directives": Array [],
+                                    "kind": "Field",
+                                    "name": Object {
+                                      "kind": "Name",
+                                      "value": "findPrice",
+                                    },
+                                    "selectionSet": Object {
+                                      "kind": "SelectionSet",
+                                      "selections": Array [
+                                        Object {
+                                          "alias": undefined,
+                                          "arguments": Array [],
+                                          "directives": Array [],
+                                          "kind": "Field",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "marketplace",
+                                          },
+                                          "selectionSet": undefined,
+                                        },
+                                        Object {
+                                          "alias": undefined,
+                                          "arguments": Array [],
+                                          "directives": Array [],
+                                          "kind": "Field",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "MSRP",
+                                          },
+                                          "selectionSet": undefined,
+                                        },
+                                        Object {
+                                          "alias": undefined,
+                                          "arguments": Array [],
+                                          "directives": Array [],
+                                          "kind": "Field",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "offerPrice",
+                                          },
+                                          "selectionSet": undefined,
+                                        },
+                                        Object {
+                                          "alias": undefined,
+                                          "arguments": Array [],
+                                          "directives": Array [],
+                                          "kind": "Field",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "currency",
+                                          },
+                                          "selectionSet": undefined,
+                                        },
+                                        Object {
+                                          "alias": undefined,
+                                          "arguments": Array [],
+                                          "directives": Array [],
+                                          "kind": "Field",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "affiliateLink",
+                                          },
+                                          "selectionSet": undefined,
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                              "variableDefinitions": Array [
+                                Object {
+                                  "defaultValue": undefined,
+                                  "directives": Array [],
+                                  "kind": "VariableDefinition",
+                                  "type": Object {
+                                    "kind": "NonNullType",
+                                    "type": Object {
+                                      "kind": "NamedType",
+                                      "name": Object {
+                                        "kind": "Name",
+                                        "value": "String",
+                                      },
+                                    },
+                                  },
+                                  "variable": Object {
+                                    "kind": "Variable",
+                                    "name": Object {
+                                      "kind": "Name",
+                                      "value": "isbn",
+                                    },
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                          "kind": "Document",
+                          "loc": Object {
+                            "end": 161,
+                            "start": 0,
+                          },
+                        }
+                      }
+                      variables={
+                        Object {
+                          "isbn": "0451532163",
+                        }
+                      }
+                    />
+                  </Prices>
+                  <div>
+                    <strong>
+                      Word Count
+                    </strong>
+                    <p>
+                      84,000
+                       words
+                    </p>
+                    <p
+                      className="count-accuracy"
+                    >
+                      Guess
+                       based on 
+                      page count
+                    </p>
+                  </div>
+                  <div>
+                    <strong>
+                      Pages
+                    </strong>
+                    <p>
+                      336
+                       pages
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="description"
+              >
+                <div
+                  className="desc-text"
+                >
+                  <div
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "<b>Henry David Thoreau reflects on life, politics, and society in these two inspiring masterworks: <i>Walden</i> and <i>Civil Disobedience</i>.</b><br><br> In 1845, Thoreau moved to a cabin that he built with his own hands along the shores of Walden Pond in Massachusetts. Shedding the trivial ties that he felt bound much of humanity, Thoreau reaped from the land both physically and mentally, and pursued truth in the quiet of nature. In <i>Walden</i>, he explains how separating oneself from the world of men can truly awaken the sleeping self. Thoreau holds fast to the notion that you have not truly existed until you adopt such a lifestyle—and only then can you reenter society, as an enlightened being.<br>  <br> These simple but profound musings—as well as “Civil Disobedience,” his protest against the government’s interference with civil liberty—have inspired many to embrace his philosophy of individualism and love of nature. More than a century and a half later, his message is more timely than ever.<br>  <br><b>With an Introduction by W.S. Merwin </b><br><b>and an Afterword by Will Howarth</b>",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="amazon-link"
+                >
+                  <a
+                    href="https://www.amazon.com/dp/0451532163?tag=readleng-20"
+                  >
+                    View more on Amazon
+                  </a>
+                </div>
+              </div>
+            </div>
+            <RelatedBooks
+              relatedBooks={
+                Array [
+                  "1451529791",
+                  "1548000019",
+                  "0679740244",
+                  "0486277909",
+                ]
+              }
+            >
+              <RelatedBooksStyles>
+                <StyledComponent
+                  forwardedComponent={
+                    Object {
+                      "$$typeof": Symbol(react.forward_ref),
+                      "attrs": Array [],
+                      "componentStyle": ComponentStyle {
+                        "componentId": "RelatedBooksStyles-sc-52dlyw-0",
+                        "isStatic": true,
+                        "lastClassName": "fSgQHs",
+                        "rules": Array [
+                          ".related-container{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-evenly;}",
+                        ],
+                      },
+                      "displayName": "RelatedBooksStyles",
+                      "foldedComponentIds": Array [],
+                      "render": [Function],
+                      "styledComponentId": "RelatedBooksStyles-sc-52dlyw-0",
+                      "target": "div",
+                      "toString": [Function],
+                      "warnTooManyClasses": [Function],
+                      "withComponent": [Function],
+                    }
+                  }
+                  forwardedRef={null}
+                >
+                  <div
+                    className="RelatedBooksStyles-sc-52dlyw-0 fSgQHs"
+                  >
+                    <h3>
+                      You might also like
+                    </h3>
+                    <div
+                      className="related-container"
+                    >
+                      <RelatedBook
+                        isbn="1451529791"
+                        key="1451529791"
+                      >
+                        <Query
+                          query={
+                            Object {
+                              "definitions": Array [
+                                Object {
+                                  "directives": Array [],
+                                  "kind": "OperationDefinition",
+                                  "name": Object {
+                                    "kind": "Name",
+                                    "value": "RELATED_BOOK_QUERY",
+                                  },
+                                  "operation": "query",
+                                  "selectionSet": Object {
+                                    "kind": "SelectionSet",
+                                    "selections": Array [
+                                      Object {
+                                        "alias": undefined,
+                                        "arguments": Array [
+                                          Object {
+                                            "kind": "Argument",
+                                            "name": Object {
+                                              "kind": "Name",
+                                              "value": "where",
+                                            },
+                                            "value": Object {
+                                              "fields": Array [
+                                                Object {
+                                                  "kind": "ObjectField",
+                                                  "name": Object {
+                                                    "kind": "Name",
+                                                    "value": "isbn10",
+                                                  },
+                                                  "value": Object {
+                                                    "kind": "Variable",
+                                                    "name": Object {
+                                                      "kind": "Name",
+                                                      "value": "isbn",
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                              "kind": "ObjectValue",
+                                            },
+                                          },
+                                        ],
+                                        "directives": Array [],
+                                        "kind": "Field",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "bookPreview",
+                                        },
+                                        "selectionSet": Object {
+                                          "kind": "SelectionSet",
+                                          "selections": Array [
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "name",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "image",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  "variableDefinitions": Array [
+                                    Object {
+                                      "defaultValue": undefined,
+                                      "directives": Array [],
+                                      "kind": "VariableDefinition",
+                                      "type": Object {
+                                        "kind": "NonNullType",
+                                        "type": Object {
+                                          "kind": "NamedType",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "String",
+                                          },
+                                        },
+                                      },
+                                      "variable": Object {
+                                        "kind": "Variable",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "isbn",
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                              "kind": "Document",
+                              "loc": Object {
+                                "end": 123,
+                                "start": 0,
+                              },
+                            }
+                          }
+                          variables={
+                            Object {
+                              "isbn": "1451529791",
+                            }
+                          }
+                        >
+                          <p>
+                            Loading...
+                          </p>
+                        </Query>
+                      </RelatedBook>
+                      <RelatedBook
+                        isbn="1548000019"
+                        key="1548000019"
+                      >
+                        <Query
+                          query={
+                            Object {
+                              "definitions": Array [
+                                Object {
+                                  "directives": Array [],
+                                  "kind": "OperationDefinition",
+                                  "name": Object {
+                                    "kind": "Name",
+                                    "value": "RELATED_BOOK_QUERY",
+                                  },
+                                  "operation": "query",
+                                  "selectionSet": Object {
+                                    "kind": "SelectionSet",
+                                    "selections": Array [
+                                      Object {
+                                        "alias": undefined,
+                                        "arguments": Array [
+                                          Object {
+                                            "kind": "Argument",
+                                            "name": Object {
+                                              "kind": "Name",
+                                              "value": "where",
+                                            },
+                                            "value": Object {
+                                              "fields": Array [
+                                                Object {
+                                                  "kind": "ObjectField",
+                                                  "name": Object {
+                                                    "kind": "Name",
+                                                    "value": "isbn10",
+                                                  },
+                                                  "value": Object {
+                                                    "kind": "Variable",
+                                                    "name": Object {
+                                                      "kind": "Name",
+                                                      "value": "isbn",
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                              "kind": "ObjectValue",
+                                            },
+                                          },
+                                        ],
+                                        "directives": Array [],
+                                        "kind": "Field",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "bookPreview",
+                                        },
+                                        "selectionSet": Object {
+                                          "kind": "SelectionSet",
+                                          "selections": Array [
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "name",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "image",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  "variableDefinitions": Array [
+                                    Object {
+                                      "defaultValue": undefined,
+                                      "directives": Array [],
+                                      "kind": "VariableDefinition",
+                                      "type": Object {
+                                        "kind": "NonNullType",
+                                        "type": Object {
+                                          "kind": "NamedType",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "String",
+                                          },
+                                        },
+                                      },
+                                      "variable": Object {
+                                        "kind": "Variable",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "isbn",
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                              "kind": "Document",
+                              "loc": Object {
+                                "end": 123,
+                                "start": 0,
+                              },
+                            }
+                          }
+                          variables={
+                            Object {
+                              "isbn": "1548000019",
+                            }
+                          }
+                        >
+                          <p>
+                            Loading...
+                          </p>
+                        </Query>
+                      </RelatedBook>
+                      <RelatedBook
+                        isbn="0679740244"
+                        key="0679740244"
+                      >
+                        <Query
+                          query={
+                            Object {
+                              "definitions": Array [
+                                Object {
+                                  "directives": Array [],
+                                  "kind": "OperationDefinition",
+                                  "name": Object {
+                                    "kind": "Name",
+                                    "value": "RELATED_BOOK_QUERY",
+                                  },
+                                  "operation": "query",
+                                  "selectionSet": Object {
+                                    "kind": "SelectionSet",
+                                    "selections": Array [
+                                      Object {
+                                        "alias": undefined,
+                                        "arguments": Array [
+                                          Object {
+                                            "kind": "Argument",
+                                            "name": Object {
+                                              "kind": "Name",
+                                              "value": "where",
+                                            },
+                                            "value": Object {
+                                              "fields": Array [
+                                                Object {
+                                                  "kind": "ObjectField",
+                                                  "name": Object {
+                                                    "kind": "Name",
+                                                    "value": "isbn10",
+                                                  },
+                                                  "value": Object {
+                                                    "kind": "Variable",
+                                                    "name": Object {
+                                                      "kind": "Name",
+                                                      "value": "isbn",
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                              "kind": "ObjectValue",
+                                            },
+                                          },
+                                        ],
+                                        "directives": Array [],
+                                        "kind": "Field",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "bookPreview",
+                                        },
+                                        "selectionSet": Object {
+                                          "kind": "SelectionSet",
+                                          "selections": Array [
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "name",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "image",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  "variableDefinitions": Array [
+                                    Object {
+                                      "defaultValue": undefined,
+                                      "directives": Array [],
+                                      "kind": "VariableDefinition",
+                                      "type": Object {
+                                        "kind": "NonNullType",
+                                        "type": Object {
+                                          "kind": "NamedType",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "String",
+                                          },
+                                        },
+                                      },
+                                      "variable": Object {
+                                        "kind": "Variable",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "isbn",
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                              "kind": "Document",
+                              "loc": Object {
+                                "end": 123,
+                                "start": 0,
+                              },
+                            }
+                          }
+                          variables={
+                            Object {
+                              "isbn": "0679740244",
+                            }
+                          }
+                        >
+                          <p>
+                            Loading...
+                          </p>
+                        </Query>
+                      </RelatedBook>
+                      <RelatedBook
+                        isbn="0486277909"
+                        key="0486277909"
+                      >
+                        <Query
+                          query={
+                            Object {
+                              "definitions": Array [
+                                Object {
+                                  "directives": Array [],
+                                  "kind": "OperationDefinition",
+                                  "name": Object {
+                                    "kind": "Name",
+                                    "value": "RELATED_BOOK_QUERY",
+                                  },
+                                  "operation": "query",
+                                  "selectionSet": Object {
+                                    "kind": "SelectionSet",
+                                    "selections": Array [
+                                      Object {
+                                        "alias": undefined,
+                                        "arguments": Array [
+                                          Object {
+                                            "kind": "Argument",
+                                            "name": Object {
+                                              "kind": "Name",
+                                              "value": "where",
+                                            },
+                                            "value": Object {
+                                              "fields": Array [
+                                                Object {
+                                                  "kind": "ObjectField",
+                                                  "name": Object {
+                                                    "kind": "Name",
+                                                    "value": "isbn10",
+                                                  },
+                                                  "value": Object {
+                                                    "kind": "Variable",
+                                                    "name": Object {
+                                                      "kind": "Name",
+                                                      "value": "isbn",
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                              "kind": "ObjectValue",
+                                            },
+                                          },
+                                        ],
+                                        "directives": Array [],
+                                        "kind": "Field",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "bookPreview",
+                                        },
+                                        "selectionSet": Object {
+                                          "kind": "SelectionSet",
+                                          "selections": Array [
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "name",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                            Object {
+                                              "alias": undefined,
+                                              "arguments": Array [],
+                                              "directives": Array [],
+                                              "kind": "Field",
+                                              "name": Object {
+                                                "kind": "Name",
+                                                "value": "image",
+                                              },
+                                              "selectionSet": undefined,
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  "variableDefinitions": Array [
+                                    Object {
+                                      "defaultValue": undefined,
+                                      "directives": Array [],
+                                      "kind": "VariableDefinition",
+                                      "type": Object {
+                                        "kind": "NonNullType",
+                                        "type": Object {
+                                          "kind": "NamedType",
+                                          "name": Object {
+                                            "kind": "Name",
+                                            "value": "String",
+                                          },
+                                        },
+                                      },
+                                      "variable": Object {
+                                        "kind": "Variable",
+                                        "name": Object {
+                                          "kind": "Name",
+                                          "value": "isbn",
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
+                              "kind": "Document",
+                              "loc": Object {
+                                "end": 123,
+                                "start": 0,
+                              },
+                            }
+                          }
+                          variables={
+                            Object {
+                              "isbn": "0486277909",
+                            }
+                          }
+                        >
+                          <p>
+                            Loading...
+                          </p>
+                        </Query>
+                      </RelatedBook>
+                    </div>
+                  </div>
+                </StyledComponent>
+              </RelatedBooksStyles>
+            </RelatedBooks>
+          </div>
+          <Footer>
+            <FooterStyles>
+              <StyledComponent
+                forwardedComponent={
+                  Object {
+                    "$$typeof": Symbol(react.forward_ref),
+                    "attrs": Array [],
+                    "componentStyle": ComponentStyle {
+                      "componentId": "FooterStyles-r0bdy3-0",
+                      "isStatic": true,
+                      "lastClassName": "fYpjpl",
+                      "rules": Array [
+                        "p{margin:1rem 0 padding:0;font-size:1.25rem;color:rgb(57,57,57);line-height:1.5rem;}.navLinks{a{padding-right:1em;}}",
+                      ],
+                    },
+                    "displayName": "FooterStyles",
+                    "foldedComponentIds": Array [],
+                    "render": [Function],
+                    "styledComponentId": "FooterStyles-r0bdy3-0",
+                    "target": "footer",
+                    "toString": [Function],
+                    "warnTooManyClasses": [Function],
+                    "withComponent": [Function],
+                  }
+                }
+                forwardedRef={null}
+              >
+                <footer
+                  className="FooterStyles-r0bdy3-0 fYpjpl"
+                >
+                  <hr />
+                  <div
+                    className="navLinks"
+                  >
+                    <Link
+                      href="/"
+                    >
+                      <a
+                        href="/"
+                        onClick={[Function]}
+                      >
+                        Home
+                      </a>
+                    </Link>
+                    <Link
+                      href="/wpm"
+                    >
+                      <a
+                        href="/wpm"
+                        onClick={[Function]}
+                      >
+                        WPM Tests
+                      </a>
+                    </Link>
+                  </div>
+                  <p>
+                    Made with ♥ in Boise by
+                     
+                    <a
+                      href="https://bridgerputnam.me"
+                    >
+                      Bridger Putnam
+                    </a>
+                  </p>
+                  <p>
+                    Word count estimates are not guaranteed to be accurate. If you are an author of a book or know of a book's accurate wordcount,
+                     
+                    <a
+                      href="mailto:hey+RL@bridgerputnam.me"
+                    >
+                      contact me
+                    </a>
+                    .
+                  </p>
+                  <p>
+                    Reading Length is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for us to earn fees by linking to Amazon.com and affiliated sites.
+                  </p>
+                </footer>
+              </StyledComponent>
+            </FooterStyles>
+          </Footer>
+        </div>
+      </StyledComponent>
+    </Inner__InnerStyles>
+  </Inner>
+</div>
+`;
