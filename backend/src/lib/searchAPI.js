@@ -1,11 +1,12 @@
 const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
+const wait = require("waait");
 
 const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
   if (
     amazonSearch.AlternateVersions &&
     Array.isArray(amazonSearch.AlternateVersions.AlternateVersion)
   ) {
-    const audibleVersion = amazonSearch.AlternateVersions.AlternateVersion.find(
+    const audibleVersions = amazonSearch.AlternateVersions.AlternateVersion.filter(
       alternate => {
         return (
           alternate.Binding === "Audible Audio Edition" ||
@@ -13,20 +14,36 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
         );
       }
     );
-    if (audibleVersion) {
+    if (audibleVersions) {
       try {
-        const runtime = await audibleSearch(audibleVersion.ASIN);
-        // Check if runtime is realistic (at least half a minute per page for books over 50 pages)
-        if (pages < 50 || runtime / pages > 0.5) {
-          const wordCount = runtime * 145;
-          ctx.db.mutation.createWordCount({
-            data: {
+        const runtime = await audibleSearch(audibleVersions);
+        if (runtime) {
+          const estWordCount = runtime * 145;
+          // Delete any estimates that are smaller than this new estimate. Alternatively, we could delete all other with the same countType...
+          await ctx.db.mutation.deleteManyWordCounts({
+            where: {
               isbn10: isbn,
-              wordCount,
-              countAccuracy: "Estimate",
+              wordCount_lte: estWordCount,
               countType: "audiobook length"
             }
           });
+          const existingGreaterWordcounts = await ctx.db.query.wordCounts({
+            where: {
+              isbn10: isbn,
+              wordCount_gt: estWordCount,
+              countType: "audiobook length"
+            }
+          });
+          if (!existingGreaterWordcounts) {
+            ctx.db.mutation.createWordCount({
+              data: {
+                isbn10: isbn,
+                wordCount: estWordCount,
+                countAccuracy: "Estimate",
+                countType: "audiobook length"
+              }
+            });
+          }
         }
       } catch (err) {
         throw new Error(err);

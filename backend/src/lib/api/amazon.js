@@ -36,21 +36,30 @@ exports.bookSearch = async searchTerm => {
   return result;
 };
 
-exports.audibleSearch = async audibleASIN => {
-  await wait(500);
+exports.audibleSearch = async audibleASINs => {
   try {
-    const result = await client
-      .ItemLookup(audibleASIN, { ResponseGroup: ["Large"] })
-      .then(result => {
-        if (result.data())
-          return result.data().Item.ItemAttributes.RunningTime._;
-      })
-      .catch(err => {
-        throw new Error(
-          `Something went wrong looking up audible version for ${audibleASIN}: ${err}`
-        );
-      });
-    return result;
+    for (let i = 0; i < audibleASINs.length; i++) {
+      let ASIN = audibleASINs[i].ASIN;
+      let result = await client
+        .ItemLookup(ASIN, { ResponseGroup: ["Large"] })
+        .then(result => {
+          if (result.data()) {
+            if (result.data().Item.ItemAttributes.Format === "Unabridged") {
+              return result.data().Item.ItemAttributes.RunningTime._;
+            }
+          }
+        })
+        .catch(err => {
+          throw new Error(
+            `Something went wrong looking up audible version for ${ASIN}: ${err}`
+          );
+        });
+      if (result > 0) {
+        i = audibleASINs.length;
+        return result;
+      }
+      await wait(500);
+    }
   } catch (err) {
     throw new Error(err);
   }
