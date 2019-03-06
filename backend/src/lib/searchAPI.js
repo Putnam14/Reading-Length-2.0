@@ -34,7 +34,10 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
               countType: "audiobook length"
             }
           });
-          if (!existingGreaterWordcounts) {
+          if (
+            !existingGreaterWordcounts ||
+            existingGreaterWordcounts.length === 0
+          ) {
             ctx.db.mutation.createWordCount({
               data: {
                 isbn10: isbn,
