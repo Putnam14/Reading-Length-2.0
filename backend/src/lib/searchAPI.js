@@ -1,7 +1,7 @@
 const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
 const wait = require("waait");
 
-const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
+const handleAudibleResponse = (amazonSearch, isbn, pages, ctx) => {
   if (
     amazonSearch.AlternateVersions &&
     Array.isArray(amazonSearch.AlternateVersions.AlternateVersion)
@@ -16,18 +16,18 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
     );
     if (audibleVersions) {
       try {
-        const runtime = await audibleSearch(audibleVersions);
+        const runtime = audibleSearch(audibleVersions);
         if (runtime) {
           const estWordCount = runtime * 145;
           // Delete any estimates that are smaller than this new estimate. Alternatively, we could delete all other with the same countType...
-          await ctx.db.mutation.deleteManyWordCounts({
+          ctx.db.mutation.deleteManyWordCounts({
             where: {
               isbn10: isbn,
               wordCount_lte: estWordCount,
               countType: "audiobook length"
             }
           });
-          const existingGreaterWordcounts = await ctx.db.query.wordCounts({
+          const existingGreaterWordcounts = ctx.db.query.wordCounts({
             where: {
               isbn10: isbn,
               wordCount_gt: estWordCount,
@@ -78,7 +78,12 @@ const handleAmazonResponse = async (amazonSearch, ctx) => {
         }
       });
     }
-    handleAudibleResponse(amazonSearch, results.isbn10, results.pageCount, ctx);
+    await handleAudibleResponse(
+      amazonSearch,
+      results.isbn10,
+      results.pageCount,
+      ctx
+    );
     const { isbn10, name } = results;
     const medImage = amazonSearch.MediumImage.URL;
     addBookPreview(isbn10, name, medImage, ctx);
