@@ -38,7 +38,7 @@ const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
             !existingGreaterWordcounts ||
             existingGreaterWordcounts.length === 0
           ) {
-            ctx.db.mutation.createWordCount({
+            await ctx.db.mutation.createWordCount({
               data: {
                 isbn10: isbn,
                 wordCount: estWordCount,
@@ -78,7 +78,12 @@ const handleAmazonResponse = async (amazonSearch, ctx) => {
         }
       });
     }
-    handleAudibleResponse(amazonSearch, results.isbn10, results.pageCount, ctx);
+    await handleAudibleResponse(
+      amazonSearch,
+      results.isbn10,
+      results.pageCount,
+      ctx
+    );
     const { isbn10, name } = results;
     const medImage = amazonSearch.MediumImage.URL;
     addBookPreview(isbn10, name, medImage, ctx);
