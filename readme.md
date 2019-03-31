@@ -42,8 +42,12 @@ Prior to deploying the schema, you will need a Prisma instance setup and set the
     - Production: ```git subtree push —prefix backend dokku master```
 
 ### Next (frontend)
+To deploy the front-end, I recommend deploying via Zeit's Now.sh platform. There are staging and prod now.json examples, all of the routing in production is done through these. You can mess around with new routes and middleware with server.js, but they likely won't work when deployed to staging or production.
 - Navigate to frontend folder
 - Deploy/run the server
     - Development: ```yarn run dev```
     - Staging: ```yarn run deploy-staging```
     - Production: ```yarn run deploy-prod```
+
+### Non-www to wwww redirect
+An interesting note with Zeit's Now is that redirecting non-www to www hits is a pain to implement via configuration. The direct-to-www folder is my best attempt at providing a 301 redirect preserving the users' intentions. It is a separate deployable with an index.html whose only purpose is being a 301 redirect provider.
