@@ -11,6 +11,7 @@
     "deploy-prod": "prisma deploy --env-file prod.variables.env"
   },
   "dependencies": {
+    "@sentry/node": "5.0.7",
     "babel-preset-env": "^1.7.0",
     "dotenv": "^6.2.0",
     "graphql": "^14.0.2",

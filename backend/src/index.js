@@ -2,6 +2,11 @@ require("dotenv").config({ path: "variables.env" });
 const createServer = require("./createServer");
 const db = require("./db");
 
+const Sentry = require("@sentry/node");
+Sentry.init({
+  dsn: "https://a4720495cfb1434bbc095a75d03c7039@sentry.io/1438659"
+});
+
 const server = createServer();
 
 //  Middleware to handle cookies (JWT)
