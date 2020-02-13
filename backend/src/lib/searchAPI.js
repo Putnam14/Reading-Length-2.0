@@ -1,17 +1,15 @@
 const {
   bookSearch,
   bookSearch2,
-  audibleSearch2,
+  audibleSearch,
   amazonPrices
 } = require("./api/amazon");
-const wait = require("waait");
 
+// Unused - Amazon doesn't make public audible running time anymore
 const handleAudibleResponse = async (name, isbn, pages, ctx) => {
   try {
-    const runtime = await audibleSearch2(name + " audible");
-    console.log("Hey");
+    const runtime = await audibleSearch(name + " audible");
     if (runtime) {
-      console.log("???");
       const estWordCount = runtime * 145;
       // Delete any estimates that are smaller than this new estimate. Alternatively, we could delete all other with the same countType...
       await ctx.db.mutation.deleteManyWordCounts({
@@ -61,9 +59,8 @@ const handleAmazonResponse = (results, searchTerm, ctx) => {
     };
     results.description = undefined;
     results.related = [];
-    //handle audible
-    const { isbn10, name, medImage } = results;
-    handleAudibleResponse(name, isbn10, book.pageCount, ctx);
+    const { isbn10, name, pageCount, medImage } = results;
+    //handleAudibleResponse(name, isbn10, pageCount, ctx);
     addBookPreview(isbn10, name, medImage, ctx);
     return book;
   } catch (err) {
@@ -71,6 +68,7 @@ const handleAmazonResponse = (results, searchTerm, ctx) => {
   }
 };
 
+// Unused until Amazon makes related offerings available again via the API
 const handleRelatedBooks = async (name, isbn10, ctx) => {
   // Add related books to bookPreview
   const detailPreview = await ctx.db.query.bookPreview({

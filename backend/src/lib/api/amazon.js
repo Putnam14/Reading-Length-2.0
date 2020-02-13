@@ -111,7 +111,8 @@ exports.bookSearch = async searchTerm => {
   }
 };
 
-exports.audibleSearch2 = searchTerm => {
+// Unused until Amazon makes public audible running lengths through the API
+exports.audibleSearch = searchTerm => {
   const searchItemsRequest = new ProductAdvertisingAPIv1.SearchItemsRequest();
 
   searchItemsRequest["PartnerTag"] = process.env.AMAZON_AFFILIATE_TAG;
@@ -136,7 +137,9 @@ exports.audibleSearch2 = searchTerm => {
     // console.log(
     //   "Complete Response: \n" + JSON.stringify(searchItemsResponse, null, 1)
     // );
-    console.log(data.SearchResult.Items[0].ItemInfo);
+    // get running length
+    const runningLength = null;
+    return runningLength;
   };
   try {
     api
