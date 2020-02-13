@@ -1,5 +1,156 @@
 const Piranhax = require("piranhax");
+const ProductAdvertisingAPIv1 = require("./paapi5-nodejs-sdk");
+const { validISBN } = require("../validISBN");
 const wait = require("waait");
+
+const defaultClient = ProductAdvertisingAPIv1.ApiClient.instance;
+
+defaultClient.accessKey = process.env.AMAZON_API_PUBLIC;
+defaultClient.secretKey = process.env.AMAZON_API_SECRET;
+
+defaultClient.host = "webservices.amazon.com";
+defaultClient.region = "us-east-1";
+
+const api = new ProductAdvertisingAPIv1.DefaultApi();
+
+exports.bookSearch = async searchTerm => {
+  const searchItemsRequest = new ProductAdvertisingAPIv1.SearchItemsRequest();
+  searchItemsRequest["PartnerTag"] = process.env.AMAZON_AFFILIATE_TAG;
+  searchItemsRequest["PartnerType"] = "Associates";
+  searchItemsRequest["Keywords"] = searchTerm;
+  searchItemsRequest["SearchIndex"] = "Books";
+  searchItemsRequest["ItemCount"] = 1;
+  searchItemsRequest["Resources"] = [
+    "Images.Primary.Large", //image
+    "Images.Primary.Medium", //medImage
+    "ItemInfo.Title", //name
+    "ItemInfo.ContentInfo", //pageCount, publishDate
+    "ItemInfo.ByLineInfo", //author
+    "ItemInfo.ExternalIds" //isbn10
+  ];
+
+  const searchItemsCallback = data => {
+    var searchItemsResponse = data;
+    if (searchItemsResponse["SearchResult"] !== undefined) {
+      // console.log(
+      //   "Complete Response: \n" + JSON.stringify(searchItemsResponse, null, 1)
+      // );
+      const result = {};
+      var item_0 = searchItemsResponse["SearchResult"]["Items"][0];
+      if (item_0) {
+        if (item_0.ASIN) {
+          result.isbn10 = item_0["ASIN"];
+        }
+        const itemInfo = item_0.ItemInfo;
+        if (itemInfo) {
+          const title = itemInfo.Title;
+          const byline = itemInfo.ByLineInfo;
+          const content = itemInfo.ContentInfo;
+          if (title) result.name = title.DisplayValue;
+          if (byline && byline.Contributors) {
+            const authors = byline.Contributors.filter(contributor => {
+              if (contributor.Role == "Author") return contributor;
+            });
+            if (authors.length > 0) result.author = authors[0].Name;
+          }
+          if (content) {
+            if (content.PublicationDate) {
+              result.publishDate = content.PublicationDate.DisplayValue;
+            }
+            if (content.PagesCount) {
+              result.pageCount = content.PagesCount.DisplayValue;
+            }
+          }
+          if (itemInfo.ExternalIds && itemInfo.ExternalIds.ISBNs) {
+            const isbns = itemInfo.ExternalIds.ISBNs.DisplayValues.filter(
+              id => {
+                return validISBN(id);
+              }
+            );
+            if (isbns.length > 0) result.isbn10 = isbns[0];
+          }
+        }
+        if (
+          item_0.Images &&
+          item_0.Images.Primary &&
+          item_0.Images.Primary.Large
+        )
+          result.image = item_0.Images.Primary.Large.URL;
+        if (
+          item_0.Images &&
+          item_0.Images.Primary &&
+          item_0.Images.Primary.Medium
+        )
+          result.medImage = item_0.Images.Primary.Medium.URL;
+        return result;
+      }
+    }
+    if (searchItemsResponse["Errors"] !== undefined) {
+      console.log("Errors:");
+      console.log(
+        "Complete Error Response: " +
+          JSON.stringify(searchItemsResponse["Errors"], null, 1)
+      );
+      console.log("Printing 1st Error:");
+      var error_0 = searchItemsResponse["Errors"][0];
+      console.log("Error Code: " + error_0["Code"]);
+      console.log("Error Message: " + error_0["Message"]);
+    }
+  };
+  try {
+    return api
+      .searchItems(searchItemsRequest, searchItemsCallback)
+      .then(res => {
+        return searchItemsCallback(res.body);
+      })
+      .catch(ex => {
+        throw new Error(ex);
+      });
+  } catch (ex) {
+    console.log("Something broke! " + ex);
+  }
+};
+
+exports.audibleSearch2 = searchTerm => {
+  const searchItemsRequest = new ProductAdvertisingAPIv1.SearchItemsRequest();
+
+  searchItemsRequest["PartnerTag"] = process.env.AMAZON_AFFILIATE_TAG;
+  searchItemsRequest["PartnerType"] = "Associates";
+  searchItemsRequest["Keywords"] = searchTerm;
+  searchItemsRequest["SearchIndex"] = "Books";
+  searchItemsRequest["ItemCount"] = 1;
+  searchItemsRequest["Resources"] = [
+    "ItemInfo.Classifications",
+    "ItemInfo.TechnicalInfo",
+    "ItemInfo.Title", //name
+    "ItemInfo.Features",
+    "ItemInfo.ManufactureInfo",
+    "ItemInfo.ProductInfo",
+    "ItemInfo.ContentInfo", //pageCount, publishDate
+    "ItemInfo.ByLineInfo", //author
+    "ItemInfo.ExternalIds" //isbn10
+  ];
+
+  const searchItemsCallback = data => {
+    var searchItemsResponse = data;
+    // console.log(
+    //   "Complete Response: \n" + JSON.stringify(searchItemsResponse, null, 1)
+    // );
+    console.log(data.SearchResult.Items[0].ItemInfo);
+  };
+  try {
+    api
+      .searchItems(searchItemsRequest, searchItemsCallback)
+      .then(res => {
+        return searchItemsCallback(res.body);
+      })
+      .catch(ex => {
+        throw new Error(ex);
+      });
+  } catch (ex) {
+    console.log("Exception: " + ex);
+  }
+};
 
 const credentials = {
   pubKey: process.env.AMAZON_API_PUBLIC,
@@ -14,27 +165,6 @@ const client = new Piranhax(
 );
 
 client.setLocale("US");
-
-exports.bookSearch = async searchTerm => {
-  const result = await client
-    .ItemSearch("Books", {
-      Keywords: searchTerm,
-      ResponseGroup: ["Large,AlternateVersions"]
-    })
-    .then(results => {
-      if (Array.isArray(results.data().Item)) {
-        const book = results.data().Item.find(item => {
-          return item.ItemAttributes.ISBN;
-        });
-        return book;
-      }
-      return results.data().Item;
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
-  return result;
-};
 
 exports.audibleSearch = async audibleASINs => {
   try {

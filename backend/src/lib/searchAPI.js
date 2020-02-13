@@ -1,93 +1,71 @@
-const { bookSearch, audibleSearch, amazonPrices } = require("./api/amazon");
+const {
+  bookSearch,
+  bookSearch2,
+  audibleSearch2,
+  amazonPrices
+} = require("./api/amazon");
 const wait = require("waait");
 
-const handleAudibleResponse = async (amazonSearch, isbn, pages, ctx) => {
-  if (
-    amazonSearch.AlternateVersions &&
-    Array.isArray(amazonSearch.AlternateVersions.AlternateVersion)
-  ) {
-    const audibleVersions = amazonSearch.AlternateVersions.AlternateVersion.filter(
-      alternate => {
-        return (
-          alternate.Binding === "Audible Audio Edition" ||
-          alternate.Binding === "Audible Audiobook"
-        );
-      }
-    );
-    if (audibleVersions) {
-      try {
-        const runtime = await audibleSearch(audibleVersions);
-        if (runtime) {
-          const estWordCount = runtime * 145;
-          // Delete any estimates that are smaller than this new estimate. Alternatively, we could delete all other with the same countType...
-          await ctx.db.mutation.deleteManyWordCounts({
-            where: {
-              isbn10: isbn,
-              wordCount_lte: estWordCount,
-              countType: "audiobook length"
-            }
-          });
-          const existingGreaterWordcounts = await ctx.db.query.wordCounts({
-            where: {
-              isbn10: isbn,
-              wordCount_gt: estWordCount,
-              countType: "audiobook length"
-            }
-          });
-          if (
-            !existingGreaterWordcounts ||
-            existingGreaterWordcounts.length === 0
-          ) {
-            await ctx.db.mutation.createWordCount({
-              data: {
-                isbn10: isbn,
-                wordCount: estWordCount,
-                countAccuracy: "Estimate",
-                countType: "audiobook length"
-              }
-            });
-          }
+const handleAudibleResponse = async (name, isbn, pages, ctx) => {
+  try {
+    const runtime = await audibleSearch2(name + " audible");
+    console.log("Hey");
+    if (runtime) {
+      console.log("???");
+      const estWordCount = runtime * 145;
+      // Delete any estimates that are smaller than this new estimate. Alternatively, we could delete all other with the same countType...
+      await ctx.db.mutation.deleteManyWordCounts({
+        where: {
+          isbn10: isbn,
+          wordCount_lte: estWordCount,
+          countType: "audiobook length"
         }
-      } catch (err) {
-        throw new Error(err);
+      });
+      const existingGreaterWordcounts = await ctx.db.query.wordCounts({
+        where: {
+          isbn10: isbn,
+          wordCount_gt: estWordCount,
+          countType: "audiobook length"
+        }
+      });
+      if (
+        !existingGreaterWordcounts ||
+        existingGreaterWordcounts.length === 0
+      ) {
+        await ctx.db.mutation.createWordCount({
+          data: {
+            isbn10: isbn,
+            wordCount: estWordCount,
+            countAccuracy: "Estimate",
+            countType: "audiobook length"
+          }
+        });
       }
     }
+  } catch (err) {
+    throw new Error(err);
   }
 };
 
-const handleAmazonResponse = async (amazonSearch, ctx) => {
+const handleAmazonResponse = (results, searchTerm, ctx) => {
   try {
-    if (typeof amazonSearch.ItemAttributes.Author === "object")
-      amazonSearch.ItemAttributes.Author =
-        amazonSearch.ItemAttributes.Author[0];
-    const results = {
-      isbn10: amazonSearch.ASIN,
-      name: amazonSearch.ItemAttributes.Title,
-      author: amazonSearch.ItemAttributes.Author,
-      image: amazonSearch.LargeImage.URL,
-      description: amazonSearch.EditorialReviews.EditorialReview.Content,
-      publishDate: amazonSearch.ItemAttributes.PublicationDate,
-      pageCount: parseInt(amazonSearch.ItemAttributes.NumberOfPages),
+    const book = {
+      isbn10: results.isbn10,
+      name: results.name,
+      author: results.author,
+      image: results.image,
+      publishDate: results.publishDate,
+      pageCount: parseInt(results.pageCount),
+      description: undefined,
       related: []
     };
-    if (amazonSearch.SimilarProducts) {
-      amazonSearch.SimilarProducts.SimilarProduct.map((product, i) => {
-        if (i < 4) {
-          results.related.push(product.ASIN);
-          handleRelatedBooks(product.Title, product.ASIN, ctx);
-        }
-      });
-    }
-    await handleAudibleResponse(
-      amazonSearch,
-      results.isbn10,
-      results.pageCount,
-      ctx
-    );
-    const { isbn10, name } = results;
-    const medImage = amazonSearch.MediumImage.URL;
+    results.description = undefined;
+    results.related = [];
+    //handle audible
+    const { isbn10, name, medImage } = results;
+    handleAudibleResponse(name, isbn10, book.pageCount, ctx);
     addBookPreview(isbn10, name, medImage, ctx);
-    return results;
+    return book;
   } catch (err) {
     throw new Error(err);
   }
@@ -130,14 +108,19 @@ const addBookIndex = (isbn10, name, author, ctx) => {
 
 const addBook = async (results, ctx) => {
   const { isbn10, name, author, related } = results;
-  const addedToDB = await ctx.db.mutation.createBook({
-    data: {
-      ...results,
-      related: { set: related }
-    }
-  });
-  if (addedToDB)
+  console.log("lets try adding this");
+  try {
+    await ctx.db.mutation.createBook({
+      data: {
+        ...results,
+        related: { set: related }
+      }
+    });
     return addBookIndex(isbn10, name.toLowerCase(), author.toLowerCase(), ctx);
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
 };
 
 const handleBook = async (results, ctx) => {
@@ -146,24 +129,26 @@ const handleBook = async (results, ctx) => {
   return index[0];
 };
 
-exports.newBookSearch = async (searchTerm, ctx) => {
-  try {
-    // Query Amazon API for search term
-    const amazonSearch = await bookSearch(searchTerm, ctx);
-    // Parse results
-    const amazonResults = await handleAmazonResponse(amazonSearch, ctx);
+exports.testMethod = testParam => {
+  console.log("I'm the test method! : " + testParam);
+};
 
-    return handleBook(amazonResults, ctx)
-      .then(result => {
-        const { isbn10 } = result;
-        return isbn10;
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
-  } catch (err) {
-    throw new Error(err);
-  }
+exports.newBookSearch = async (searchTerm, ctx) => {
+  // Query Amazon API for search term
+  const amazonSearch = await bookSearch(searchTerm);
+  const amazonResults = await handleAmazonResponse(
+    amazonSearch,
+    searchTerm,
+    ctx
+  );
+  return handleBook(amazonResults, ctx)
+    .then(result => {
+      const { isbn10 } = result;
+      return isbn10;
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
 };
 
 exports.priceSearch = async isbn => {
@@ -172,9 +157,7 @@ exports.priceSearch = async isbn => {
   if (amazonResult) {
     const amazonObject = {
       marketplace: "Amazon",
-      affiliateLink: `https://www.amazon.com/dp/${isbn}?tag=${
-        process.env.AMAZON_AFFILIATE_TAG
-      }`
+      affiliateLink: `https://www.amazon.com/dp/${isbn}?tag=${process.env.AMAZON_AFFILIATE_TAG}`
     };
     amazonObject.MSRP = amazonResult.ItemAttributes.ListPrice.Amount;
     amazonObject.currency = amazonResult.ItemAttributes.ListPrice.CurrencyCode;
