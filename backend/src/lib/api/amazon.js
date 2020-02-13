@@ -155,6 +155,7 @@ exports.audibleSearch = searchTerm => {
   }
 };
 
+// --------------- Old API -----------------
 const credentials = {
   pubKey: process.env.AMAZON_API_PUBLIC,
   secKey: process.env.AMAZON_API_SECRET,
@@ -168,35 +169,6 @@ const client = new Piranhax(
 );
 
 client.setLocale("US");
-
-exports.audibleSearch = async audibleASINs => {
-  try {
-    for (let i = 0; i < audibleASINs.length; i++) {
-      let ASIN = audibleASINs[i].ASIN;
-      let result = await client
-        .ItemLookup(ASIN, { ResponseGroup: ["Large"] })
-        .then(result => {
-          if (result.data()) {
-            if (result.data().Item.ItemAttributes.Format === "Unabridged") {
-              return result.data().Item.ItemAttributes.RunningTime._;
-            }
-          }
-        })
-        .catch(err => {
-          throw new Error(
-            `Something went wrong looking up audible version for ${ASIN}: ${err}`
-          );
-        });
-      if (result > 0) {
-        i = audibleASINs.length;
-        return result;
-      }
-      await wait(500);
-    }
-  } catch (err) {
-    throw new Error(err);
-  }
-};
 
 exports.amazonPrices = async isbn => {
   await wait(750);
