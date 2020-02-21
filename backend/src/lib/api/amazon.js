@@ -1,7 +1,5 @@
-const Piranhax = require("piranhax");
 const ProductAdvertisingAPIv1 = require("./paapi5-nodejs-sdk");
 const { validISBN } = require("../validISBN");
-const wait = require("waait");
 
 const defaultClient = ProductAdvertisingAPIv1.ApiClient.instance;
 
@@ -111,78 +109,64 @@ exports.bookSearch = async searchTerm => {
   }
 };
 
-// Unused until Amazon makes public audible running lengths through the API
-exports.audibleSearch = searchTerm => {
-  const searchItemsRequest = new ProductAdvertisingAPIv1.SearchItemsRequest();
-
-  searchItemsRequest["PartnerTag"] = process.env.AMAZON_AFFILIATE_TAG;
-  searchItemsRequest["PartnerType"] = "Associates";
-  searchItemsRequest["Keywords"] = searchTerm;
-  searchItemsRequest["SearchIndex"] = "Books";
-  searchItemsRequest["ItemCount"] = 1;
-  searchItemsRequest["Resources"] = [
-    "ItemInfo.Classifications",
-    "ItemInfo.TechnicalInfo",
-    "ItemInfo.Title", //name
-    "ItemInfo.Features",
-    "ItemInfo.ManufactureInfo",
-    "ItemInfo.ProductInfo",
-    "ItemInfo.ContentInfo", //pageCount, publishDate
-    "ItemInfo.ByLineInfo", //author
-    "ItemInfo.ExternalIds" //isbn10
+exports.getOfferPrice = isbn => {
+  const getItemsRequest = new ProductAdvertisingAPIv1.GetItemsRequest();
+  getItemsRequest["PartnerTag"] = process.env.AMAZON_AFFILIATE_TAG;
+  getItemsRequest["PartnerType"] = "Associates";
+  getItemsRequest["ItemIds"] = [isbn];
+  getItemsRequest["Condition"] = "New";
+  getItemsRequest["Resources"] = [
+    "Offers.Listings.SavingBasis",
+    "Offers.Listings.Price"
   ];
-
-  const searchItemsCallback = data => {
-    var searchItemsResponse = data;
-    // console.log(
-    //   "Complete Response: \n" + JSON.stringify(searchItemsResponse, null, 1)
-    // );
-    // get running length
-    const runningLength = null;
-    return runningLength;
+  const priceCallback = data => {
+    var getItemsResponse = data;
+    if (getItemsResponse["ItemsResult"] !== undefined) {
+      const result = {};
+      var itemInfo = getItemsResponse["ItemsResult"]["Items"][0];
+      if (itemInfo) {
+        const offers = itemInfo.Offers;
+        if (offers) {
+          const listings = offers.Listings;
+          if (listings && listings.length > 0) {
+            const listing = listings[0];
+            result.msrp = listing.SavingBasis
+              ? Math.round(listing.SavingBasis.Amount * 100)
+              : null;
+            if (listing.Price) {
+              const price = listing.Price;
+              result.price = price.Amount
+                ? Math.round(price.Amount * 100)
+                : null;
+              result.currency = price.Currency ? price.Currency : null;
+            }
+          }
+        }
+        return result;
+      }
+    }
+    if (getItemsResponse["Errors"] !== undefined) {
+      console.log("Errors:");
+      console.log(
+        "Complete Error Response: " +
+          JSON.stringify(getItemsResponse["Errors"], null, 1)
+      );
+      console.log("Printing 1st Error:");
+      var error_0 = getItemsResponse["Errors"][0];
+      console.log("Error Code: " + error_0["Code"]);
+      console.log("Error Message: " + error_0["Message"]);
+    }
   };
   try {
-    api
-      .searchItems(searchItemsRequest, searchItemsCallback)
+    return api
+      .getItems(getItemsRequest, priceCallback)
       .then(res => {
-        return searchItemsCallback(res.body);
+        return priceCallback(res.body);
       })
       .catch(ex => {
         throw new Error(ex);
       });
   } catch (ex) {
-    console.log("Exception: " + ex);
-  }
-};
-
-// --------------- Old API -----------------
-const credentials = {
-  pubKey: process.env.AMAZON_API_PUBLIC,
-  secKey: process.env.AMAZON_API_SECRET,
-  affTag: process.env.AMAZON_AFFILIATE_TAG
-};
-
-const client = new Piranhax(
-  credentials.pubKey,
-  credentials.secKey,
-  credentials.affTag
-);
-
-client.setLocale("US");
-
-exports.amazonPrices = async isbn => {
-  await wait(750);
-  try {
-    const result = await client
-      .ItemLookup(isbn, { ResponseGroup: ["Medium,Offers"] })
-      .then(result => {
-        if (result.data()) return result.data().Item;
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
-    return result;
-  } catch (err) {
-    throw new Error(err);
+    console.log("Something broke! " + ex);
   }
 };
