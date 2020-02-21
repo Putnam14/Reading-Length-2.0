@@ -37,7 +37,7 @@ class Prices extends React.Component {
                         {price.formattedOffer}
                       </>
                     ) : (
-                      price.formattedMSRP
+                      price.formattedOffer
                     )}
                   </a>
                 </p>
