@@ -4,27 +4,29 @@ const { newBookSearch, priceSearch } = require("../lib/searchAPI");
 const Query = {
   findBook(parent, args, ctx, info) {
     const { isbn10 } = args;
-    return ctx.db.query
-      .book({ where: { isbn10 } }, info)
-      .then(res => {
-        if (res) return res;
-        return newBookSearch(isbn10, ctx, info)
-          .then(res => {
-            return ctx.db.query.book({ where: { isbn10: res } }, info);
-          })
-          .catch(err => {
-            throw new Error(err);
-          });
-      })
-      .then(res => {
-        if (res) return res;
-      })
-      .catch(err => {
-        throw new Error(
-          `Could not find book for ISBN ${isbn10}. Error: ${err}`,
-          err
-        );
-      });
+    return ctx.db.query.book({ where: { isbn10 } }, info).then(async res => {
+      if (res) return res;
+      return await newBookSearch(isbn10, ctx, info)
+        .then(res => {
+          return ctx.db.query
+            .book({ where: { isbn10: res } }, info)
+            .then(async res => {
+              if (res) return res;
+            })
+            .catch(err => {
+              throw new Error(
+                `Could not find book for ISBN ${isbn10}. Error: ${err}`,
+                err
+              );
+            });
+        })
+        .catch(err => {
+          throw new Error(
+            `Looks like that book isn't on our shelves. If you followed a link here, try refreshing. Our servers may be busy.`,
+            err
+          );
+        });
+    });
   },
   findPrice(parent, args, ctx, info) {
     const { isbn10 } = args;
@@ -46,16 +48,11 @@ const Query = {
       info
     );
   },
-  findNewBook(parent, args, ctx, info) {
+  async findNewBook(parent, args, ctx, info) {
     const { searchTerm } = args;
     // Following returns an ISBN
-    return newBookSearch(searchTerm, ctx, info)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
+    const res = await newBookSearch(searchTerm, ctx, info);
+    return res;
   }
 };
 
