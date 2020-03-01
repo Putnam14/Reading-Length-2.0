@@ -186,7 +186,10 @@ class BookPage extends React.Component {
                         <div className="desc-text">
                           <div
                             dangerouslySetInnerHTML={{
-                              __html: book.description,
+                              __html:
+                                book.description.length > 0
+                                  ? book.description
+                                  : "This book's description is not available on Reading Length.",
                             }}
                           />
                         </div>
