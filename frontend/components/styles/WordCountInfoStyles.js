@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 const WordCountInfoStyles = styled.div`
   font-size: 2rem;
+  height: 100%;
   h1 {
     font-size: 2rem;
     padding: 0;
@@ -47,6 +48,11 @@ const WordCountInfoStyles = styled.div`
       font-size: 1.5rem;
       font-style: italic;
     }
+  }
+  .result-container {
+    height: 80%;
+    display: grid;
+    align-items: center;
   }
   .results {
     p {
