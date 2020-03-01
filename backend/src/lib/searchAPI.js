@@ -96,44 +96,37 @@ const handleBook = (results, ctx) => {
     });
 };
 
-exports.newBookSearch = (searchTerm, ctx) => {
-  return bookSearch(searchTerm)
-    .then(searchResults => {
-      return handleAmazonResponse(searchResults, ctx);
-    })
-    .then(transformedResults => {
-      return handleBook(transformedResults, ctx);
-    })
-    .then(result => {
-      const { isbn10 } = result;
-      return isbn10;
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
+exports.newBookSearch = async (searchTerm, ctx) => {
+  try {
+    const searchResults = await bookSearch(searchTerm);
+    const transformedResults = handleAmazonResponse(searchResults, ctx);
+    return handleBook(transformedResults, ctx)
+      .then(result => {
+        const { isbn10 } = result;
+        return isbn10;
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
-exports.priceSearch = isbn => {
+exports.priceSearch = async isbn => {
   const prices = [];
-  return getOfferPrice(isbn)
-    .then(priceResult => {
-      if (priceResult) {
-        const priceObject = {
-          marketplace: "Amazon",
-          affiliateLink: `https://www.amazon.com/dp/${isbn}?tag=${process.env.AMAZON_AFFILIATE_TAG}`
-        };
-        priceObject.MSRP = priceResult.msrp ? priceResult.msrp : undefined;
-        priceObject.currency = priceResult.currency
-          ? priceResult.currency
-          : undefined;
-        priceObject.offerPrice = priceResult.price
-          ? priceResult.price
-          : undefined;
-        prices.push(priceObject);
-      }
-      return prices;
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
+  const priceResult = await getOfferPrice(isbn);
+  if (priceResult) {
+    const priceObject = {
+      marketplace: "Amazon",
+      affiliateLink: `https://www.amazon.com/dp/${isbn}?tag=${process.env.AMAZON_AFFILIATE_TAG}`
+    };
+    priceObject.MSRP = priceResult.msrp ? priceResult.msrp : undefined;
+    priceObject.currency = priceResult.currency
+      ? priceResult.currency
+      : undefined;
+    priceObject.offerPrice = priceResult.price ? priceResult.price : undefined;
+    prices.push(priceObject);
+  }
+  return prices;
 };
