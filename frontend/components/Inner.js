@@ -6,7 +6,6 @@ const InnerStyles = styled.div`
   max-width: ${props => props.theme.maxWidth};
   margin: 0 auto;
   padding: 2rem;
-  min-height: calc(100vh - 50px);
   display: grid;
   grid-template-rows: 1fr auto;
 `
