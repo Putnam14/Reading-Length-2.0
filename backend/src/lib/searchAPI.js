@@ -9,7 +9,7 @@ const handleAmazonResponse = (results, ctx) => {
       image: results.image,
       publishDate: results.publishDate,
       pageCount: parseInt(results.pageCount),
-      description: "Description not available on Reading Length",
+      description: "",
       related: []
     };
     const { isbn10, name, medImage } = results;

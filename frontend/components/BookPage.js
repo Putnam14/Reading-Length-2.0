@@ -187,7 +187,7 @@ class BookPage extends React.Component {
                           <div
                             dangerouslySetInnerHTML={{
                               __html:
-                                book.description.length > 0
+                                book.description && book.description.length > 0
                                   ? book.description
                                   : "This book's description is not available on Reading Length.",
                             }}
@@ -204,7 +204,7 @@ class BookPage extends React.Component {
                         </div>
                       </div>
                     </div>
-                    {book.related && (
+                    {book.related && book.related.length > 0 && (
                       <RelatedBooks relatedBooks={book.related} />
                     )}
                   </Inner>
