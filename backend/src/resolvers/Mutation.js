@@ -8,7 +8,6 @@ const Mutations = {
       },
       info
     );
-    console.log("Book: " + book);
     // const bookIndex = await ctx.db.mutation.createBookIndex()
     return book;
   }

@@ -36,70 +36,39 @@ const addBookPreview = async (isbn10, name, image, ctx) => {
 };
 
 const getBookIndex = (isbn10, ctx) => {
-  return ctx.db.query
-    .bookIndexes({ where: { isbn10: isbn10 } })
-    .then(result => {
-      return result;
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
+  return ctx.db.query.bookIndexes({ where: { isbn10 } });
 };
 
 const addBookIndex = (isbn10, name, author, ctx) => {
-  return ctx.db.mutation
-    .createBookIndex({
-      data: { isbn10, name, author }
-    })
-    .then(result => {
-      return result;
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
+  return ctx.db.mutation.createBookIndex({
+    data: { isbn10, name, author }
+  });
 };
 
-const addBook = (results, ctx) => {
+const addBook = async (results, ctx) => {
   const { isbn10, name, author, related } = results;
-  return ctx.db.mutation
-    .createBook({
-      data: {
-        ...results,
-        related: { set: related }
-      }
-    })
-    .then(() => {
-      return addBookIndex(
-        isbn10,
-        name.toLowerCase(),
-        author.toLowerCase(),
-        ctx
-      );
-    })
-    .then(result => {
-      return result;
-    })
-    .catch(err => {
-      console.log(err);
-      throw new Error(err);
-    });
+  const addedToDB = await ctx.db.mutation.createBook({
+    data: {
+      ...results,
+      related: { set: related }
+    }
+  });
+  if (addedToDB)
+    return addBookIndex(isbn10, name.toLowerCase(), author.toLowerCase(), ctx);
 };
 
-const handleBook = (results, ctx) => {
-  return getBookIndex(results.isbn10, ctx)
-    .then(result => {
-      if (result[0]) return result[0];
-      return addBook(results, ctx);
-    })
-    .catch(err => {
-      throw new Error(err);
-    });
+const handleBook = async (results, ctx) => {
+  const index = await getBookIndex(results.isbn10, ctx);
+  if (!index[0]) return addBook(results, ctx);
+  return index[0];
 };
 
 exports.newBookSearch = async (searchTerm, ctx) => {
   try {
     const searchResults = await bookSearch(searchTerm);
+
     const transformedResults = handleAmazonResponse(searchResults, ctx);
+
     return handleBook(transformedResults, ctx)
       .then(result => {
         const { isbn10 } = result;
