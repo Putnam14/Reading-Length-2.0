@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const HomeStyles = styled.div`
-  height: 100%;
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
