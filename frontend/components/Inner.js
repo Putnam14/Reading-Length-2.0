@@ -5,7 +5,7 @@ import Footer from './Footer'
 const InnerStyles = styled.div`
   max-width: ${props => props.theme.maxWidth};
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem;
   display: grid;
   grid-template-rows: 1fr auto;
 `

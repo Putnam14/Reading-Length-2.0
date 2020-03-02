@@ -15,6 +15,7 @@ const BookStyles = styled.div`
       align-items: center;
       img {
         box-shadow: ${props => props.theme.bs};
+        max-height: 400px;
       }
     }
   }
