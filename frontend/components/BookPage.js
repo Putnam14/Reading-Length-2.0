@@ -11,6 +11,7 @@ import WordCountInfo from './WordCountInfo'
 import Prices from './Prices'
 import Loading from './Loading'
 import validISBN from '../lib/isbnValidator'
+import Ad from './Ad'
 
 const BOOK_FROM_ISBN_QUERY = gql`
   query BOOK_FROM_ISBN_QUERY($isbn: String!) {
@@ -160,6 +161,7 @@ class BookPage extends React.Component {
                     </div>
                   </div>
                   <Inner>
+                    <Ad />
                     <div className="book-info">
                       {/* Need this div so the height of the book data is not the same as the description */}
                       <div>
@@ -186,7 +188,10 @@ class BookPage extends React.Component {
                         <div className="desc-text">
                           <div
                             dangerouslySetInnerHTML={{
-                              __html: book.description,
+                              __html:
+                                book.description && book.description.length > 0
+                                  ? book.description
+                                  : "This book's description is not available on Reading Length.",
                             }}
                           />
                         </div>
@@ -201,7 +206,7 @@ class BookPage extends React.Component {
                         </div>
                       </div>
                     </div>
-                    {book.related && (
+                    {book.related && book.related.length > 0 && (
                       <RelatedBooks relatedBooks={book.related} />
                     )}
                   </Inner>
