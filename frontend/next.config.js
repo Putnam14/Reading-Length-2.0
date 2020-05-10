@@ -2,13 +2,13 @@ const prod = process.env.SERVER === 'production'
 const staging = process.env.SERVER === 'staging'
 
 const endpoints = {
-  dev: 'http://localhost:4444',
+  dev: 'https://yoga.readinglength.com/',
   staging: 'https://rlength-yoga-staging.herokuapp.com/',
   prod: 'https://yoga.readinglength.com/',
 }
 
 const urls = {
-  dev: 'http://localhost:3000',
+  dev: 'https://www.readinglength.com',
   staging: 'https://staging.readinglength.com',
   prod: 'https://www.readinglength.com',
 }
@@ -30,7 +30,7 @@ if (prod) {
 }
 
 module.exports = {
-  target: 'serverless',
+  target: 'server',
   env: {
     ENDPOINT: endpoint,
     SERVER: process.env.SERVER,
