@@ -35,7 +35,7 @@
   "bundleDependencies": false,
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "superagent": "3.5.2"
+    "superagent": "5.2.2"
   },
   "deprecated": false,
   "description": "ProductAdvertisingAPI 5.0 NodeJS SDK",
