@@ -11,7 +11,7 @@
     "build": "next build",
     "now-build": "next build",
     "start-dev": "NODE_ENV=development node server.js",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next build && ENV=production node server.js",
     "test": "NODE_ENV=test jest --watch",
     "deploy-staging": "now -A staging.now.json && now alias -A staging.now.json",
     "deploy-prod": "now -A prod.now.json && now alias -A prod.now.json"
