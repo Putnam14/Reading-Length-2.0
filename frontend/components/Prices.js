@@ -26,7 +26,7 @@ class Prices extends React.Component {
           const prices = priceFormatter(priceData)
           return (
             <PriceStyles>
-              <strong>Price</strong>
+              {prices.length >= 1 && <strong>Price</strong>}
               {prices.map((price, i) => (
                 <p key={price.marketplace}>
                   {price.marketplace}:{' '}

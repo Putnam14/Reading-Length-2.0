@@ -178,10 +178,12 @@ class BookPage extends React.Component {
                               {countAccuracy} based on {countType}
                             </p>
                           </div>
-                          <div>
-                            <strong>Pages</strong>
-                            <p>{book.pageCount} pages</p>
-                          </div>
+                          {book.pageCount && (
+                            <div>
+                              <strong>Pages</strong>
+                              <p>{book.pageCount} pages</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="description">
