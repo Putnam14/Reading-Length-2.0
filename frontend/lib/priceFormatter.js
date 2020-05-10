@@ -1,6 +1,7 @@
 const formatMoney = (amount, currency) => {
   // Amount is stored and handled as cents
   const parsedAmount = parseInt(amount)
+  if (currency == null) return parsedAmount / 100
   const options = {
     style: 'currency',
     currency,
